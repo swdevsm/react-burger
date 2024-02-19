@@ -1,0 +1,14 @@
+.headerBox {
+  padding: 16px;
+  width: 100%;
+}
+
+.headerItem {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+.headerLogo {
+  padding-top: 9px;
+  flex-grow: 10;
+}
