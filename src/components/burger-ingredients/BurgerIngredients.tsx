@@ -28,7 +28,7 @@ const IngredientsCategory = ({
 }: IngredientsCategoryProps) => {
   const filtered = data.filter((value) => value.type === type);
   return (
-    <div className={burgerIngredientsStyles.box + " p-10"}>
+    <div className={burgerIngredientsStyles.categoryBox + " p-10"}>
       <p className="text text_type_main-medium">{title}</p>
       <div className={burgerIngredientsStyles.ingredients}>
         {filtered.map((value) => (
@@ -55,9 +55,11 @@ const BurgerIngredients = ({ data }: BurgerIngredientsProps) => {
           Начинки
         </Tab>
       </div>
-      <IngredientsCategory title="Булки" type="bun" data={data} />
-      <IngredientsCategory title="Соусы" type="sauce" data={data} />
-      <IngredientsCategory title="Начинки" type="main" data={data} />
+      <div className={burgerIngredientsStyles.scroll}>
+        <IngredientsCategory title="Булки" type="bun" data={data} />
+        <IngredientsCategory title="Соусы" type="sauce" data={data} />
+        <IngredientsCategory title="Начинки" type="main" data={data} />
+      </div>
     </div>
   );
 };

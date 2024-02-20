@@ -1,14 +1,26 @@
 .box {
-    flex-flow: column;
+  flex-flow: column;
+  justify-content: start;
+}
+
+.categoryBox {
+  flex-flow: column;
 }
 
 .ingredients {
-    flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 
 .ingredient {
-    flex-flow: column;
-    text-align: center;
-    width: 272px;
-    height: 208px;
+  flex-flow: column;
+  /* text-align: center; */
+  width: 272px;
+  height: 208px;
+}
+
+.scroll {
+  flex-flow: row;
+  flex-wrap: wrap;
+  height: 20%;
+  overflow-y: scroll;
 }

@@ -5,42 +5,69 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { BurgerConstructorProps } from "./BurgerConstructor.types";
-import burgerConstructor from "./BurgerConstructor.module.css";
+import burgerConstructorStyles from "./BurgerConstructor.module.css";
 import { useState } from "react";
 
 const BurgerConstructor = ({ data }: BurgerConstructorProps) => {
   const [total] = useState(610);
   return (
-    <div className={burgerConstructor.box + " pt-25"}>
-      <div className={burgerConstructor.list}>
+    <div className={burgerConstructorStyles.box + " pt-25"}>
+      <div className="pt-4">
+        <div className={burgerConstructorStyles.dragIcon + " pr-2"}>
+          <div className={burgerConstructorStyles.emptyDragIcon} />
+        </div>
+        {/* fixme: check lenght */}
+        <ConstructorElement
+          key={data[0]._id}
+          type={"top"}
+          isLocked={true}
+          text={data[0].name}
+          price={data[0].price}
+          thumbnail={data[0].image}
+        />
+      </div>
+
+      <div className={burgerConstructorStyles.list}>
         {data.map((value, index) => {
-          const type =
-            index === 0
-              ? "top"
-              : index == data.length - 1
-              ? "bottom"
-              : undefined;
           return (
-            <div className="pt-4">
-              <div className={burgerConstructor.dragIcon + " pr-2"}>
-                <DragIcon type="primary" />
+            index !== 0 &&
+            index !== data.length - 1 && (
+              <div className="pt-4">
+                <div className={burgerConstructorStyles.dragIcon + " pr-2"}>
+                  <DragIcon type="primary" />
+                </div>
+                <ConstructorElement
+                  key={value._id}
+                  isLocked={false}
+                  text={value.name}
+                  price={value.price}
+                  thumbnail={value.image}
+                />
               </div>
-              <ConstructorElement
-                type={type}
-                isLocked={false}
-                text={value.name}
-                price={value.price}
-                thumbnail={value.image}
-              />
-            </div>
+            )
           );
         })}
       </div>
-      <div className={burgerConstructor.totalBox + " pt-10"}>
-        <div className={burgerConstructor.total}>
+
+      <div className="pt-4">
+        <div className={burgerConstructorStyles.dragIcon + " pr-2"}>
+          <div className={burgerConstructorStyles.emptyDragIcon} />
+        </div>
+        <ConstructorElement
+          key={data[data.length - 1]._id}
+          type={"bottom"}
+          isLocked={true}
+          text={data[data.length - 1].name}
+          price={data[data.length - 1].price}
+          thumbnail={data[data.length - 1].image}
+        />
+      </div>
+
+      <div className={burgerConstructorStyles.totalBox + " pt-10"}>
+        <div className={burgerConstructorStyles.total}>
           <p className="text text_type_digits-medium">{total}</p>
         </div>
-        <div className={burgerConstructor.totalIcon + " pl-4"}>
+        <div className={burgerConstructorStyles.totalIcon + " pl-4"}>
           <CurrencyIcon type="primary" />
         </div>
         <div className="pl-10">

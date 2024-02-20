@@ -1,10 +1,14 @@
 .box {
   flex-flow: column;
   justify-content: start;
+  height: 100%;
 }
 
 .list {
   flex-flow: column;
+  height: 15%;
+  overflow-y: scroll;
+  justify-content: start;
 }
 
 .totalBox {
@@ -13,6 +17,11 @@
 
 .dragIcon {
   align-self: center;
+}
+
+.emptyDragIcon {
+  width: 24px;
+  height: 24px;
 }
 
 .total {

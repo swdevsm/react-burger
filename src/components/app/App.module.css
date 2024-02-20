@@ -30,10 +30,12 @@
 .aside {
   composes: element;
   grid-area: aside;
+  /* height: fit-content; */
 }
 .content {
   composes: element;
   grid-area: content;
+  /* height: fit-content; */
 }
 .section {
   composes: element;
