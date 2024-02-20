@@ -15,7 +15,7 @@ const App = () => {
         <BurgerIngredients data={data} />
       </div>
       <div className={appStyles.content}>
-        <BurgerConstructor />
+        <BurgerConstructor data={data}/>
       </div>
       {/* <div className={appStyles.section}>Section</div> */}
       {/* <div className={appStyles.footer}>Footer</div> */}

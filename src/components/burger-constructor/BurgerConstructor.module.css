@@ -1,0 +1,24 @@
+.box {
+  flex-flow: column;
+  justify-content: start;
+}
+
+.list {
+  flex-flow: column;
+}
+
+.totalBox {
+  justify-content: center;
+}
+
+.dragIcon {
+  align-self: center;
+}
+
+.total {
+  align-self: center;
+}
+
+.totalIcon {
+  align-self: center;
+}
