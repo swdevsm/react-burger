@@ -25,7 +25,7 @@ const OrderDetails = ({ order }: OrderDetailsProps) => {
       <div className={orderDetailsStyles.message + " pt-10 mt-5"}>
         {startMessage}
       </div>
-      <div className={orderDetailsStyles.message + " pt-2"}>{waitMessage}</div>
+      <div className={orderDetailsStyles.message + " pt-2 pb-10 mb-5"}>{waitMessage}</div>
     </div>
   );
 };

@@ -3,7 +3,7 @@
   justify-content: flex-start;
   width: 720px;
   height: auto;
-  background-color: #131316;
+  background-color: rgba(28, 28, 33, 1);
   border: 1px solid rgba(76, 76, 255, 0.2);
   border-radius: 40px;
   position: fixed;
