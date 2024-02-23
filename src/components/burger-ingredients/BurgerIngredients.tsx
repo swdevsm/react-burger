@@ -1,6 +1,7 @@
 import { useState } from "react";
 import burgerIngredientsStyles from "./BurgerIngredients.module.css";
 import {
+  Counter,
   CurrencyIcon,
   Tab,
 } from "@ya.praktikum/react-developer-burger-ui-components";
@@ -21,7 +22,7 @@ const Ingredient = ({ ingredient }: IngredientProps) => {
     details: ingredientDetails,
   });
   return (
-    <div onClick={toggleOpen}>
+    <div onClick={toggleOpen} className={burgerIngredientsStyles.counterParent}>
       <Container extraClass={burgerIngredientsStyles.center + " pt-6 pl-4"}>
         <img src={ingredient.image} />
 
@@ -35,6 +36,7 @@ const Ingredient = ({ ingredient }: IngredientProps) => {
         <p className="text text_type_main-default pt-1">{ingredient.name}</p>
         {openModal && modal}
       </Container>
+      <Counter count={1} size="default" />
     </div>
   );
 };

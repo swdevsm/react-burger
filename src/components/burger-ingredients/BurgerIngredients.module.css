@@ -6,3 +6,7 @@
   height: 100vh;
   overflow: auto;
 }
+
+.counterParent {
+  position: relative;
+}
