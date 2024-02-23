@@ -9,17 +9,34 @@ import {
   IngredientProps,
   IngredientsCategoryProps,
 } from "./BurgerIngredients.types";
+import Modal from "../modal/Modal";
 
-const Ingredient = ({ ingredient }: IngredientProps) => (
-  <div className={burgerIngredientsStyles.ingredient + " pt-8 pl-4"}>
-    <img src={ingredient.image} />
-    <div className="pt-1">
-      <p className="text text_type_digits-default pr-1">{ingredient.price}</p>
-      <CurrencyIcon type="primary" />
+const Ingredient = ({ ingredient }: IngredientProps) => {
+  const [openModal, setOpenModal] = useState(false);
+  const toggleOpen = () => {
+    setOpenModal(!openModal);
+  };
+  const modal = (
+    <Modal header="Детали ингредиента" onClose={toggleOpen}>
+      {ingredient.name}
+    </Modal>
+  );
+
+  return (
+    <div
+      className={burgerIngredientsStyles.ingredient + " pt-8 pl-4"}
+      onClick={toggleOpen}
+    >
+      <img src={ingredient.image} />
+      <div className="pt-1">
+        <p className="text text_type_digits-default pr-1">{ingredient.price}</p>
+        <CurrencyIcon type="primary" />
+      </div>
+      <p className="text text_type_main-default pt-1">{ingredient.name}</p>
+      {openModal && modal}
     </div>
-    <p className="text text_type_main-default pt-1">{ingredient.name}</p>
-  </div>
-);
+  );
+};
 
 const IngredientsCategory = ({
   title,
@@ -32,7 +49,7 @@ const IngredientsCategory = ({
       <p className="text text_type_main-medium">{title}</p>
       <div className={burgerIngredientsStyles.ingredients}>
         {filtered.map((value) => (
-          <Ingredient ingredient={value} />
+          <Ingredient key={value._id} ingredient={value} />
         ))}
       </div>
     </div>

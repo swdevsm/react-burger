@@ -1,0 +1,24 @@
+.box {
+  flex-flow: column;
+  justify-content: flex-start;
+  width: 720px;
+  height: auto;
+  background-color: rgba(76, 76, 255, 0.2);
+  border: 1px solid rgba(28, 28, 33, 1);
+  border-radius: 40px;
+  position: fixed;
+  top: 30%;
+}
+
+.header {
+  flex-flow: row;
+}
+
+.headerText {
+  flex-grow: 3;
+}
+
+.headerIcon {
+  flex-grow: 1;
+  justify-content: right;
+}
