@@ -55,18 +55,20 @@ const IngredientsCategory = ({
 const BurgerIngredients = ({ data }: BurgerIngredientsProps) => {
   const [current, setCurrent] = useState("bun");
   return (
-    <div className={burgerIngredientsStyles.box}>
-      <p className="text text_type_main-large pt-10">Соберите бургер</p>
-      <div className="pt-5">
-        <Tab value="bun" active={current === "bun"} onClick={setCurrent}>
-          Булки
-        </Tab>
-        <Tab value="sauce" active={current === "sauce"} onClick={setCurrent}>
-          Соусы
-        </Tab>
-        <Tab value="main" active={current === "main"} onClick={setCurrent}>
-          Начинки
-        </Tab>
+    <div className={burgerIngredientsStyles.column}>
+      <div className={burgerIngredientsStyles.box}>
+        <p className="text text_type_main-large pt-10">Соберите бургер</p>
+        <div className="pt-5">
+          <Tab value="bun" active={current === "bun"} onClick={setCurrent}>
+            Булки
+          </Tab>
+          <Tab value="sauce" active={current === "sauce"} onClick={setCurrent}>
+            Соусы
+          </Tab>
+          <Tab value="main" active={current === "main"} onClick={setCurrent}>
+            Начинки
+          </Tab>
+        </div>
       </div>
       <div className={burgerIngredientsStyles.scroll}>
         <IngredientsCategory title="Булки" type="bun" data={data} />

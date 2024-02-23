@@ -30,19 +30,20 @@ const App = () => {
 
   const errorMessage = <>Something going wrong, try later</>;
   return (
-    <div className={appStyles.container}>
-      {/* <div className={appStyles.element} id="one"></div> */}
-      <div className={appStyles.nav}>
+    <div className={appStyles.column}>
+      <div className={appStyles.row}>
         <AppHeader />
       </div>
-      <div className={appStyles.aside}>
-        {data.length > 0 ? <BurgerIngredients data={data} /> : errorMessage}
+      <div className={appStyles.row}>
+        <div className={appStyles.row}>
+          <div className={appStyles.row + "pl-10 ml-10"}></div>
+          {data.length > 0 ? <BurgerIngredients data={data} /> : errorMessage}
+        </div>
+        <div className={appStyles.row}>
+          {data.length > 0 ? <BurgerConstructor data={data} /> : errorMessage}
+        </div>
+        <div className={appStyles.row + "pr-10 mr-10"}></div>
       </div>
-      <div className={appStyles.content}>
-        {data.length > 0 ? <BurgerConstructor data={data} /> : errorMessage}
-      </div>
-      {/* <div className={appStyles.section}>Section</div> */}
-      {/* <div className={appStyles.footer}>Footer</div> */}
     </div>
   );
 };

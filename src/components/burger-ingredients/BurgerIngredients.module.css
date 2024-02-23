@@ -1,6 +1,11 @@
+.column {
+  flex-flow: column;
+}
+
 .box {
   flex-flow: column;
-  justify-content: start;
+  justify-content: center;
+  height: fit-content;
 }
 
 .categoryBox {

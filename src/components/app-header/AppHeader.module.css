@@ -8,4 +8,5 @@
 
 .headerLogo {
   flex-grow: 10;
+  justify-content: center;
 }
