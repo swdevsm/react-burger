@@ -7,9 +7,14 @@ import {
 import { BurgerConstructorProps } from "./BurgerConstructor.types";
 import burgerConstructorStyles from "./BurgerConstructor.module.css";
 import { useState } from "react";
+import useModal from "../../hooks/modal.hook";
 
 const BurgerConstructor = ({ data }: BurgerConstructorProps) => {
   const [total] = useState(610);
+  const totalDetails = <>{total}</>;
+  const { openModal, toggleOpen, modal } = useModal({
+    details: totalDetails,
+  });
   return (
     <div className={burgerConstructorStyles.box + " pt-25"}>
       <div className="pt-4">
@@ -71,11 +76,17 @@ const BurgerConstructor = ({ data }: BurgerConstructorProps) => {
           <CurrencyIcon type="primary" />
         </div>
         <div className="pl-10">
-          <Button htmlType="button" type="primary" size="large">
+          <Button
+            htmlType="button"
+            type="primary"
+            size="large"
+            onClick={toggleOpen}
+          >
             Оформить заказ
           </Button>
         </div>
       </div>
+      {openModal && modal}
     </div>
   );
 };

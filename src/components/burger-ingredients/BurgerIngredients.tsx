@@ -9,19 +9,14 @@ import {
   IngredientProps,
   IngredientsCategoryProps,
 } from "./BurgerIngredients.types";
-import Modal from "../modal/Modal";
+import useModal from "../../hooks/modal.hook";
 
 const Ingredient = ({ ingredient }: IngredientProps) => {
-  const [openModal, setOpenModal] = useState(false);
-  const toggleOpen = () => {
-    setOpenModal(!openModal);
-  };
-  const modal = (
-    <Modal header="Детали ингредиента" onClose={toggleOpen}>
-      {ingredient.name}
-    </Modal>
-  );
-
+  const ingredientDetails = <>{ingredient.name}</>;
+  const { openModal, toggleOpen, modal } = useModal({
+    header: "Детали ингредиента",
+    details: ingredientDetails,
+  });
   return (
     <div
       className={burgerIngredientsStyles.ingredient + " pt-8 pl-4"}
