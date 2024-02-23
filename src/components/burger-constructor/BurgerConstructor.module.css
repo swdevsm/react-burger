@@ -1,33 +1,20 @@
-.box {
-  flex-flow: column;
-  justify-content: start;
-  height: 100%;
-}
-
-.list {
-  flex-flow: column;
-  height: 15%;
-  overflow-y: scroll;
-  justify-content: start;
-}
-
-.totalBox {
+.center {
   justify-content: center;
 }
+.scroll {
+  height: 100vh;
+  overflow: auto;
+}
 
-.dragIcon {
+.align {
   align-self: center;
+}
+
+.right {
+  justify-content: right;
 }
 
 .emptyDragIcon {
   width: 24px;
   height: 24px;
-}
-
-.total {
-  align-self: center;
-}
-
-.totalIcon {
-  align-self: center;
 }

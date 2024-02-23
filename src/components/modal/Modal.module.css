@@ -11,19 +11,12 @@
   left: calc((100% / 2) - 100% / 4);
 }
 
-.children {
+.center {
   justify-content: center;
 }
 
-.header {
-  flex-flow: row;
-}
-
-.headerText {
-  flex-grow: 3;
-}
-
 .headerIcon {
-  flex-grow: 1;
+  align-self: center;
   justify-content: right;
+  flex-grow: 1;
 }

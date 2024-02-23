@@ -1,4 +1,6 @@
 import { IngredientProps } from "../burger-ingredients/BurgerIngredients.types";
+import Col from "../col/Col";
+import Container from "../container/Container";
 import ingredientDetailsStyles from "./IngredientDetails.module.css";
 
 interface IngredientDetailsItemProps {
@@ -11,30 +13,44 @@ const IngredientDetailsItem = ({
   value,
 }: IngredientDetailsItemProps) => {
   return (
-    <div className={ingredientDetailsStyles.detailsItems + " pl-5"}>
-      <div className={ingredientDetailsStyles.detailsItem}>
-        <p className="text text_type_main-default text_color_inactive">
-          {label}
-        </p>
-      </div>
-      <div className={ingredientDetailsStyles.detailsItem + " pt-2"}>
-        <p className="text text_type_digits-default text_color_inactive">
-          {value}
-        </p>
-      </div>
-    </div>
+    <Container extraClass={ingredientDetailsStyles.center + " pl-5"}>
+      <Col w={6}>
+        <Container extraClass={ingredientDetailsStyles.center}>
+          <p className="text text_type_main-default text_color_inactive">
+            {label}
+          </p>
+        </Container>
+      </Col>
+      <Col extraClass={"pt-2"}>
+        <Container extraClass={ingredientDetailsStyles.center}>
+          <p className="text text_type_digits-default text_color_inactive">
+            {value}
+          </p>
+        </Container>
+      </Col>
+    </Container>
   );
 };
 
 const IngredientDetails = ({ ingredient }: IngredientProps) => {
   return (
-    <div className={ingredientDetailsStyles.box}>
-      <img src={ingredient.image_large} />
-      <div className={ingredientDetailsStyles.box}>
-        <div className={ingredientDetailsStyles.name}>
+    <Container>
+      <Col w={6}>
+        <Container extraClass={ingredientDetailsStyles.center}>
+          <img src={ingredient.image_large} />
+        </Container>
+      </Col>
+
+      <Col w={6}>
+        <Container extraClass={ingredientDetailsStyles.center}>
           <p className="text text_type_main-medium">{ingredient.name}</p>
-        </div>
-        <div className={ingredientDetailsStyles.details + " pt-8 pb-10 mb-5"}>
+        </Container>
+      </Col>
+
+      <Col w={6}>
+        <Container
+          extraClass={ingredientDetailsStyles.center + " pt-8 pb-10 mb-5"}
+        >
           <IngredientDetailsItem
             label="Калории,ккал"
             value={ingredient.calories}
@@ -45,9 +61,9 @@ const IngredientDetails = ({ ingredient }: IngredientProps) => {
             label="Углеводы, г"
             value={ingredient.carbohydrates}
           />
-        </div>
-      </div>
-    </div>
+        </Container>
+      </Col>
+    </Container>
   );
 };
 

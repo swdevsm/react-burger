@@ -4,6 +4,8 @@ import BurgerConstructor from "../burger-constructor/BurgerConstructor.tsx";
 import BurgerIngredients from "../burger-ingredients/BurgerIngredients.tsx";
 import appStyles from "./App.module.css";
 import { ApiData } from "../../ApiData.types.ts";
+import Container from "../container/Container.tsx";
+import Col from "../col/Col.tsx";
 
 const App = () => {
   const [data, setData] = useState<ApiData[]>([]);
@@ -28,22 +30,47 @@ const App = () => {
     load();
   }, []);
 
-  const errorMessage = <>Something going wrong, try later</>;
+  const errorMessage = <>Something wrong, try later</>;
   return (
-    <div className={appStyles.column}>
-      <div className={appStyles.row}>
-        <AppHeader />
-      </div>
-      <div className={appStyles.row}>
-        <div className={appStyles.row}>
-          <div className={appStyles.row + "pl-10 ml-10"}></div>
-          {data.length > 0 ? <BurgerIngredients data={data} /> : errorMessage}
+    <div>
+      {/* // for debug
+       <Container>
+        <div className={commonStyles.col2} style={{ background: "blue" }}>
+          <p>Contents of first col</p>
         </div>
-        <div className={appStyles.row}>
-          {data.length > 0 ? <BurgerConstructor data={data} /> : errorMessage}
+        <div className={commonStyles.col3} style={{ background: "red" }}>
+          <p>Contents of second col</p>
         </div>
-        <div className={appStyles.row + "pr-10 mr-10"}></div>
-      </div>
+        <div className={commonStyles.col1} style={{ background: "green" }}>
+          <p>Contents of third col</p>
+        </div>
+        <div className={commonStyles.col5} style={{ background: "purple" }}>
+          <p>Contents of fourth col</p>
+        </div>
+        <div className={commonStyles.col6} style={{ background: "orange" }}>
+          <p>Contents of fifth col</p>
+        </div>
+      </Container> */}
+
+      <Container extraClass={appStyles.center}>
+        <Col w={6}>
+          <AppHeader />
+        </Col>
+        <Col w={6}>
+          {data.length > 0 && (
+            <Container extraClass={appStyles.center}>
+              <Col w={3} extraClass={appStyles.center}>
+                <BurgerIngredients data={data} />
+              </Col>
+
+              <Col w={3} extraClass={appStyles.center + " pl-10"}>
+                <BurgerConstructor data={data} />
+              </Col>
+            </Container>
+          )}
+          {(!data || data.length === 0) && errorMessage}
+        </Col>
+      </Container>
     </div>
   );
 };

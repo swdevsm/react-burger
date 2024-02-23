@@ -4,6 +4,8 @@ import modalStyles from "./Modal.module.css";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import ModalOverlay from "../modal-overlay/ModalOverlay";
 import { useEffect } from "react";
+import Col from "../col/Col";
+import Container from "../container/Container";
 
 const modalRoot = document.getElementById("react-modals")!;
 
@@ -21,27 +23,32 @@ const Modal = ({ children, header, onClose }: ModalProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return ReactDOM.createPortal(
-    <div>
+  const modalElement = (
+    <Container>
       <div className={modalStyles.box}>
-        <div className={modalStyles.header + " pt-10 pl-10 pr-10"}>
-          {header && (
-            <p
-              className={modalStyles.headerText + " text text_type_main-large"}
-            >
-              {header}
-            </p>
-          )}
-          <div className={modalStyles.headerIcon}>
-            <CloseIcon type="primary" onClick={onClose} />
-          </div>
-        </div>
-        <div className={modalStyles.children}>{children}</div>
+        <Col w={6}>
+          <Container extraClass="pt-10 pl-10 pr-10">
+            {/* <Col w={4}> */}
+              {header && (
+                <p className={"text text_type_main-large"}>{header}</p>
+              )}
+            {/* </Col> */}
+
+            {/* <Col w={1}> */}
+              <Container extraClass={modalStyles.headerIcon}>
+                <CloseIcon type="primary" onClick={onClose} />
+              </Container>
+            {/* </Col> */}
+          </Container>
+        </Col>
+
+        <Col w={6}>{children}</Col>
       </div>
       <ModalOverlay onClick={onClose} />
-    </div>,
-    modalRoot
+    </Container>
   );
+
+  return ReactDOM.createPortal(modalElement, modalRoot);
 };
 
 export default Modal;

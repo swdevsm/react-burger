@@ -1,3 +1,6 @@
+.center {
+  justify-content: center;
+}
 .box {
   flex-flow: column;
 }

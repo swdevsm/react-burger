@@ -11,6 +11,8 @@ import {
 } from "./BurgerIngredients.types";
 import useModal from "../../hooks/modal.hook";
 import IngredientDetails from "../ingredient-details/IngredientDetails";
+import Container from "../container/Container";
+import Col from "../col/Col";
 
 const Ingredient = ({ ingredient }: IngredientProps) => {
   const ingredientDetails = <IngredientDetails ingredient={ingredient} />;
@@ -19,17 +21,20 @@ const Ingredient = ({ ingredient }: IngredientProps) => {
     details: ingredientDetails,
   });
   return (
-    <div
-      className={burgerIngredientsStyles.ingredient + " pt-8 pl-4"}
-      onClick={toggleOpen}
-    >
-      <img src={ingredient.image} />
-      <div className="pt-1">
-        <p className="text text_type_digits-default pr-1">{ingredient.price}</p>
-        <CurrencyIcon type="primary" />
-      </div>
-      <p className="text text_type_main-default pt-1">{ingredient.name}</p>
-      {openModal && modal}
+    <div onClick={toggleOpen}>
+      <Container extraClass={burgerIngredientsStyles.center + " pt-6 pl-4"}>
+        <img src={ingredient.image} />
+
+        <Container extraClass={burgerIngredientsStyles.center}>
+          <p className="text text_type_digits-default pr-1 pt-1">
+            {ingredient.price}
+          </p>
+          <CurrencyIcon type="primary" />
+        </Container>
+
+        <p className="text text_type_main-default pt-1">{ingredient.name}</p>
+        {openModal && modal}
+      </Container>
     </div>
   );
 };
@@ -41,41 +46,63 @@ const IngredientsCategory = ({
 }: IngredientsCategoryProps) => {
   const filtered = data.filter((value) => value.type === type);
   return (
-    <div className={burgerIngredientsStyles.categoryBox + " p-10"}>
-      <p className="text text_type_main-medium">{title}</p>
-      <div className={burgerIngredientsStyles.ingredients}>
+    <Col w={6} extraClass="pt-10">
+      <Container extraClass={burgerIngredientsStyles.center}>
+        <Col w={6}>
+          <p className="text text_type_main-medium">{title}</p>
+        </Col>
         {filtered.map((value) => (
-          <Ingredient key={value._id} ingredient={value} />
+          <Col w={3}>
+            <Ingredient key={value._id} ingredient={value} />
+          </Col>
         ))}
-      </div>
-    </div>
+      </Container>
+    </Col>
   );
 };
 
 const BurgerIngredients = ({ data }: BurgerIngredientsProps) => {
   const [current, setCurrent] = useState("bun");
   return (
-    <div className={burgerIngredientsStyles.column}>
-      <div className={burgerIngredientsStyles.box}>
+    <Container>
+      <Col w={6}>
         <p className="text text_type_main-large pt-10">Соберите бургер</p>
-        <div className="pt-5">
-          <Tab value="bun" active={current === "bun"} onClick={setCurrent}>
-            Булки
-          </Tab>
-          <Tab value="sauce" active={current === "sauce"} onClick={setCurrent}>
-            Соусы
-          </Tab>
-          <Tab value="main" active={current === "main"} onClick={setCurrent}>
-            Начинки
-          </Tab>
-        </div>
-      </div>
-      <div className={burgerIngredientsStyles.scroll}>
-        <IngredientsCategory title="Булки" type="bun" data={data} />
-        <IngredientsCategory title="Соусы" type="sauce" data={data} />
-        <IngredientsCategory title="Начинки" type="main" data={data} />
-      </div>
-    </div>
+
+        <Container extraClass={burgerIngredientsStyles.center + " pt-5"}>
+          <Col w={2}>
+            <Tab value="bun" active={current === "bun"} onClick={setCurrent}>
+              Булки
+            </Tab>
+          </Col>
+
+          <Col w={2}>
+            <Tab
+              value="sauce"
+              active={current === "sauce"}
+              onClick={setCurrent}
+            >
+              Соусы
+            </Tab>
+          </Col>
+
+          <Col w={2}>
+            <Tab value="main" active={current === "main"} onClick={setCurrent}>
+              Начинки
+            </Tab>
+          </Col>
+        </Container>
+
+        <Container>
+          <Col w={6}>
+            <Container extraClass={burgerIngredientsStyles.scroll}>
+              <IngredientsCategory title="Булки" type="bun" data={data} />
+              <IngredientsCategory title="Соусы" type="sauce" data={data} />
+              <IngredientsCategory title="Начинки" type="main" data={data} />
+            </Container>
+          </Col>
+        </Container>
+      </Col>
+    </Container>
   );
 };
 

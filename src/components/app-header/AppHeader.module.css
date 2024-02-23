@@ -1,12 +1,7 @@
-.headerBox {
-  width: 100%;
-}
-
-.headerItem {
-  flex-grow: 1;
-}
-
-.headerLogo {
-  flex-grow: 10;
+.center {
   justify-content: center;
+}
+
+.right {
+  justify-content: right;
 }

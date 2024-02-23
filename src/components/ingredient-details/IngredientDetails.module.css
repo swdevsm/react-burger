@@ -1,16 +1,7 @@
-.box {
-  flex-flow: column;
-}
-.name {
+.center {
   justify-content: center;
 }
-.details {
-  flex-flow: row;
-}
+
 .detailsItems {
-  flex-flow: column;
   width: 112px;
-}
-.detailsItem {
-  justify-content: center;
 }
