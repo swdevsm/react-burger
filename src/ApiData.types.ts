@@ -12,3 +12,8 @@ export type ApiData = {
   image_large: string;
   __v: number;
 };
+
+export type ApiDataResponce = {
+    data: ApiData[];
+    success: boolean;
+}
