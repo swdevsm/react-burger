@@ -27,7 +27,7 @@ const Modal = ({ children, header, onClose }: ModalProps) => {
         <div className={modalStyles.header + " pt-10 pl-10 pr-10"}>
           {header && (
             <p
-              className={modalStyles.headerText + " text text_type_main-medium"}
+              className={modalStyles.headerText + " text text_type_main-large"}
             >
               {header}
             </p>

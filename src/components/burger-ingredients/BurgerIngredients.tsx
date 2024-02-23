@@ -10,9 +10,10 @@ import {
   IngredientsCategoryProps,
 } from "./BurgerIngredients.types";
 import useModal from "../../hooks/modal.hook";
+import IngredientDetails from "../ingredient-details/IngredientDetails";
 
 const Ingredient = ({ ingredient }: IngredientProps) => {
-  const ingredientDetails = <>{ingredient.name}</>;
+  const ingredientDetails = <IngredientDetails ingredient={ingredient} />;
   const { openModal, toggleOpen, modal } = useModal({
     header: "Детали ингредиента",
     details: ingredientDetails,
