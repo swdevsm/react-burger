@@ -8,12 +8,18 @@ import { useEffect } from "react";
 const modalRoot = document.getElementById("react-modals")!;
 
 const Modal = ({ children, header, onClose }: ModalProps) => {
+  const escFunction = (event: KeyboardEvent) => {
+    if (event.key === "Escape") {
+      onClose();
+    }
+  };
   useEffect(function handleEscKey() {
-    document.addEventListener("keydown", onClose, false);
+    document.addEventListener("keydown", escFunction, false);
     return () => {
-      document.removeEventListener("keydown", onClose, false);
+      document.removeEventListener("keydown", escFunction, false);
     };
   }, []);
+
   return ReactDOM.createPortal(
     <div className={modalStyles.box}>
       <div className={modalStyles.header + " pt-10 pl-10 pr-10"}>

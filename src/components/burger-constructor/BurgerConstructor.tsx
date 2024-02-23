@@ -8,10 +8,18 @@ import { BurgerConstructorProps } from "./BurgerConstructor.types";
 import burgerConstructorStyles from "./BurgerConstructor.module.css";
 import { useState } from "react";
 import useModal from "../../hooks/modal.hook";
+import OrderDetails from "../order-details/OrderDetails";
 
 const BurgerConstructor = ({ data }: BurgerConstructorProps) => {
   const [total] = useState(610);
-  const totalDetails = <>{total}</>;
+  const totalDetails = (
+    <OrderDetails
+      order={{
+        id: "034536",
+        state: "start",
+      }}
+    />
+  );
   const { openModal, toggleOpen, modal } = useModal({
     details: totalDetails,
   });

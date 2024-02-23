@@ -3,11 +3,11 @@
   justify-content: flex-start;
   width: 720px;
   height: auto;
-  background-color: rgba(28, 28, 33, 1);
+  background-color: #131316;
   border: 1px solid rgba(76, 76, 255, 0.2);
   border-radius: 40px;
   position: fixed;
-  top: 30%;
+  top: 10%;
 }
 
 .header {

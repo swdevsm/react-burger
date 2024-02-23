@@ -1,0 +1,15 @@
+.box {
+  flex-flow: column;
+}
+
+.message {
+  justify-content: center;
+}
+
+.imageBox {
+  justify-content: center;
+}
+
+.image {
+  width: 120px;
+}
