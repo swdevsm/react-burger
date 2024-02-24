@@ -25,45 +25,43 @@ const BurgerConstructor = ({ data }: BurgerConstructorProps) => {
   const { openModal, toggleOpen, modal } = useModal({
     details: totalDetails,
   });
+  const buns = data.filter((value) => value.type === "bun");
+  const top = buns[0]; // no state yet
+  const bottom = buns[0]; // no state yet
+  const filteredData = data.filter((value) => value.type !== "bun");
   return (
     <Container extraClass={burgerConstructorStyles.center + " pt-25"}>
       <Col w={6}>
         <Container extraClass={burgerConstructorStyles.center}>
           <div className={burgerConstructorStyles.emptyDragIcon} />
           <ConstructorElement
-            key={data[0]._id}
+            key={top._id}
             type={"top"}
             isLocked={true}
-            text={data[0].name}
-            price={data[0].price}
-            thumbnail={data[0].image}
+            text={`${top.name} (верх)`}
+            price={top.price}
+            thumbnail={top.image}
           />
         </Container>
       </Col>
 
       <Container extraClass={burgerConstructorStyles.scroll}>
-        {data.map((value, index) => {
+        {filteredData.map((value) => {
           return (
-            index !== 0 &&
-            index !== data.length - 1 && (
-              <Col w={6}>
-                <Container
-                  extraClass={burgerConstructorStyles.center + " pt-4"}
-                >
-                  <div className={burgerConstructorStyles.align}>
-                    <DragIcon type="primary" />
-                  </div>
+            <Col key={value._id} w={6}>
+              <Container extraClass={burgerConstructorStyles.center + " pt-4"}>
+                <div className={burgerConstructorStyles.align}>
+                  <DragIcon type="primary" />
+                </div>
 
-                  <ConstructorElement
-                    key={value._id}
-                    isLocked={false}
-                    text={value.name}
-                    price={value.price}
-                    thumbnail={value.image}
-                  />
-                </Container>
-              </Col>
-            )
+                <ConstructorElement
+                  isLocked={false}
+                  text={value.name}
+                  price={value.price}
+                  thumbnail={value.image}
+                />
+              </Container>
+            </Col>
           );
         })}
       </Container>
@@ -72,12 +70,12 @@ const BurgerConstructor = ({ data }: BurgerConstructorProps) => {
         <Container extraClass={burgerConstructorStyles.center + " pt-4"}>
           <div className={burgerConstructorStyles.emptyDragIcon} />
           <ConstructorElement
-            key={data[data.length - 1]._id}
+            key={bottom._id}
             type={"bottom"}
             isLocked={true}
-            text={data[data.length - 1].name}
-            price={data[data.length - 1].price}
-            thumbnail={data[data.length - 1].image}
+            text={`${bottom.name} (низ)`}
+            price={bottom.price}
+            thumbnail={bottom.image}
           />
         </Container>
       </Col>

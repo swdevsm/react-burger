@@ -54,8 +54,8 @@ const IngredientsCategory = ({
           <p className="text text_type_main-medium">{title}</p>
         </Col>
         {filtered.map((value) => (
-          <Col w={3}>
-            <Ingredient key={value._id} ingredient={value} />
+          <Col key={value._id} w={3}>
+            <Ingredient ingredient={value} />
           </Col>
         ))}
       </Container>
