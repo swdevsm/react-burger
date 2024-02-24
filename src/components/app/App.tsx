@@ -52,21 +52,25 @@ const App = () => {
 
       <Container extraClass={appStyles.center}>
         <Col w={6}>
-          <AppHeader />
+          <header>
+            <AppHeader />
+          </header>
         </Col>
         <Col w={6}>
-          {data.length > 0 && (
-            <Container extraClass={appStyles.center}>
-              <Col w={3} extraClass={appStyles.center}>
-                <BurgerIngredients data={data} />
-              </Col>
+          <main>
+            {data.length > 0 && (
+              <Container extraClass={appStyles.center}>
+                <Col w={3} extraClass={appStyles.center}>
+                  <BurgerIngredients data={data} />
+                </Col>
 
-              <Col w={3} extraClass={appStyles.center + " pl-10"}>
-                <BurgerConstructor data={data} />
-              </Col>
-            </Container>
-          )}
-          {(!data || data.length === 0) && errorMessage}
+                <Col w={3} extraClass={appStyles.center + " pl-10"}>
+                  <BurgerConstructor data={data} />
+                </Col>
+              </Container>
+            )}
+            {(!data || data.length === 0) && errorMessage}
+          </main>
         </Col>
       </Container>
     </div>
