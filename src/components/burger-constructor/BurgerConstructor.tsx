@@ -45,10 +45,10 @@ const BurgerConstructor = ({ data }: BurgerConstructorProps) => {
         </Container>
       </Col>
 
-      <Container extraClass={burgerConstructorStyles.scroll}>
-        {filteredData.map((value) => {
-          return (
-            <Col key={value._id} w={6}>
+      <Container>
+        <ul className={burgerConstructorStyles.scroll}>
+          {filteredData.map((value) => (
+            <li key={value._id}>
               <Container extraClass={burgerConstructorStyles.center + " pt-4"}>
                 <div className={burgerConstructorStyles.align}>
                   <DragIcon type="primary" />
@@ -61,9 +61,9 @@ const BurgerConstructor = ({ data }: BurgerConstructorProps) => {
                   thumbnail={value.image}
                 />
               </Container>
-            </Col>
-          );
-        })}
+            </li>
+          ))}
+        </ul>
       </Container>
 
       <Col w={6}>
@@ -89,6 +89,7 @@ const BurgerConstructor = ({ data }: BurgerConstructorProps) => {
             <CurrencyIcon type="primary" />
           </div>
           <div className="pl-10">
+            {/* fixme: refactor to <button> ? */}
             <Button
               htmlType="button"
               type="primary"

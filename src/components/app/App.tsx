@@ -28,7 +28,12 @@ const App = () => {
     load();
   }, []);
 
-  const errorMessage = <>Something wrong, try later</>;
+  const errorMessage = (
+    <p className="text text_type_main-medium text_color_inactive">
+      Loading ... Try to update page
+    </p>
+  );
+
   return (
     <div>
       {/* // for debug
@@ -69,7 +74,11 @@ const App = () => {
                 </Col>
               </Container>
             )}
-            {(!data || data.length === 0) && errorMessage}
+            {(!data || data.length === 0) && (
+              <Container extraClass={appStyles.center}>
+                {errorMessage}
+              </Container>
+            )}
           </main>
         </Col>
       </Container>

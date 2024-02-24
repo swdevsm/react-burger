@@ -12,19 +12,23 @@ const AppHeader = () => {
   return (
     <Container extraClass={appHeaderStyles.center}>
       <Col w={2}>
-        <Container extraClass={appHeaderStyles.center}>
-          <Container extraClass="p-5">
-            <BurgerIcon type="primary" />
-            <p className="text text_type_main-default pl-2">Конструктор</p>
+        <nav>
+          <Container extraClass={appHeaderStyles.center}>
+            <Container extraClass="p-5">
+              {/* fixme: refactor to <button> ? */}
+              <BurgerIcon type="primary" />
+              <p className="text text_type_main-default pl-2">Конструктор</p>
+            </Container>
+            <Container extraClass="p-5 ml-2">
+              {/* fixme: refactor to <button> ? */}
+              <ListIcon type="secondary" />
+              <div className="p-1" />
+              <p className="text text_type_main-default text_color_inactive">
+                Лента заказов
+              </p>
+            </Container>
           </Container>
-          <Container extraClass="p-5 ml-2">
-            <ListIcon type="secondary" />
-            <div className="p-1" />
-            <p className="text text_type_main-default text_color_inactive">
-              Лента заказов
-            </p>
-          </Container>
-        </Container>
+        </nav>
       </Col>
 
       <Col w={2}>
@@ -35,6 +39,7 @@ const AppHeader = () => {
 
       <Col w={2}>
         <Container extraClass={appHeaderStyles.right + " p-5"}>
+          {/* fixme: refactor to <button> ? */}
           <ProfileIcon type="secondary" />
           <p className="text text_type_main-default text_color_inactive pl-1">
             Личный кабинет

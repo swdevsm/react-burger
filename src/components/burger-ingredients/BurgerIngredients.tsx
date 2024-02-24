@@ -58,11 +58,17 @@ const IngredientsCategory = ({
         <Col w={6}>
           <p className="text text_type_main-medium">{title}</p>
         </Col>
-        {filtered.map((value) => (
-          <Col key={value._id} w={3}>
-            <Ingredient ingredient={value} />
-          </Col>
-        ))}
+        <ul>
+          <Container extraClass={burgerIngredientsStyles.center}>
+            {filtered.map((value) => (
+              <Col key={value._id} w={3}>
+                <li>
+                  <Ingredient ingredient={value} />
+                </li>
+              </Col>
+            ))}
+          </Container>
+        </ul>
       </Container>
     </Col>
   );
@@ -110,9 +116,21 @@ const BurgerIngredients = ({ data }: BurgerIngredientsProps) => {
         <Container>
           <Col w={6}>
             <Container extraClass={burgerIngredientsStyles.scroll}>
-              <IngredientsCategory title="Булки" type="bun" data={data} />
-              <IngredientsCategory title="Соусы" type="sauce" data={data} />
-              <IngredientsCategory title="Начинки" type="main" data={data} />
+              <ul>
+                <li>
+                  <IngredientsCategory title="Булки" type="bun" data={data} />
+                </li>
+                <li>
+                  <IngredientsCategory title="Соусы" type="sauce" data={data} />
+                </li>
+                <li>
+                  <IngredientsCategory
+                    title="Начинки"
+                    type="main"
+                    data={data}
+                  />
+                </li>
+              </ul>
             </Container>
           </Col>
         </Container>
