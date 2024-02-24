@@ -3,6 +3,7 @@ import orderDetailsStyles from "./OrderDetails.module.css";
 import done from "../../images/done.png";
 import Container from "../container/Container";
 import Col from "../col/Col";
+import styles from "../../index.module.css";
 
 const OrderDetails = ({ order }: OrderDetailsProps) => {
   const orderId = <p className="text text_type_digits-large">{order.id}</p>;
@@ -20,29 +21,29 @@ const OrderDetails = ({ order }: OrderDetailsProps) => {
   return (
     <Container>
       <Col w={6}>
-        <Container extraClass={orderDetailsStyles.center}>{orderId}</Container>
+        <Container extraClass={styles.center}>{orderId}</Container>
       </Col>
 
       <Col w={6}>
-        <Container extraClass={orderDetailsStyles.center + " pt-8"}>
+        <Container extraClass={styles.center + " pt-8"}>
           {orderIdMessage}
         </Container>
       </Col>
 
       <Col w={6}>
-        <Container extraClass={orderDetailsStyles.center + " pt-10 mt-5"}>
+        <Container extraClass={styles.center + " pt-10 mt-5"}>
           <img className={orderDetailsStyles.image} src={done} alt="Logo" />
         </Container>
       </Col>
 
       <Col w={6}>
-        <Container extraClass={orderDetailsStyles.center + " pt-10 mt-5"}>
+        <Container extraClass={styles.center + " pt-10 mt-5"}>
           {startMessage}
         </Container>
       </Col>
 
       <Col w={6}>
-        <Container extraClass={orderDetailsStyles.center + " pt-2 pb-10 mb-5"}>
+        <Container extraClass={styles.center + " pt-2 pb-10 mb-5"}>
           {waitMessage}
         </Container>
       </Col>

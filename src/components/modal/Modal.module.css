@@ -11,10 +11,6 @@
   z-index: 1;
 }
 
-.center {
-  justify-content: center;
-}
-
 .headerIcon {
   align-self: center;
   justify-content: right;

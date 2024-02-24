@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import commonStyles from "../../index.module.css";
+import styles from "../../index.module.css";
 import { LayoutProps } from "./Layout.types";
 
 const Container = ({
@@ -8,7 +8,7 @@ const Container = ({
 }: PropsWithChildren<LayoutProps>) => {
   const innerExtraClass = extraClass ? " " + extraClass : "";
   return (
-    <div className={`${commonStyles.container}${innerExtraClass}`}>
+    <div className={`${styles.container}${innerExtraClass}`}>
       {children}
     </div>
   );

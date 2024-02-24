@@ -4,16 +4,16 @@ import {
   Logo,
   ProfileIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import appHeaderStyles from "./AppHeader.module.css";
 import Container from "../container/Container";
 import Col from "../col/Col";
+import styles from "../../index.module.css";
 
 const AppHeader = () => {
   return (
-    <Container extraClass={appHeaderStyles.center}>
+    <Container extraClass={styles.center}>
       <Col w={2}>
         <nav>
-          <Container extraClass={appHeaderStyles.center}>
+          <Container extraClass={styles.center}>
             <Container extraClass="p-5">
               {/* fixme: refactor to <button> ? */}
               <BurgerIcon type="primary" />
@@ -32,13 +32,13 @@ const AppHeader = () => {
       </Col>
 
       <Col w={2}>
-        <Container extraClass={appHeaderStyles.center + " p-2"}>
+        <Container extraClass={styles.center + " p-2"}>
           <Logo />
         </Container>
       </Col>
 
       <Col w={2}>
-        <Container extraClass={appHeaderStyles.right + " p-5"}>
+        <Container extraClass={styles.right + " p-5"}>
           {/* fixme: refactor to <button> ? */}
           <ProfileIcon type="secondary" />
           <p className="text text_type_main-default text_color_inactive pl-1">

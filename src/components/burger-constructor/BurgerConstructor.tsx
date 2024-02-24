@@ -11,6 +11,7 @@ import useModal from "../../hooks/modal.hook";
 import OrderDetails from "../order-details/OrderDetails";
 import Container from "../container/Container";
 import Col from "../col/Col";
+import styles from "../../index.module.css";
 
 const BurgerConstructor = ({ data }: BurgerConstructorProps) => {
   const [total] = useState(610);
@@ -30,9 +31,9 @@ const BurgerConstructor = ({ data }: BurgerConstructorProps) => {
   const bottom = buns[0]; // no state yet
   const filteredData = data.filter((value) => value.type !== "bun");
   return (
-    <Container extraClass={burgerConstructorStyles.center + " pt-25"}>
+    <Container extraClass={styles.center + " pt-25"}>
       <Col w={6}>
-        <Container extraClass={burgerConstructorStyles.center}>
+        <Container extraClass={styles.center}>
           <div className={burgerConstructorStyles.emptyDragIcon} />
           <ConstructorElement
             key={top._id}
@@ -46,11 +47,11 @@ const BurgerConstructor = ({ data }: BurgerConstructorProps) => {
       </Col>
 
       <Container>
-        <ul className={burgerConstructorStyles.scroll}>
+        <ul className={styles.scroll}>
           {filteredData.map((value) => (
             <li key={value._id}>
-              <Container extraClass={burgerConstructorStyles.center + " pt-4"}>
-                <div className={burgerConstructorStyles.align}>
+              <Container extraClass={styles.center + " pt-4"}>
+                <div className={styles.align}>
                   <DragIcon type="primary" />
                 </div>
 
@@ -67,7 +68,7 @@ const BurgerConstructor = ({ data }: BurgerConstructorProps) => {
       </Container>
 
       <Col w={6}>
-        <Container extraClass={burgerConstructorStyles.center + " pt-4"}>
+        <Container extraClass={styles.center + " pt-4"}>
           <div className={burgerConstructorStyles.emptyDragIcon} />
           <ConstructorElement
             key={bottom._id}
@@ -81,14 +82,12 @@ const BurgerConstructor = ({ data }: BurgerConstructorProps) => {
       </Col>
 
       <Col w={6}>
-        <Container extraClass={burgerConstructorStyles.right + " pt-10"}>
-          <div className={burgerConstructorStyles.total}>
-            <p className="text text_type_digits-medium">{total}</p>
-          </div>
-          <div className={burgerConstructorStyles.totalIcon + " pl-4"}>
+        <Container extraClass={styles.right + " pt-10"}>
+          <p className="text text_type_digits-medium">{total}</p>
+          <div className={"pl-4"}>
             <CurrencyIcon type="primary" />
           </div>
-          <div className="pl-10">
+          <div className="pl-10 pb-10">
             {/* fixme: refactor to <button> ? */}
             <Button
               htmlType="button"

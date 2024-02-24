@@ -3,6 +3,23 @@
   flex-wrap: wrap;
 }
 
+.center {
+  justify-content: center;
+}
+
+.scroll {
+  height: 100vh;
+  overflow: auto;
+}
+
+.align {
+  align-self: center;
+}
+
+.right {
+  justify-content: right;
+}
+
 .col1 {
   flex-basis: 16%;
 }
