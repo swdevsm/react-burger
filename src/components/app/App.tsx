@@ -15,16 +15,14 @@ const App = () => {
       const url = "https://norma.nomoreparties.space/api/ingredients";
       try {
         const res = await fetch(url);
-        const json = await res.json();
-        if (json.success) {
-          setData(json.data);
-        } else {
-          setData([]);
-          // todo: error boundary ?
+        if (!res.ok) {
+          throw new Error("Network response was not OK");
         }
+        const json = await res.json();
+        setData(json.success ? json.data : []);
       } catch (e) {
         setData([]);
-        // todo: error boundary ?
+        console.error("There has been a problem with fetch operation:", e);
       }
     };
     load();
