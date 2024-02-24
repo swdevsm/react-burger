@@ -28,17 +28,11 @@ const Modal = ({ children, header, onClose }: ModalProps) => {
       <div className={modalStyles.box}>
         <Col w={6}>
           <Container extraClass="pt-10 pl-10 pr-10">
-            {/* <Col w={4}> */}
-              {header && (
-                <p className={"text text_type_main-large"}>{header}</p>
-              )}
-            {/* </Col> */}
+            {header && <p className={"text text_type_main-large"}>{header}</p>}
 
-            {/* <Col w={1}> */}
-              <Container extraClass={modalStyles.headerIcon}>
-                <CloseIcon type="primary" onClick={onClose} />
-              </Container>
-            {/* </Col> */}
+            <Container extraClass={modalStyles.headerIcon}>
+              <CloseIcon type="primary" onClick={onClose} />
+            </Container>
           </Container>
         </Col>
 

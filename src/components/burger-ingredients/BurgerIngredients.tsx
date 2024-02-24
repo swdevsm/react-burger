@@ -22,21 +22,26 @@ const Ingredient = ({ ingredient }: IngredientProps) => {
     details: ingredientDetails,
   });
   return (
-    <div onClick={toggleOpen} className={burgerIngredientsStyles.counterParent}>
-      <Container extraClass={burgerIngredientsStyles.center + " pt-6 pl-4"}>
-        <img src={ingredient.image} />
+    <div>
+      <div
+        onClick={toggleOpen}
+        className={burgerIngredientsStyles.counterParent}
+      >
+        <Container extraClass={burgerIngredientsStyles.center + " pt-6 pl-4"}>
+          <img src={ingredient.image} />
 
-        <Container extraClass={burgerIngredientsStyles.center}>
-          <p className="text text_type_digits-default pr-1 pt-1">
-            {ingredient.price}
-          </p>
-          <CurrencyIcon type="primary" />
+          <Container extraClass={burgerIngredientsStyles.center}>
+            <p className="text text_type_digits-default pr-1 pt-1">
+              {ingredient.price}
+            </p>
+            <CurrencyIcon type="primary" />
+          </Container>
+
+          <p className="text text_type_main-default pt-1">{ingredient.name}</p>
         </Container>
-
-        <p className="text text_type_main-default pt-1">{ingredient.name}</p>
-        {openModal && modal}
-      </Container>
-      <Counter count={1} size="default" />
+        <Counter count={1} size="default" />
+      </div>
+      {openModal && modal}
     </div>
   );
 };
@@ -64,7 +69,7 @@ const IngredientsCategory = ({
 };
 
 const BurgerIngredients = ({ data }: BurgerIngredientsProps) => {
-  const [current, setCurrent] = useState("bun");
+  const [currentTab, setCurrentTab] = useState("bun");
   return (
     <Container>
       <Col w={6}>
@@ -72,7 +77,11 @@ const BurgerIngredients = ({ data }: BurgerIngredientsProps) => {
 
         <Container extraClass={burgerIngredientsStyles.center + " pt-5"}>
           <Col w={2}>
-            <Tab value="bun" active={current === "bun"} onClick={setCurrent}>
+            <Tab
+              value="bun"
+              active={currentTab === "bun"}
+              onClick={setCurrentTab}
+            >
               Булки
             </Tab>
           </Col>
@@ -80,15 +89,19 @@ const BurgerIngredients = ({ data }: BurgerIngredientsProps) => {
           <Col w={2}>
             <Tab
               value="sauce"
-              active={current === "sauce"}
-              onClick={setCurrent}
+              active={currentTab === "sauce"}
+              onClick={setCurrentTab}
             >
               Соусы
             </Tab>
           </Col>
 
           <Col w={2}>
-            <Tab value="main" active={current === "main"} onClick={setCurrent}>
+            <Tab
+              value="main"
+              active={currentTab === "main"}
+              onClick={setCurrentTab}
+            >
               Начинки
             </Tab>
           </Col>

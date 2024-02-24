@@ -1,5 +1,4 @@
 .box {
-  flex-flow: column;
   justify-content: center;
   width: 720px;
   height: auto;
@@ -9,6 +8,7 @@
   position: fixed;
   top: 10%;
   left: calc((100% / 2) - 100% / 4);
+  z-index: 1;
 }
 
 .center {
