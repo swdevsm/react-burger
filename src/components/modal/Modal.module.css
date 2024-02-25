@@ -1,0 +1,18 @@
+.box {
+  justify-content: center;
+  width: 720px;
+  height: auto;
+  background-color: rgba(28, 28, 33, 1);
+  border: 1px solid rgba(76, 76, 255, 0.2);
+  border-radius: 40px;
+  position: fixed;
+  top: 10%;
+  left: calc((100% / 2) - 100% / 4);
+  z-index: 1;
+}
+
+.headerIcon {
+  align-self: center;
+  justify-content: right;
+  flex-grow: 1;
+}

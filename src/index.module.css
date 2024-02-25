@@ -1,0 +1,57 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.center {
+  justify-content: center;
+}
+
+.scroll {
+  height: 100vh;
+  overflow: auto;
+}
+
+.align {
+  align-self: center;
+}
+
+.right {
+  justify-content: right;
+}
+
+.col1 {
+  flex-basis: 16%;
+}
+
+.col2 {
+  flex-basis: 32%;
+}
+
+.col3 {
+  flex-basis: 48%;
+}
+
+.col4 {
+  flex-basis: 64%;
+}
+
+.col5 {
+  flex-basis: 80%;
+}
+
+.col6 {
+  flex-basis: 100%;
+}
+
+/*Responsive Cols*/
+@media only screen and (max-width: 500px) {
+  .col1,
+  .col2,
+  .col3,
+  .col4,
+  .col5,
+  .col6 {
+    flex-basis: 100%;
+  }
+}
