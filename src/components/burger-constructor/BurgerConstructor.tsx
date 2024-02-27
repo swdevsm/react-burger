@@ -13,19 +13,45 @@ import Container from "../container/Container";
 import Col from "../col/Col";
 import styles from "../../index.module.css";
 
+const createOrder = async (selectedIngredients: string[]) => {
+  const url = "https://norma.nomoreparties.space/api/orders";
+  try {
+    const res = await fetch(url, {
+      method: "post",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ingredients: selectedIngredients,
+      }),
+    });
+    if (!res.ok) {
+      throw new Error("Network response was not OK");
+    }
+    const json = await res.json();
+    return json.success ? json.order?.number : null;
+  } catch (e) {
+    console.error("There has been a problem with fetch operation:", e);
+    return null;
+  }
+};
+
 const BurgerConstructor = ({ data }: BurgerConstructorProps) => {
   const [total] = useState(610);
-  const totalDetails = (
-    <OrderDetails
-      order={{
-        id: "034536",
-        state: "start",
-      }}
-    />
-  );
+  const [orderNumber, setOrderNumber] = useState(null);
+  const [ingredientsList] = useState(["643d69a5c3f7b9001cfa093c"]); // todo: selected list of ingredients
   const { openModal, toggleOpen, modal } = useModal({
-    details: totalDetails,
+    details: (
+      <OrderDetails
+        order={{
+          id: `${orderNumber}`,
+          state: "start",
+        }}
+      />
+    ),
   });
+
   const buns = data.filter((value) => value.type === "bun");
   const top = buns[0]; // no state yet
   const bottom = buns[0]; // no state yet
@@ -93,7 +119,11 @@ const BurgerConstructor = ({ data }: BurgerConstructorProps) => {
               htmlType="button"
               type="primary"
               size="large"
-              onClick={toggleOpen}
+              onClick={async () => {
+                const order = await createOrder(ingredientsList);
+                setOrderNumber(order);
+                toggleOpen();
+              }}
             >
               Оформить заказ
             </Button>
