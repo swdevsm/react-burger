@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import burgerIngredientsStyles from "./BurgerIngredients.module.css";
 import {
   Counter,
@@ -6,7 +6,6 @@ import {
   Tab,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import {
-  BurgerIngredientsProps,
   IngredientProps,
   IngredientsCategoryProps,
 } from "./BurgerIngredients.types";
@@ -15,6 +14,7 @@ import IngredientDetails from "../ingredient-details/IngredientDetails";
 import Container from "../container/Container";
 import Col from "../col/Col";
 import styles from "../../index.module.css";
+import { ApiDataContext } from "../../services/apiDataContext";
 
 const Ingredient = ({ ingredient }: IngredientProps) => {
   const ingredientDetails = <IngredientDetails ingredient={ingredient} />;
@@ -75,7 +75,8 @@ const IngredientsCategory = ({
   );
 };
 
-const BurgerIngredients = ({ data }: BurgerIngredientsProps) => {
+const BurgerIngredients = () => {
+  const data = useContext(ApiDataContext);
   const [currentTab, setCurrentTab] = useState("bun");
   return (
     <Container>

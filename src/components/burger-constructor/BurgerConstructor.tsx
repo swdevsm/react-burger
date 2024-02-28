@@ -4,14 +4,15 @@ import {
   CurrencyIcon,
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { BurgerConstructorProps } from "./BurgerConstructor.types";
 import burgerConstructorStyles from "./BurgerConstructor.module.css";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import useModal from "../../hooks/modal.hook";
 import OrderDetails from "../order-details/OrderDetails";
 import Container from "../container/Container";
 import Col from "../col/Col";
 import styles from "../../index.module.css";
+import { ApiDataContext } from "../../services/apiDataContext";
+import { ApiData } from "../../ApiData.types";
 
 const createOrder = async (selectedIngredients: string[]) => {
   const url = "https://norma.nomoreparties.space/api/orders";
@@ -37,7 +38,8 @@ const createOrder = async (selectedIngredients: string[]) => {
   }
 };
 
-const BurgerConstructor = ({ data }: BurgerConstructorProps) => {
+const BurgerConstructor = () => {
+  const data: Array<ApiData> = useContext(ApiDataContext);
   const [total] = useState(610);
   const [orderNumber, setOrderNumber] = useState(null);
   const [ingredientsList] = useState(["643d69a5c3f7b9001cfa093c"]); // todo: selected list of ingredients
