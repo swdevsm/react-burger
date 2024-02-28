@@ -38,11 +38,38 @@ const createOrder = async (selectedIngredients: string[]) => {
   }
 };
 
+const renderBun = (
+  type: "top" | "bottom",
+  { _id, name, price, image }: ApiData
+) => {
+  const typeName = type === "top" ? "верх" : "низ";
+  const customStyles = type === "top" ? "" : "pt-4";
+  return (
+    <Container extraClass={`${styles.center} ${customStyles}`}>
+      <div className={burgerConstructorStyles.emptyDragIcon} />
+      <ConstructorElement
+        key={_id}
+        type={type}
+        isLocked={true}
+        text={`${name} (${typeName})`}
+        price={price}
+        thumbnail={image}
+      />
+    </Container>
+  );
+};
+
 const BurgerConstructor = () => {
-  const data: Array<ApiData> = useContext(ApiDataContext);
-  const [total] = useState(610);
+  const data: Array<ApiData> = useContext(ApiDataContext); // todo: refactor to redux
+  const [selectedBun] = useState(
+    data?.filter((value) => value.type === "bun")[0] // fixme: change filter to selected bun by dnd ? do not forget update to ingredients list two times
+  );
+  const [selectedIngredients] = useState(
+    data.filter((value) => value.type !== "bun") // fixme: change fiter to selected items after dnd
+  );
+  const [total] = useState(610); // fixme: calculate state after dnd (after select items)
+  const [ingredientsList] = useState(["643d69a5c3f7b9001cfa093c"]); // todo: update to selected list of ingredients
   const [orderNumber, setOrderNumber] = useState(null);
-  const [ingredientsList] = useState(["643d69a5c3f7b9001cfa093c"]); // todo: selected list of ingredients
   const { openModal, toggleOpen, modal } = useModal({
     details: (
       <OrderDetails
@@ -54,30 +81,15 @@ const BurgerConstructor = () => {
     ),
   });
 
-  const buns = data.filter((value) => value.type === "bun");
-  const top = buns[0]; // no state yet
-  const bottom = buns[0]; // no state yet
-  const filteredData = data.filter((value) => value.type !== "bun");
   return (
     <Container extraClass={styles.center + " pt-25"}>
-      <Col w={6}>
-        <Container extraClass={styles.center}>
-          <div className={burgerConstructorStyles.emptyDragIcon} />
-          <ConstructorElement
-            key={top._id}
-            type={"top"}
-            isLocked={true}
-            text={`${top.name} (верх)`}
-            price={top.price}
-            thumbnail={top.image}
-          />
-        </Container>
-      </Col>
+      <Col w={6}>{renderBun("top", selectedBun)}</Col>
 
       <Container>
         <ul className={styles.scroll}>
-          {filteredData.map((value) => (
+          {selectedIngredients.map((value) => (
             <li key={value._id}>
+              {/* fixme: use uuid as key */}
               <Container extraClass={styles.center + " pt-4"}>
                 <div className={styles.align}>
                   <DragIcon type="primary" />
@@ -95,19 +107,7 @@ const BurgerConstructor = () => {
         </ul>
       </Container>
 
-      <Col w={6}>
-        <Container extraClass={styles.center + " pt-4"}>
-          <div className={burgerConstructorStyles.emptyDragIcon} />
-          <ConstructorElement
-            key={bottom._id}
-            type={"bottom"}
-            isLocked={true}
-            text={`${bottom.name} (низ)`}
-            price={bottom.price}
-            thumbnail={bottom.image}
-          />
-        </Container>
-      </Col>
+      <Col w={6}>{renderBun("bottom", selectedBun)}</Col>
 
       <Col w={6}>
         <Container extraClass={styles.right + " pt-10"}>
