@@ -5,7 +5,7 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import burgerConstructorStyles from "./BurgerConstructor.module.css";
-import { useContext, useState } from "react";
+import { useContext, useReducer, useState } from "react";
 import useModal from "../../hooks/modal.hook";
 import OrderDetails from "../order-details/OrderDetails";
 import Container from "../container/Container";
@@ -13,6 +13,7 @@ import Col from "../col/Col";
 import styles from "../../index.module.css";
 import { ApiDataContext } from "../../services/apiDataContext";
 import { ApiData } from "../../ApiData.types";
+import { TotalAction, TotalState } from "./BurgerConstructor.types";
 
 const createOrder = async (selectedIngredients: string[]) => {
   const url = "https://norma.nomoreparties.space/api/orders";
@@ -59,16 +60,36 @@ const renderBun = (
   );
 };
 
+const initialState: TotalState = { sum: 0 };
+
+const totalReducer = (state: TotalState, action: TotalAction): TotalState => {
+  switch (action.type) {
+    case "inc":
+      return { sum: state.sum + action.sum };
+    case "dec":
+      return { sum: state.sum - action.sum };
+    case "clear":
+      return initialState;
+    default:
+      throw new Error(`Wrong type of action: ${action.type}`);
+  }
+};
+
 const BurgerConstructor = () => {
-  const data: Array<ApiData> = useContext(ApiDataContext); // todo: refactor to redux
+  // todo: call dispatcher on dnd actions
+  const [total, totalDispatcher] = useReducer(totalReducer, initialState);
+  // todo: refactor to redux
+  const data: Array<ApiData> = useContext(ApiDataContext);
+  // fixme: change filter to selected bun by dnd ? do not forget update to ingredients list two times
   const [selectedBun] = useState(
-    data?.filter((value) => value.type === "bun")[0] // fixme: change filter to selected bun by dnd ? do not forget update to ingredients list two times
+    data?.filter((value) => value.type === "bun")[0]
   );
+  // fixme: change fiter to selected items after dnd
   const [selectedIngredients] = useState(
-    data.filter((value) => value.type !== "bun") // fixme: change fiter to selected items after dnd
+    data.filter((value) => value.type !== "bun")
   );
-  const [total] = useState(610); // fixme: calculate state after dnd (after select items)
-  const [ingredientsList] = useState(["643d69a5c3f7b9001cfa093c"]); // todo: update to selected list of ingredients
+  // todo: update to selected list of ingredients
+  const [ingredientsList] = useState(["643d69a5c3f7b9001cfa093c"]);
   const [orderNumber, setOrderNumber] = useState(null);
   const { openModal, toggleOpen, modal } = useModal({
     details: (
@@ -111,7 +132,7 @@ const BurgerConstructor = () => {
 
       <Col w={6}>
         <Container extraClass={styles.right + " pt-10"}>
-          <p className="text text_type_digits-medium">{total}</p>
+          <p className="text text_type_digits-medium">{total.sum}</p>
           <div className={"pl-4"}>
             <CurrencyIcon type="primary" />
           </div>
@@ -122,6 +143,7 @@ const BurgerConstructor = () => {
               type="primary"
               size="large"
               onClick={async () => {
+                totalDispatcher({ type: "inc", sum: 1 }); // fixme: for demo example dispacher usage
                 const order = await createOrder(ingredientsList);
                 setOrderNumber(order);
                 toggleOpen();
