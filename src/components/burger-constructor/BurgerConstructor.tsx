@@ -5,7 +5,7 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import burgerConstructorStyles from "./BurgerConstructor.module.css";
-import { useContext, useReducer, useState } from "react";
+import { useContext, useEffect, useReducer, useState } from "react";
 import useModal from "../../hooks/modal.hook";
 import OrderDetails from "../order-details/OrderDetails";
 import Container from "../container/Container";
@@ -81,11 +81,11 @@ const BurgerConstructor = () => {
   // todo: refactor to redux
   const data: Array<ApiData> = useContext(ApiDataContext);
   // fixme: change filter to selected bun by dnd ? do not forget update to ingredients list two times
-  const [selectedBun] = useState(
+  const [selectedBun, setSelectedBun] = useState<ApiData>(
     data?.filter((value) => value.type === "bun")[0]
   );
   // fixme: change fiter to selected items after dnd
-  const [selectedIngredients] = useState(
+  const [selectedIngredients, setSelectedIngredients] = useState(
     data.filter((value) => value.type !== "bun")
   );
   // todo: update to selected list of ingredients
@@ -101,6 +101,57 @@ const BurgerConstructor = () => {
       />
     ),
   });
+
+  useEffect(
+    function demoTotalCalculation() {
+      const random = (max: number) => {
+        return Math.floor(Math.random() * max);
+      };
+      const shuffle = (array: Array<ApiData>) => {
+        let currentIndex = array.length,
+          randomIndex;
+        // While there remain elements to shuffle.
+        while (currentIndex > 0) {
+          // Pick a remaining element.
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+          // And swap it with the current element.
+          [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex],
+            array[currentIndex],
+          ];
+        }
+        return array;
+      };
+      if (data) {
+        const buns = data?.filter((value) => value.type === "bun");
+        setSelectedBun(buns[random(buns.length)]);
+        const ingredients = data.filter((value) => value.type !== "bun");
+        const start = random(ingredients.length / 2);
+        const end = ingredients.length / 2 + random(ingredients.length / 2) - 1;
+        const randomized = shuffle(ingredients.slice(start, end));
+        setSelectedIngredients(randomized);
+        totalDispatcher({
+          type: "clear",
+          sum: 100_500,
+        });
+        totalDispatcher({
+          type: "inc",
+          sum: randomized
+            .map((value) => value.price)
+            .reduce(
+              (accumulator, currentValue) => accumulator + currentValue,
+              0
+            ),
+        });
+        totalDispatcher({
+          type: "inc",
+          sum: selectedBun.price * 2,
+        });
+      }
+    },
+    [data]
+  );
 
   return (
     <Container extraClass={styles.center + " pt-25"}>
@@ -143,7 +194,6 @@ const BurgerConstructor = () => {
               type="primary"
               size="large"
               onClick={async () => {
-                totalDispatcher({ type: "inc", sum: 1 }); // fixme: for demo example dispacher usage
                 const order = await createOrder(ingredientsList);
                 setOrderNumber(order);
                 toggleOpen();

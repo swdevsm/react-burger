@@ -4,6 +4,7 @@ todo:
 
 - correct layout ???
 - correct scroll styles
+- make scroll adaptive
 - 4 reducers
   - "ingredients"
   - "burgerConstructor"
