@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import burgerIngredientsStyles from "./BurgerIngredients.module.css";
 import {
   Counter,
@@ -6,7 +6,6 @@ import {
   Tab,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import {
-  BurgerIngredientsProps,
   IngredientProps,
   IngredientsCategoryProps,
 } from "./BurgerIngredients.types";
@@ -15,6 +14,7 @@ import IngredientDetails from "../ingredient-details/IngredientDetails";
 import Container from "../container/Container";
 import Col from "../col/Col";
 import styles from "../../index.module.css";
+import { ApiDataContext } from "../../services/apiDataContext";
 
 const Ingredient = ({ ingredient }: IngredientProps) => {
   const ingredientDetails = <IngredientDetails ingredient={ingredient} />;
@@ -28,17 +28,21 @@ const Ingredient = ({ ingredient }: IngredientProps) => {
         onClick={toggleOpen}
         className={burgerIngredientsStyles.counterParent}
       >
-        <Container extraClass={styles.center + " pt-6 pl-4"}>
-          <img src={ingredient.image} />
+        <Container extraClass={"pt-6 pl-4"}>
+          <Col w={6} extraClass={styles.center}>
+            <img src={ingredient.image} />
 
-          <Container extraClass={styles.center}>
-            <p className="text text_type_digits-default pr-1 pt-1">
-              {ingredient.price}
+            <Container extraClass={styles.center}>
+              <p className="text text_type_digits-default pr-1 pt-1">
+                {ingredient.price}
+              </p>
+              <CurrencyIcon type="primary" />
+            </Container>
+
+            <p className="text text_type_main-default pt-1">
+              {ingredient.name}
             </p>
-            <CurrencyIcon type="primary" />
-          </Container>
-
-          <p className="text text_type_main-default pt-1">{ingredient.name}</p>
+          </Col>
         </Container>
         <Counter count={1} size="default" />
       </div>
@@ -57,12 +61,14 @@ const IngredientsCategory = ({
     <Col w={6} extraClass="pt-10">
       <Container extraClass={styles.center}>
         <Col w={6}>
-          <p className="text text_type_main-medium">{title}</p>
+          <p id={type} className="text text_type_main-medium">
+            {title}
+          </p>
         </Col>
         <ul>
           <Container extraClass={styles.center}>
             {filtered.map((value) => (
-              <Col key={value._id} w={3}>
+              <Col key={value._id} w={1}>
                 <li>
                   <Ingredient ingredient={value} />
                 </li>
@@ -75,8 +81,17 @@ const IngredientsCategory = ({
   );
 };
 
-const BurgerIngredients = ({ data }: BurgerIngredientsProps) => {
+const BurgerIngredients = () => {
+  const data = useContext(ApiDataContext);
   const [currentTab, setCurrentTab] = useState("bun");
+  const scrollByTab = (id: string) => {
+    const elem = document.getElementById(id);
+    elem?.scrollIntoView({ behavior: "smooth" });
+  };
+  const handleTabClick = (value: string) => {
+    setCurrentTab(value);
+    scrollByTab(value);
+  };
   return (
     <Container>
       <Col w={6}>
@@ -87,7 +102,7 @@ const BurgerIngredients = ({ data }: BurgerIngredientsProps) => {
             <Tab
               value="bun"
               active={currentTab === "bun"}
-              onClick={setCurrentTab}
+              onClick={handleTabClick}
             >
               Булки
             </Tab>
@@ -97,7 +112,7 @@ const BurgerIngredients = ({ data }: BurgerIngredientsProps) => {
             <Tab
               value="sauce"
               active={currentTab === "sauce"}
-              onClick={setCurrentTab}
+              onClick={handleTabClick}
             >
               Соусы
             </Tab>
@@ -107,7 +122,7 @@ const BurgerIngredients = ({ data }: BurgerIngredientsProps) => {
             <Tab
               value="main"
               active={currentTab === "main"}
-              onClick={setCurrentTab}
+              onClick={handleTabClick}
             >
               Начинки
             </Tab>

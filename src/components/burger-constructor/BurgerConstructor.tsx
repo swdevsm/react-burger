@@ -4,52 +4,141 @@ import {
   CurrencyIcon,
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { BurgerConstructorProps } from "./BurgerConstructor.types";
 import burgerConstructorStyles from "./BurgerConstructor.module.css";
-import { useState } from "react";
+import { useContext, useEffect, useMemo, useReducer, useState } from "react";
 import useModal from "../../hooks/modal.hook";
 import OrderDetails from "../order-details/OrderDetails";
 import Container from "../container/Container";
 import Col from "../col/Col";
 import styles from "../../index.module.css";
+import { ApiDataContext } from "../../services/apiDataContext";
+import { ApiData } from "../../ApiData.types";
+import { TotalAction, TotalState } from "./BurgerConstructor.types";
+import { createOrder } from "../../utils/burger-api";
 
-const BurgerConstructor = ({ data }: BurgerConstructorProps) => {
-  const [total] = useState(610);
-  const totalDetails = (
-    <OrderDetails
-      order={{
-        id: "034536",
-        state: "start",
-      }}
-    />
-  );
+const initialState: TotalState = { sum: 0 };
+
+const totalReducer = (state: TotalState, action: TotalAction): TotalState => {
+  switch (action.type) {
+    case "inc":
+      return { sum: state.sum + action.sum };
+    case "dec":
+      return { sum: state.sum - action.sum };
+    case "clear":
+      return initialState;
+    default:
+      throw new Error(`Wrong type of action: ${action.type}`);
+  }
+};
+
+const BurgerConstructor = () => {
+  // todo: refactor to redux
+  const data: Array<ApiData> = useContext(ApiDataContext);
+  const { buns, ingredients } = useMemo(() => {
+    return {
+      buns: data.filter((item) => item.type === "bun") ?? [],
+      ingredients: data.filter((item) => item.type !== "bun") ?? [],
+    };
+  }, [data]);
+  // todo: call dispatcher on dnd actions
+  const [total, totalDispatcher] = useReducer(totalReducer, initialState);
+  // fixme: change filter to selected bun by dnd ? do not forget update to ingredients list two times
+  const [selectedBun, setSelectedBun] = useState<ApiData>(buns[0]);
+  // fixme: change fiter to selected items after dnd
+  const [selectedIngredients, setSelectedIngredients] = useState<ApiData[]>([]);
+  // todo: update to selected list of ingredients
+  const [ingredientsIdList, setIngredientsIdList] = useState<string[]>([]);
+  const [orderNumber, setOrderNumber] = useState(null);
   const { openModal, toggleOpen, modal } = useModal({
-    details: totalDetails,
+    details: (
+      <OrderDetails
+        order={{
+          id: `${orderNumber}`,
+          state: "start",
+        }}
+      />
+    ),
   });
-  const buns = data.filter((value) => value.type === "bun");
-  const top = buns[0]; // no state yet
-  const bottom = buns[0]; // no state yet
-  const filteredData = data.filter((value) => value.type !== "bun");
+
+  const totalPrice = useMemo(() => {
+    const bunPrice = selectedBun.price * 2;
+    const ingredientsPrice = selectedIngredients
+      .map((value) => value.price)
+      .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    return bunPrice + ingredientsPrice;
+  }, [selectedIngredients, selectedBun]);
+
+  useEffect(() => {
+    totalDispatcher({
+      type: "clear",
+      sum: 0,
+    });
+    totalDispatcher({
+      type: "inc",
+      sum: totalPrice,
+    });
+  }, [totalPrice]);
+
+  useEffect(
+    function demoTotalCalculation() {
+      const random = (max: number) => {
+        return Math.floor(Math.random() * max);
+      };
+      const shuffle = (array: Array<ApiData>) => {
+        let currentIndex = array.length,
+          randomIndex;
+        // While there remain elements to shuffle.
+        while (currentIndex > 0) {
+          // Pick a remaining element.
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+          // And swap it with the current element.
+          [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex],
+            array[currentIndex],
+          ];
+        }
+        return array;
+      };
+      if (data) {
+        setSelectedBun(buns[random(buns.length)]);
+        const start = random(ingredients.length / 2);
+        const end = ingredients.length / 2 + random(ingredients.length / 2) - 1;
+        const randomized = shuffle(ingredients.slice(start, end));
+        setSelectedIngredients(randomized);
+        const withBunsList = [selectedBun, ...randomized, selectedBun];
+        setIngredientsIdList(withBunsList.map((value) => value._id));
+      }
+    },
+    [buns, data, ingredients, selectedBun]
+  );
+
+  const handleCreateOrderClick = async () => {
+    createOrder(ingredientsIdList).then(setOrderNumber);
+    toggleOpen();
+  };
+
   return (
     <Container extraClass={styles.center + " pt-25"}>
       <Col w={6}>
-        <Container extraClass={styles.center}>
+        <Container extraClass={`${styles.center}`}>
           <div className={burgerConstructorStyles.emptyDragIcon} />
           <ConstructorElement
-            key={top._id}
-            type={"top"}
+            key={selectedBun._id}
+            type="top"
             isLocked={true}
-            text={`${top.name} (верх)`}
-            price={top.price}
-            thumbnail={top.image}
+            text={`${selectedBun.name} (верх)`}
+            price={selectedBun.price}
+            thumbnail={selectedBun.image}
           />
         </Container>
       </Col>
 
       <Container>
         <ul className={styles.scroll}>
-          {filteredData.map((value) => (
+          {selectedIngredients.map((value) => (
             <li key={value._id}>
+              {/* fixme: use uuid as key */}
               <Container extraClass={styles.center + " pt-4"}>
                 <div className={styles.align}>
                   <DragIcon type="primary" />
@@ -68,22 +157,22 @@ const BurgerConstructor = ({ data }: BurgerConstructorProps) => {
       </Container>
 
       <Col w={6}>
-        <Container extraClass={styles.center + " pt-4"}>
+        <Container extraClass={`${styles.center} pt-4`}>
           <div className={burgerConstructorStyles.emptyDragIcon} />
           <ConstructorElement
-            key={bottom._id}
+            key={selectedBun._id}
             type={"bottom"}
             isLocked={true}
-            text={`${bottom.name} (низ)`}
-            price={bottom.price}
-            thumbnail={bottom.image}
+            text={`${selectedBun.name} (низ)`}
+            price={selectedBun.price}
+            thumbnail={selectedBun.image}
           />
         </Container>
       </Col>
 
       <Col w={6}>
         <Container extraClass={styles.right + " pt-10"}>
-          <p className="text text_type_digits-medium">{total}</p>
+          <p className="text text_type_digits-medium">{total.sum}</p>
           <div className={"pl-4"}>
             <CurrencyIcon type="primary" />
           </div>
@@ -93,7 +182,7 @@ const BurgerConstructor = ({ data }: BurgerConstructorProps) => {
               htmlType="button"
               type="primary"
               size="large"
-              onClick={toggleOpen}
+              onClick={handleCreateOrderClick}
             >
               Оформить заказ
             </Button>

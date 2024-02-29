@@ -8,9 +8,7 @@ const Container = ({
 }: PropsWithChildren<LayoutProps>) => {
   const innerExtraClass = extraClass ? " " + extraClass : "";
   return (
-    <div className={`${styles.container}${innerExtraClass}`}>
-      {children}
-    </div>
+    <div className={`${styles.container}${innerExtraClass}`}>{children}</div>
   );
 };
 

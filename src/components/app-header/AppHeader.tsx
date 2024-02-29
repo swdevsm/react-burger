@@ -14,19 +14,17 @@ const AppHeader = () => {
       <Col w={2}>
         <nav>
           <Container extraClass={styles.center}>
-            <Container extraClass="p-5">
-              {/* fixme: refactor to <button> ? */}
+            <a href="#" className={styles.container + " p-5"}>
               <BurgerIcon type="primary" />
               <p className="text text_type_main-default pl-2">Конструктор</p>
-            </Container>
-            <Container extraClass="p-5 ml-2">
-              {/* fixme: refactor to <button> ? */}
+            </a>
+            <a href="#" className={styles.container + " p-5 ml-2"}>
               <ListIcon type="secondary" />
               <div className="p-1" />
               <p className="text text_type_main-default text_color_inactive">
                 Лента заказов
               </p>
-            </Container>
+            </a>
           </Container>
         </nav>
       </Col>
@@ -38,13 +36,12 @@ const AppHeader = () => {
       </Col>
 
       <Col w={2}>
-        <Container extraClass={styles.right + " p-5"}>
-          {/* fixme: refactor to <button> ? */}
+        <a href="#" className={`${styles.container} ${styles.right} p-5`}>
           <ProfileIcon type="secondary" />
           <p className="text text_type_main-default text_color_inactive pl-1">
             Личный кабинет
           </p>
-        </Container>
+        </a>
       </Col>
     </Container>
   );
