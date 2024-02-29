@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import burgerIngredientsStyles from "./BurgerIngredients.module.css";
 import {
   Counter,
@@ -61,7 +61,9 @@ const IngredientsCategory = ({
     <Col w={6} extraClass="pt-10">
       <Container extraClass={styles.center}>
         <Col w={6}>
-          <p className="text text_type_main-medium">{title}</p>
+          <p id={type} className="text text_type_main-medium">
+            {title}
+          </p>
         </Col>
         <ul>
           <Container extraClass={styles.center}>
@@ -82,6 +84,14 @@ const IngredientsCategory = ({
 const BurgerIngredients = () => {
   const data = useContext(ApiDataContext);
   const [currentTab, setCurrentTab] = useState("bun");
+  const scrollByTab = (id: string) => {
+    const elem = document.getElementById(id);
+    elem?.scrollIntoView({ behavior: "smooth" });
+  };
+  const handleTabClick = (value: string) => {
+    setCurrentTab(value);
+    scrollByTab(value);
+  };
   return (
     <Container>
       <Col w={6}>
@@ -92,7 +102,7 @@ const BurgerIngredients = () => {
             <Tab
               value="bun"
               active={currentTab === "bun"}
-              onClick={setCurrentTab}
+              onClick={handleTabClick}
             >
               Булки
             </Tab>
@@ -102,7 +112,7 @@ const BurgerIngredients = () => {
             <Tab
               value="sauce"
               active={currentTab === "sauce"}
-              onClick={setCurrentTab}
+              onClick={handleTabClick}
             >
               Соусы
             </Tab>
@@ -112,7 +122,7 @@ const BurgerIngredients = () => {
             <Tab
               value="main"
               active={currentTab === "main"}
-              onClick={setCurrentTab}
+              onClick={handleTabClick}
             >
               Начинки
             </Tab>
