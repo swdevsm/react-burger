@@ -47,7 +47,7 @@ const BurgerConstructor = () => {
   // fixme: change fiter to selected items after dnd
   const [selectedIngredients, setSelectedIngredients] = useState<ApiData[]>([]);
   // todo: update to selected list of ingredients
-  const [ingredientsList, setIngredientsList] = useState<string[]>([]);
+  const [ingredientsIdList, setIngredientsIdList] = useState<string[]>([]);
   const [orderNumber, setOrderNumber] = useState(null);
   const { openModal, toggleOpen, modal } = useModal({
     details: (
@@ -59,6 +59,25 @@ const BurgerConstructor = () => {
       />
     ),
   });
+
+  const totalPrice = useMemo(() => {
+    const bunPrice = selectedBun.price * 2;
+    const ingredientsPrice = selectedIngredients
+      .map((value) => value.price)
+      .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    return bunPrice + ingredientsPrice;
+  }, [selectedIngredients, selectedBun]);
+
+  useEffect(() => {
+    totalDispatcher({
+      type: "clear",
+      sum: 0,
+    });
+    totalDispatcher({
+      type: "inc",
+      sum: totalPrice,
+    });
+  }, [totalPrice]);
 
   useEffect(
     function demoTotalCalculation() {
@@ -88,27 +107,14 @@ const BurgerConstructor = () => {
         const randomized = shuffle(ingredients.slice(start, end));
         setSelectedIngredients(randomized);
         const withBunsList = [selectedBun, ...randomized, selectedBun];
-        setIngredientsList(withBunsList.map((value) => value._id));
-        totalDispatcher({
-          type: "clear",
-          sum: 0,
-        });
-        totalDispatcher({
-          type: "inc",
-          sum: withBunsList
-            .map((value) => value.price)
-            .reduce(
-              (accumulator, currentValue) => accumulator + currentValue,
-              0
-            ),
-        });
+        setIngredientsIdList(withBunsList.map((value) => value._id));
       }
     },
     [buns, data, ingredients, selectedBun]
   );
 
   const handleCreateOrderClick = async () => {
-    createOrder(ingredientsList).then(setOrderNumber);
+    createOrder(ingredientsIdList).then(setOrderNumber);
     toggleOpen();
   };
 
