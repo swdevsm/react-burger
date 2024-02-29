@@ -118,21 +118,16 @@ const BurgerConstructor = () => {
     toggleOpen();
   };
 
-  const typeBunName = (type: "top" | "bottom") =>
-    type === "top" ? "верх" : "низ";
-  const customBunStyles = (type: "top" | "bottom") =>
-    type === "top" ? "" : "pt-4";
-
   return (
     <Container extraClass={styles.center + " pt-25"}>
       <Col w={6}>
-        <Container extraClass={`${styles.center} ${customBunStyles}`}>
+        <Container extraClass={`${styles.center}`}>
           <div className={burgerConstructorStyles.emptyDragIcon} />
           <ConstructorElement
             key={selectedBun._id}
             type="top"
             isLocked={true}
-            text={`${selectedBun.name} (${typeBunName("top")})`}
+            text={`${selectedBun.name} (верх)`}
             price={selectedBun.price}
             thumbnail={selectedBun.image}
           />
@@ -162,13 +157,13 @@ const BurgerConstructor = () => {
       </Container>
 
       <Col w={6}>
-        <Container extraClass={`${styles.center} ${customBunStyles}`}>
+        <Container extraClass={`${styles.center} pt-4`}>
           <div className={burgerConstructorStyles.emptyDragIcon} />
           <ConstructorElement
             key={selectedBun._id}
             type={"bottom"}
             isLocked={true}
-            text={`${selectedBun.name} (${typeBunName("bottom")})`}
+            text={`${selectedBun.name} (низ)`}
             price={selectedBun.price}
             thumbnail={selectedBun.image}
           />

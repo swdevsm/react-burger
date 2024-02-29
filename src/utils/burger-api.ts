@@ -1,5 +1,7 @@
+import { BURGER_API_URL } from "./config";
+
 export const getIngredients = () => {
-  const url = "https://norma.nomoreparties.space/api/ingredients";
+  const url = `${BURGER_API_URL}/ingredients`;
   return fetch(url)
     .then(checkResponse)
     .then((json) => (json.success ? json.data : []))
@@ -9,7 +11,7 @@ export const getIngredients = () => {
 };
 
 export const createOrder = (selectedIngredients: string[]) => {
-  const url = "https://norma.nomoreparties.space/api/orders";
+  const url = `${BURGER_API_URL}/orders`;
   return fetch(url, {
     method: "post",
     headers: {
