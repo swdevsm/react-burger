@@ -23,3 +23,7 @@ li {
   border: 3px solid #8585ad;
   background: #8585ad;
 }
+
+a {
+  all: unset;
+}
