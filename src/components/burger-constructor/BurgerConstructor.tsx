@@ -39,27 +39,6 @@ const createOrder = async (selectedIngredients: string[]) => {
   }
 };
 
-const renderBun = (
-  type: "top" | "bottom",
-  { _id, name, price, image }: ApiData
-) => {
-  const typeName = type === "top" ? "верх" : "низ";
-  const customStyles = type === "top" ? "" : "pt-4";
-  return (
-    <Container extraClass={`${styles.center} ${customStyles}`}>
-      <div className={burgerConstructorStyles.emptyDragIcon} />
-      <ConstructorElement
-        key={_id}
-        type={type}
-        isLocked={true}
-        text={`${name} (${typeName})`}
-        price={price}
-        thumbnail={image}
-      />
-    </Container>
-  );
-};
-
 const initialState: TotalState = { sum: 0 };
 
 const totalReducer = (state: TotalState, action: TotalAction): TotalState => {
@@ -153,9 +132,26 @@ const BurgerConstructor = () => {
     [data]
   );
 
+  const typeBunName = (type: "top" | "bottom") =>
+    type === "top" ? "верх" : "низ";
+  const customBunStyles = (type: "top" | "bottom") =>
+    type === "top" ? "" : "pt-4";
+
   return (
     <Container extraClass={styles.center + " pt-25"}>
-      <Col w={6}>{renderBun("top", selectedBun)}</Col>
+      <Col w={6}>
+        <Container extraClass={`${styles.center} ${customBunStyles}`}>
+          <div className={burgerConstructorStyles.emptyDragIcon} />
+          <ConstructorElement
+            key={selectedBun._id}
+            type="top"
+            isLocked={true}
+            text={`${selectedBun.name} (${typeBunName("top")})`}
+            price={selectedBun.price}
+            thumbnail={selectedBun.image}
+          />
+        </Container>
+      </Col>
 
       <Container>
         <ul className={styles.scroll}>
@@ -179,7 +175,19 @@ const BurgerConstructor = () => {
         </ul>
       </Container>
 
-      <Col w={6}>{renderBun("bottom", selectedBun)}</Col>
+      <Col w={6}>
+        <Container extraClass={`${styles.center} ${customBunStyles}`}>
+          <div className={burgerConstructorStyles.emptyDragIcon} />
+          <ConstructorElement
+            key={selectedBun._id}
+            type={"bottom"}
+            isLocked={true}
+            text={`${selectedBun.name} (${typeBunName("bottom")})`}
+            price={selectedBun.price}
+            thumbnail={selectedBun.image}
+          />
+        </Container>
+      </Col>
 
       <Col w={6}>
         <Container extraClass={styles.right + " pt-10"}>
