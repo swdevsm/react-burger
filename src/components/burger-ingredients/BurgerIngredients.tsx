@@ -28,17 +28,21 @@ const Ingredient = ({ ingredient }: IngredientProps) => {
         onClick={toggleOpen}
         className={burgerIngredientsStyles.counterParent}
       >
-        <Container extraClass={styles.center + " pt-6 pl-4"}>
-          <img src={ingredient.image} />
+        <Container extraClass={"pt-6 pl-4"}>
+          <Col w={6} extraClass={styles.center}>
+            <img src={ingredient.image} />
 
-          <Container extraClass={styles.center}>
-            <p className="text text_type_digits-default pr-1 pt-1">
-              {ingredient.price}
+            <Container extraClass={styles.center}>
+              <p className="text text_type_digits-default pr-1 pt-1">
+                {ingredient.price}
+              </p>
+              <CurrencyIcon type="primary" />
+            </Container>
+
+            <p className="text text_type_main-default pt-1">
+              {ingredient.name}
             </p>
-            <CurrencyIcon type="primary" />
-          </Container>
-
-          <p className="text text_type_main-default pt-1">{ingredient.name}</p>
+          </Col>
         </Container>
         <Counter count={1} size="default" />
       </div>
@@ -62,7 +66,7 @@ const IngredientsCategory = ({
         <ul>
           <Container extraClass={styles.center}>
             {filtered.map((value) => (
-              <Col key={value._id} w={3}>
+              <Col key={value._id} w={1}>
                 <li>
                   <Ingredient ingredient={value} />
                 </li>
