@@ -129,7 +129,7 @@ const BurgerConstructor = () => {
         });
       }
     },
-    [data]
+    [data, selectedBun]
   );
 
   const typeBunName = (type: "top" | "bottom") =>

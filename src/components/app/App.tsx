@@ -66,7 +66,7 @@ const App = () => {
           <Col w={6}>
             <main>
               {data.length > 0 && (
-                <Container extraClass={styles.center}>
+                <Container extraClass={styles.center + " pl-10 pr-10"}>
                   <Col w={3} extraClass={styles.center}>
                     <BurgerIngredients />
                   </Col>
