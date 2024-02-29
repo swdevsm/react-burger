@@ -130,6 +130,12 @@ const BurgerConstructor = () => {
     [buns, data, ingredients, selectedBun]
   );
 
+  const handleCreateOrderClick = async () => {
+    const order = await createOrder(ingredientsList);
+    setOrderNumber(order);
+    toggleOpen();
+  };
+
   const typeBunName = (type: "top" | "bottom") =>
     type === "top" ? "верх" : "низ";
   const customBunStyles = (type: "top" | "bottom") =>
@@ -199,11 +205,7 @@ const BurgerConstructor = () => {
               htmlType="button"
               type="primary"
               size="large"
-              onClick={async () => {
-                const order = await createOrder(ingredientsList);
-                setOrderNumber(order);
-                toggleOpen();
-              }}
+              onClick={handleCreateOrderClick}
             >
               Оформить заказ
             </Button>
