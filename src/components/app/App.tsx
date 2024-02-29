@@ -7,26 +7,13 @@ import Container from "../container/Container.tsx";
 import Col from "../col/Col.tsx";
 import styles from "../../index.module.css";
 import { ApiDataContext } from "../../services/apiDataContext.ts";
+import { getIngredients } from "../../utils/burger-api.ts";
 
 const App = () => {
   const [data, setData] = useState<ApiData[]>([]);
 
-  useEffect(function loadDataFromApi() {
-    const load = async () => {
-      const url = "https://norma.nomoreparties.space/api/ingredients";
-      try {
-        const res = await fetch(url);
-        if (!res.ok) {
-          throw new Error("Network response was not OK");
-        }
-        const json = await res.json();
-        setData(json.success ? json.data : []);
-      } catch (e) {
-        setData([]);
-        console.error("There has been a problem with fetch operation:", e);
-      }
-    };
-    load();
+  useEffect(() => {
+    getIngredients().then(setData);
   }, []);
 
   const errorMessage = (

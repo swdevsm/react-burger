@@ -14,30 +14,7 @@ import styles from "../../index.module.css";
 import { ApiDataContext } from "../../services/apiDataContext";
 import { ApiData } from "../../ApiData.types";
 import { TotalAction, TotalState } from "./BurgerConstructor.types";
-
-const createOrder = async (selectedIngredients: string[]) => {
-  const url = "https://norma.nomoreparties.space/api/orders";
-  try {
-    const res = await fetch(url, {
-      method: "post",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ingredients: selectedIngredients,
-      }),
-    });
-    if (!res.ok) {
-      throw new Error("Network response was not OK");
-    }
-    const json = await res.json();
-    return json.success ? json.order?.number : null;
-  } catch (e) {
-    console.error("There has been a problem with fetch operation:", e);
-    return null;
-  }
-};
+import { createOrder } from "../../utils/burger-api";
 
 const initialState: TotalState = { sum: 0 };
 
@@ -131,8 +108,7 @@ const BurgerConstructor = () => {
   );
 
   const handleCreateOrderClick = async () => {
-    const order = await createOrder(ingredientsList);
-    setOrderNumber(order);
+    createOrder(ingredientsList).then(setOrderNumber);
     toggleOpen();
   };
 
