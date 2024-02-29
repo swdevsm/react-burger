@@ -5,3 +5,21 @@ ul {
 li {
   all: unset;
 }
+
+:root {
+  scrollbar-color: unset;
+  scrollbar-width: unset;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #2f2f37;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 3px solid #8585ad;
+  background: #8585ad;
+}
