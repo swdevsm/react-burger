@@ -5,7 +5,7 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import burgerConstructorStyles from "./BurgerConstructor.module.css";
-import { useContext, useEffect, useReducer, useState } from "react";
+import { useContext, useEffect, useMemo, useReducer, useState } from "react";
 import useModal from "../../hooks/modal.hook";
 import OrderDetails from "../order-details/OrderDetails";
 import Container from "../container/Container";
@@ -55,20 +55,22 @@ const totalReducer = (state: TotalState, action: TotalAction): TotalState => {
 };
 
 const BurgerConstructor = () => {
-  // todo: call dispatcher on dnd actions
-  const [total, totalDispatcher] = useReducer(totalReducer, initialState);
   // todo: refactor to redux
   const data: Array<ApiData> = useContext(ApiDataContext);
+  const { buns, ingredients } = useMemo(() => {
+    return {
+      buns: data.filter((item) => item.type === "bun") ?? [],
+      ingredients: data.filter((item) => item.type !== "bun") ?? [],
+    };
+  }, [data]);
+  // todo: call dispatcher on dnd actions
+  const [total, totalDispatcher] = useReducer(totalReducer, initialState);
   // fixme: change filter to selected bun by dnd ? do not forget update to ingredients list two times
-  const [selectedBun, setSelectedBun] = useState<ApiData>(
-    data?.filter((value) => value.type === "bun")[0]
-  );
+  const [selectedBun, setSelectedBun] = useState<ApiData>(buns[0]);
   // fixme: change fiter to selected items after dnd
-  const [selectedIngredients, setSelectedIngredients] = useState(
-    data.filter((value) => value.type !== "bun")
-  );
+  const [selectedIngredients, setSelectedIngredients] = useState<ApiData[]>([]);
   // todo: update to selected list of ingredients
-  const [ingredientsList] = useState(["643d69a5c3f7b9001cfa093c"]);
+  const [ingredientsList, setIngredientsList] = useState<string[]>([]);
   const [orderNumber, setOrderNumber] = useState(null);
   const { openModal, toggleOpen, modal } = useModal({
     details: (
@@ -103,33 +105,29 @@ const BurgerConstructor = () => {
         return array;
       };
       if (data) {
-        const buns = data?.filter((value) => value.type === "bun");
         setSelectedBun(buns[random(buns.length)]);
-        const ingredients = data.filter((value) => value.type !== "bun");
         const start = random(ingredients.length / 2);
         const end = ingredients.length / 2 + random(ingredients.length / 2) - 1;
         const randomized = shuffle(ingredients.slice(start, end));
         setSelectedIngredients(randomized);
+        const withBunsList = [selectedBun, ...randomized, selectedBun];
+        setIngredientsList(withBunsList.map((value) => value._id));
         totalDispatcher({
           type: "clear",
-          sum: 100_500,
+          sum: 0,
         });
         totalDispatcher({
           type: "inc",
-          sum: randomized
+          sum: withBunsList
             .map((value) => value.price)
             .reduce(
               (accumulator, currentValue) => accumulator + currentValue,
               0
             ),
         });
-        totalDispatcher({
-          type: "inc",
-          sum: selectedBun.price * 2,
-        });
       }
     },
-    [data, selectedBun]
+    [buns, data, ingredients, selectedBun]
   );
 
   const typeBunName = (type: "top" | "bottom") =>
