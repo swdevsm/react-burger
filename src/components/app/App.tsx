@@ -1,19 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import AppHeader from "../app-header/AppHeader.tsx";
 import BurgerConstructor from "../burger-constructor/BurgerConstructor.tsx";
 import BurgerIngredients from "../burger-ingredients/BurgerIngredients.tsx";
-import { ApiData } from "../../ApiData.types.ts";
 import Container from "../container/Container.tsx";
 import Col from "../col/Col.tsx";
 import styles from "../../index.module.css";
-import { ApiDataContext } from "../../services/apiDataContext.ts";
 import { getIngredients } from "../../utils/burger-api.ts";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { setIngredients } from "../../services/ingredients";
 
 const App = () => {
-  const [data, setData] = useState<ApiData[]>([]);
+  const data = useAppSelector((state) => state.ingredients.ingredients);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    getIngredients().then(setData);
+    getIngredients().then((data) => {
+      dispatch(setIngredients(data));
+    });
   }, []);
 
   const errorMessage = (
@@ -43,33 +46,31 @@ const App = () => {
         </div>
       </Container> */}
 
-      <ApiDataContext.Provider value={data}>
-        <Container extraClass={styles.center}>
-          <Col w={6}>
-            <header>
-              <AppHeader />
-            </header>
-          </Col>
-          <Col w={6}>
-            <main>
-              {data.length > 0 && (
-                <Container extraClass={styles.center + " pl-10 pr-10"}>
-                  <Col w={3} extraClass={styles.center}>
-                    <BurgerIngredients />
-                  </Col>
+      <Container extraClass={styles.center}>
+        <Col w={6}>
+          <header>
+            <AppHeader />
+          </header>
+        </Col>
+        <Col w={6}>
+          <main>
+            {data.length > 0 && (
+              <Container extraClass={styles.center + " pl-10 pr-10"}>
+                <Col w={3} extraClass={styles.center}>
+                  <BurgerIngredients />
+                </Col>
 
-                  <Col w={3} extraClass={styles.center + " pl-10"}>
-                    <BurgerConstructor />
-                  </Col>
-                </Container>
-              )}
-              {(!data || data.length === 0) && (
-                <Container extraClass={styles.center}>{errorMessage}</Container>
-              )}
-            </main>
-          </Col>
-        </Container>
-      </ApiDataContext.Provider>
+                <Col w={3} extraClass={styles.center + " pl-10"}>
+                  <BurgerConstructor />
+                </Col>
+              </Container>
+            )}
+            {(!data || data.length === 0) && (
+              <Container extraClass={styles.center}>{errorMessage}</Container>
+            )}
+          </main>
+        </Col>
+      </Container>
     </div>
   );
 };

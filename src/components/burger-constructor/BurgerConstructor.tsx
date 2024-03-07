@@ -5,16 +5,16 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import burgerConstructorStyles from "./BurgerConstructor.module.css";
-import { useContext, useEffect, useMemo, useReducer, useState } from "react";
+import { useEffect, useMemo, useReducer, useState } from "react";
 import useModal from "../../hooks/modal.hook";
 import OrderDetails from "../order-details/OrderDetails";
 import Container from "../container/Container";
 import Col from "../col/Col";
 import styles from "../../index.module.css";
-import { ApiDataContext } from "../../services/apiDataContext";
 import { ApiData } from "../../ApiData.types";
 import { TotalAction, TotalState } from "./BurgerConstructor.types";
 import { createOrder } from "../../utils/burger-api";
+import { useAppSelector } from "../../app/hooks";
 
 const initialState: TotalState = { sum: 0 };
 
@@ -33,7 +33,8 @@ const totalReducer = (state: TotalState, action: TotalAction): TotalState => {
 
 const BurgerConstructor = () => {
   // todo: refactor to redux
-  const data: Array<ApiData> = useContext(ApiDataContext);
+  // const data: Array<ApiData> = useContext(ApiDataContext);
+  const data = useAppSelector((state) => state.ingredients.ingredients);
   const { buns, ingredients } = useMemo(() => {
     return {
       buns: data.filter((item) => item.type === "bun") ?? [],
