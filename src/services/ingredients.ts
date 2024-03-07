@@ -1,20 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../app/store";
 import { ApiData } from "../ApiData.types";
-import { Order } from "../components/order-details/OrderDetails.types";
 
-interface GlobalState {
+interface IngredientsState {
   ingredients: ApiData[];
-  selectedIngredients: ApiData[];
-  ingredientDetails?: ApiData | null;
-  order?: Order | null;
 }
 
-const initialState: GlobalState = {
+const initialState: IngredientsState = {
   ingredients: [],
-  selectedIngredients: [],
-  ingredientDetails: null,
-  order: null,
 };
 
 export const ingredientsSlice = createSlice({
