@@ -13,13 +13,13 @@ import Col from "../col/Col";
 import styles from "../../index.module.css";
 import { ApiData } from "../../ApiData.types";
 import { TotalAction, TotalState } from "./BurgerConstructor.types";
-import { createOrder } from "../../utils/burger-api";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   selectSelectedIngredients,
   setSelectedIngredients,
 } from "../../services/burgerConstructor";
 import { selectIngredients } from "../../services/ingredients";
+import { createOrderRequest, selectOrder } from "../../services/order";
 
 const initialState: TotalState = { sum: 0 };
 
@@ -52,12 +52,12 @@ const BurgerConstructor = () => {
   const [selectedBun, setSelectedBun] = useState<ApiData>(buns[0]);
   // todo: update to selected list of ingredients
   const [ingredientsIdList, setIngredientsIdList] = useState<string[]>([]);
-  const [orderNumber, setOrderNumber] = useState(null);
+  const order = useAppSelector(selectOrder);
   const { openModal, toggleOpen, modal } = useModal({
     details: (
       <OrderDetails
         order={{
-          id: `${orderNumber}`,
+          id: `${order}`,
           state: "start",
         }}
       />
@@ -119,7 +119,7 @@ const BurgerConstructor = () => {
   );
 
   const handleCreateOrderClick = async () => {
-    createOrder(ingredientsIdList).then(setOrderNumber);
+    dispatch(createOrderRequest(ingredientsIdList));
     toggleOpen();
   };
 

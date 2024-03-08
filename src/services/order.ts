@@ -1,27 +1,35 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import type { RootState } from "../app/store";
-import { Order } from "../components/order-details/OrderDetails.types";
+import { createOrder } from "../utils/burger-api";
+import { createGenericSlice, FetchApiState } from "./common";
 
-interface OrderState {
-  order?: Order | null;
-}
+export const createOrderRequest = createAsyncThunk(
+  "order/create",
+  async (selectedIngredients: string[]) =>
+    (await createOrder(selectedIngredients)) as number
+);
 
-const initialState: OrderState = {
-  order: null,
-};
-
-export const orderSlice = createSlice({
+export const orderSlice = createGenericSlice({
   name: "order",
-  initialState,
-  reducers: {
-    setOrder: (state, action: PayloadAction<Order>) => {
-      state.order = action.payload;
-    },
+  initialState: { status: "loading" } as FetchApiState<number | null>,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(createOrderRequest.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(createOrderRequest.fulfilled, (state, action) => {
+      state.data = action.payload;
+      state.status = "finished";
+    });
+    builder.addCase(createOrderRequest.rejected, (state) => {
+      state.status = "error";
+      state.data = null;
+    });
   },
 });
 
-export const { setOrder } = orderSlice.actions;
+export const { start, success, error } = orderSlice.actions;
 
-export const selectOrder = (state: RootState) => state.order.order;
+export const selectOrder = (state: RootState) => state.order.data;
 
 export default orderSlice.reducer;
