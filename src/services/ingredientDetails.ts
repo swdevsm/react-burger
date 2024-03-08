@@ -17,10 +17,14 @@ export const ingredientsDetailsSlice = createSlice({
     setIngredientsDetails: (state, action: PayloadAction<ApiData>) => {
       state.ingredientDetails = action.payload;
     },
+    clearIngredientsDetails: (state) => {
+      state.ingredientDetails = null;
+    },
   },
 });
 
-export const { setIngredientsDetails } = ingredientsDetailsSlice.actions;
+export const { setIngredientsDetails, clearIngredientsDetails } =
+  ingredientsDetailsSlice.actions;
 
 export const selectIngredients = (state: RootState) =>
   state.ingredientDetails.ingredientDetails;

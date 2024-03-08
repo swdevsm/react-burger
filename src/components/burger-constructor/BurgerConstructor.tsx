@@ -62,6 +62,7 @@ const BurgerConstructor = () => {
         }}
       />
     ),
+    onClose: () => {},
   });
 
   const totalPrice = useMemo(() => {

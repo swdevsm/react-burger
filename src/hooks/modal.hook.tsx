@@ -4,15 +4,22 @@ import Modal from "../components/modal/Modal";
 interface ModalHookProps {
   header?: string;
   details: ReactNode;
+  onClose: () => void;
 }
 
-const useModal = ({ header, details }: ModalHookProps) => {
+const useModal = ({ header, details, onClose }: ModalHookProps) => {
   const [openModal, setOpenModal] = useState(false);
   const toggleOpen = () => {
     setOpenModal(!openModal);
   };
   const modal = (
-    <Modal header={header} onClose={toggleOpen}>
+    <Modal
+      header={header}
+      onClose={() => {
+        toggleOpen();
+        onClose();
+      }}
+    >
       {details}
     </Modal>
   );

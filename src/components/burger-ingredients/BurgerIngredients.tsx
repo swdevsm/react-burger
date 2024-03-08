@@ -14,19 +14,30 @@ import IngredientDetails from "../ingredient-details/IngredientDetails";
 import Container from "../container/Container";
 import Col from "../col/Col";
 import styles from "../../index.module.css";
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectIngredients } from "../../services/ingredients";
+import {
+  clearIngredientsDetails,
+  setIngredientsDetails,
+} from "../../services/ingredientDetails";
 
 const Ingredient = ({ ingredient }: IngredientProps) => {
+  const dispatch = useAppDispatch();
   const ingredientDetails = <IngredientDetails ingredient={ingredient} />;
   const { openModal, toggleOpen, modal } = useModal({
     header: "Детали ингредиента",
     details: ingredientDetails,
+    onClose: () => {
+      dispatch(clearIngredientsDetails());
+    },
   });
   return (
     <div>
       <div
-        onClick={toggleOpen}
+        onClick={() => {
+          toggleOpen();
+          dispatch(setIngredientsDetails(ingredient));
+        }}
         className={burgerIngredientsStyles.counterParent}
       >
         <Container extraClass={"pt-6 pl-4"}>
