@@ -14,7 +14,12 @@ import styles from "../../index.module.css";
 import { ApiData } from "../../ApiData.types";
 import { TotalAction, TotalState } from "./BurgerConstructor.types";
 import { createOrder } from "../../utils/burger-api";
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  selectSelectedIngredients,
+  setSelectedIngredients,
+} from "../../services/burgerConstructor";
+import { selectIngredients } from "../../services/ingredients";
 
 const initialState: TotalState = { sum: 0 };
 
@@ -32,7 +37,9 @@ const totalReducer = (state: TotalState, action: TotalAction): TotalState => {
 };
 
 const BurgerConstructor = () => {
-  const { data } = useAppSelector((state) => state.ingredients);
+  const data = useAppSelector(selectIngredients);
+  const selectedIngredients = useAppSelector(selectSelectedIngredients);
+  const dispatch = useAppDispatch();
   const { buns, ingredients } = useMemo(() => {
     return {
       buns: data?.filter((item) => item.type === "bun") ?? [],
@@ -43,8 +50,6 @@ const BurgerConstructor = () => {
   const [total, totalDispatcher] = useReducer(totalReducer, initialState);
   // fixme: change filter to selected bun by dnd ? do not forget update to ingredients list two times
   const [selectedBun, setSelectedBun] = useState<ApiData>(buns[0]);
-  // fixme: change fiter to selected items after dnd
-  const [selectedIngredients, setSelectedIngredients] = useState<ApiData[]>([]);
   // todo: update to selected list of ingredients
   const [ingredientsIdList, setIngredientsIdList] = useState<string[]>([]);
   const [orderNumber, setOrderNumber] = useState(null);
@@ -104,12 +109,12 @@ const BurgerConstructor = () => {
         const start = random(ingredients.length / 2);
         const end = ingredients.length / 2 + random(ingredients.length / 2) - 1;
         const randomized = shuffle(ingredients.slice(start, end));
-        setSelectedIngredients(randomized);
+        dispatch(setSelectedIngredients(randomized));
         const withBunsList = [selectedBun, ...randomized, selectedBun];
         setIngredientsIdList(withBunsList.map((value) => value._id));
       }
     },
-    [buns, data, ingredients, selectedBun]
+    [dispatch, buns, data, ingredients, selectedBun]
   );
 
   const handleCreateOrderClick = async () => {

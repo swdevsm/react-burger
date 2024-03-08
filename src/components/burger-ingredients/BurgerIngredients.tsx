@@ -15,6 +15,7 @@ import Container from "../container/Container";
 import Col from "../col/Col";
 import styles from "../../index.module.css";
 import { useAppSelector } from "../../app/hooks";
+import { selectIngredients } from "../../services/ingredients";
 
 const Ingredient = ({ ingredient }: IngredientProps) => {
   const ingredientDetails = <IngredientDetails ingredient={ingredient} />;
@@ -82,7 +83,7 @@ const IngredientsCategory = ({
 };
 
 const BurgerIngredients = () => {
-  const { data } = useAppSelector((state) => state.ingredients);
+  const data = useAppSelector(selectIngredients);
   const [currentTab, setCurrentTab] = useState("bun");
   const scrollByTab = (id: string) => {
     const elem = document.getElementById(id);
