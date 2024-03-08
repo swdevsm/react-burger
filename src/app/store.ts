@@ -3,15 +3,15 @@ import ingredientsReducer from "../services/ingredients";
 import burgerConstructorReducer from "../services/burgerConstructor";
 import orderReducer from "../services/order";
 import ingredientDetailsReducer from "../services/ingredientDetails";
-import { combineReducers } from "redux";
 
 export const store = configureStore({
-  reducer: combineReducers({
+  reducer: {
     ingredients: ingredientsReducer,
     burgerConstructor: burgerConstructorReducer,
     ingredientDetails: ingredientDetailsReducer,
     order: orderReducer,
-  }),
+  },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -32,13 +32,11 @@ const totalReducer = (state: TotalState, action: TotalAction): TotalState => {
 };
 
 const BurgerConstructor = () => {
-  // todo: refactor to redux
-  // const data: Array<ApiData> = useContext(ApiDataContext);
-  const data = useAppSelector((state) => state.ingredients.ingredients);
+  const { data } = useAppSelector((state) => state.ingredients);
   const { buns, ingredients } = useMemo(() => {
     return {
-      buns: data.filter((item) => item.type === "bun") ?? [],
-      ingredients: data.filter((item) => item.type !== "bun") ?? [],
+      buns: data?.filter((item) => item.type === "bun") ?? [],
+      ingredients: data?.filter((item) => item.type !== "bun") ?? [],
     };
   }, [data]);
   // todo: call dispatcher on dnd actions

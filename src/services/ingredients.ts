@@ -1,28 +1,35 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "../app/store";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { RootState } from "../app/store";
 import { ApiData } from "../ApiData.types";
+import { getIngredients } from "../utils/burger-api";
+import { FetchApiState, createGenericSlice } from "./common";
 
-interface IngredientsState {
-  ingredients: ApiData[];
-}
+export const fetchIngredients = createAsyncThunk(
+  "ingredients/fetch",
+  async () => (await getIngredients()) as ApiData[]
+);
 
-const initialState: IngredientsState = {
-  ingredients: [],
-};
-
-export const ingredientsSlice = createSlice({
+export const ingredientsSlice = createGenericSlice({
   name: "ingredients",
-  initialState,
-  reducers: {
-    setIngredients: (state, action: PayloadAction<ApiData[]>) => {
-      state.ingredients = action.payload;
-    },
+  initialState: { status: "loading" } as FetchApiState<ApiData[]>,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(fetchIngredients.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(fetchIngredients.fulfilled, (state, action) => {
+      state.data = action.payload;
+      state.status = "finished";
+    });
+    builder.addCase(fetchIngredients.rejected, (state) => {
+      state.status = "error";
+      state.data = [];
+    });
   },
 });
 
-export const { setIngredients } = ingredientsSlice.actions;
+export const { success, start, error } = ingredientsSlice.actions;
 
-export const selectIngredients = (state: RootState) =>
-  state.ingredients.ingredients;
+export const selectIngredients = (state: RootState) => state.ingredients.data;
 
 export default ingredientsSlice.reducer;

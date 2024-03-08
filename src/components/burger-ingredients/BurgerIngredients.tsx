@@ -82,7 +82,7 @@ const IngredientsCategory = ({
 };
 
 const BurgerIngredients = () => {
-  const data = useAppSelector((state) => state.ingredients.ingredients);
+  const { data } = useAppSelector((state) => state.ingredients);
   const [currentTab, setCurrentTab] = useState("bun");
   const scrollByTab = (id: string) => {
     const elem = document.getElementById(id);
@@ -134,16 +134,24 @@ const BurgerIngredients = () => {
             <Container extraClass={styles.scroll}>
               <ul>
                 <li>
-                  <IngredientsCategory title="Булки" type="bun" data={data} />
+                  <IngredientsCategory
+                    title="Булки"
+                    type="bun"
+                    data={data ?? []}
+                  />
                 </li>
                 <li>
-                  <IngredientsCategory title="Соусы" type="sauce" data={data} />
+                  <IngredientsCategory
+                    title="Соусы"
+                    type="sauce"
+                    data={data ?? []}
+                  />
                 </li>
                 <li>
                   <IngredientsCategory
                     title="Начинки"
                     type="main"
-                    data={data}
+                    data={data ?? []}
                   />
                 </li>
               </ul>

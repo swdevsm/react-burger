@@ -5,21 +5,24 @@ import BurgerIngredients from "../burger-ingredients/BurgerIngredients.tsx";
 import Container from "../container/Container.tsx";
 import Col from "../col/Col.tsx";
 import styles from "../../index.module.css";
-import { getIngredients } from "../../utils/burger-api.ts";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import { setIngredients } from "../../services/ingredients";
+import { fetchIngredients } from "../../services/ingredients";
 
 const App = () => {
-  const data = useAppSelector((state) => state.ingredients.ingredients);
+  const { status } = useAppSelector((state) => state.ingredients);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    getIngredients().then((data) => {
-      dispatch(setIngredients(data));
-    });
-  }, []);
+    dispatch(fetchIngredients());
+  }, [dispatch]);
 
   const errorMessage = (
+    <p className="text text_type_main-medium text_color_inactive">
+      Error ... Try to update page
+    </p>
+  );
+
+  const loadingMessage = (
     <p className="text text_type_main-medium text_color_inactive">
       Loading ... Try to update page
     </p>
@@ -54,7 +57,7 @@ const App = () => {
         </Col>
         <Col w={6}>
           <main>
-            {data.length > 0 && (
+            {status === "finished" && (
               <Container extraClass={styles.center + " pl-10 pr-10"}>
                 <Col w={3} extraClass={styles.center}>
                   <BurgerIngredients />
@@ -65,8 +68,11 @@ const App = () => {
                 </Col>
               </Container>
             )}
-            {(!data || data.length === 0) && (
+            {status === "error" && (
               <Container extraClass={styles.center}>{errorMessage}</Container>
+            )}
+            {status === "loading" && (
+              <Container extraClass={styles.center}>{loadingMessage}</Container>
             )}
           </main>
         </Col>
