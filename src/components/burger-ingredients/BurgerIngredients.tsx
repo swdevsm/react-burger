@@ -20,6 +20,7 @@ import {
   clearIngredientsDetails,
   setIngredientsDetails,
 } from "../../services/ingredientDetails";
+import { addIngredient } from "../../services/burgerConstructor";
 
 const Ingredient = ({ ingredient }: IngredientProps) => {
   const dispatch = useAppDispatch();
@@ -37,6 +38,7 @@ const Ingredient = ({ ingredient }: IngredientProps) => {
         onClick={() => {
           toggleOpen();
           dispatch(setIngredientsDetails(ingredient));
+          dispatch(addIngredient(ingredient)); //fixme: remove this action to dnd handler
         }}
         className={burgerIngredientsStyles.counterParent}
       >

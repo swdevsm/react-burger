@@ -17,10 +17,20 @@ export const burgerConstructorSlice = createSlice({
     setSelectedIngredients: (state, action: PayloadAction<ApiData[]>) => {
       state.selectedIngredients = action.payload;
     },
+    addIngredient: (state, action: PayloadAction<ApiData>) => {
+      if (action.payload.type !== "bun") {
+        // fixme: bun should be replaced ?
+        state.selectedIngredients = [
+          ...state.selectedIngredients,
+          action.payload,
+        ];
+      }
+    },
   },
 });
 
-export const { setSelectedIngredients } = burgerConstructorSlice.actions;
+export const { setSelectedIngredients, addIngredient } =
+  burgerConstructorSlice.actions;
 
 export const selectSelectedIngredients = (state: RootState) =>
   state.burgerConstructor.selectedIngredients;

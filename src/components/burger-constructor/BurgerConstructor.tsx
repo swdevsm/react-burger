@@ -14,10 +14,7 @@ import styles from "../../index.module.css";
 import { ApiData } from "../../ApiData.types";
 import { TotalAction, TotalState } from "./BurgerConstructor.types";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import {
-  selectSelectedIngredients,
-  setSelectedIngredients,
-} from "../../services/burgerConstructor";
+import { selectSelectedIngredients } from "../../services/burgerConstructor";
 import { selectIngredients } from "../../services/ingredients";
 import { createOrderRequest, selectOrder } from "../../services/order";
 
@@ -39,20 +36,21 @@ const totalReducer = (state: TotalState, action: TotalAction): TotalState => {
 const BurgerConstructor = () => {
   const data = useAppSelector(selectIngredients);
   const selectedIngredients = useAppSelector(selectSelectedIngredients);
+  const order = useAppSelector(selectOrder);
   const dispatch = useAppDispatch();
-  const { buns, ingredients } = useMemo(() => {
-    return {
+
+  const { buns } = useMemo(
+    () => ({
       buns: data?.filter((item) => item.type === "bun") ?? [],
-      ingredients: data?.filter((item) => item.type !== "bun") ?? [],
-    };
-  }, [data]);
+    }),
+    [data]
+  );
   // todo: call dispatcher on dnd actions
   const [total, totalDispatcher] = useReducer(totalReducer, initialState);
   // fixme: change filter to selected bun by dnd ? do not forget update to ingredients list two times
   const [selectedBun, setSelectedBun] = useState<ApiData>(buns[0]);
   // todo: update to selected list of ingredients
   const [ingredientsIdList, setIngredientsIdList] = useState<string[]>([]);
-  const order = useAppSelector(selectOrder);
   const { openModal, toggleOpen, modal } = useModal({
     details: (
       <OrderDetails
@@ -89,33 +87,13 @@ const BurgerConstructor = () => {
       const random = (max: number) => {
         return Math.floor(Math.random() * max);
       };
-      const shuffle = (array: Array<ApiData>) => {
-        let currentIndex = array.length,
-          randomIndex;
-        // While there remain elements to shuffle.
-        while (currentIndex > 0) {
-          // Pick a remaining element.
-          randomIndex = Math.floor(Math.random() * currentIndex);
-          currentIndex--;
-          // And swap it with the current element.
-          [array[currentIndex], array[randomIndex]] = [
-            array[randomIndex],
-            array[currentIndex],
-          ];
-        }
-        return array;
-      };
       if (data) {
         setSelectedBun(buns[random(buns.length)]);
-        const start = random(ingredients.length / 2);
-        const end = ingredients.length / 2 + random(ingredients.length / 2) - 1;
-        const randomized = shuffle(ingredients.slice(start, end));
-        dispatch(setSelectedIngredients(randomized));
-        const withBunsList = [selectedBun, ...randomized, selectedBun];
+        const withBunsList = [selectedBun, ...selectedIngredients, selectedBun];
         setIngredientsIdList(withBunsList.map((value) => value._id));
       }
     },
-    [dispatch, buns, data, ingredients, selectedBun]
+    [buns, data, selectedBun, selectedIngredients]
   );
 
   const handleCreateOrderClick = async () => {
