@@ -5,7 +5,7 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import burgerConstructorStyles from "./BurgerConstructor.module.css";
-import { useEffect, useMemo, useReducer } from "react";
+import { useEffect, useMemo, useReducer, useRef } from "react";
 import useModal from "../../hooks/modal.hook";
 import OrderDetails from "../order-details/OrderDetails";
 import Container from "../container/Container";
@@ -15,13 +15,16 @@ import { TotalAction, TotalState } from "./BurgerConstructor.types";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   addIngredient,
+  moveIngredient,
   removeIngredient,
   selectSelectedBun,
   selectSelectedIngredients,
 } from "../../services/burgerConstructor";
 import { selectIngredients } from "../../services/ingredients";
 import { createOrderRequest, selectOrder } from "../../services/order";
-import { useDrop } from "react-dnd";
+import { ApiData } from "../../ApiData.types";
+import { useDrag, useDrop } from "react-dnd";
+import type { Identifier, XYCoord } from "dnd-core";
 
 const initialState: TotalState = { sum: 0 };
 
@@ -37,6 +40,86 @@ const totalReducer = (state: TotalState, action: TotalAction): TotalState => {
       throw new Error(`Wrong type of action: ${action.type}`);
   }
 };
+
+interface DraggableItemProps {
+  ingredient: ApiData;
+  index: number;
+}
+
+const DraggableItem = ({ ingredient, index }: DraggableItemProps) => {
+  const dispatch = useAppDispatch();
+  const handleRemoveElement = (index: number) => {
+    dispatch(removeIngredient(index));
+  };
+  const ref = useRef<HTMLDivElement>(null);
+  const [{ handlerId }, drop] = useDrop<
+    DragItem,
+    void,
+    { handlerId: Identifier | null }
+  >({
+    accept: "constructor",
+    collect(monitor) {
+      return {
+        handlerId: monitor.getHandlerId(),
+      };
+    },
+    hover(item: DragItem, monitor) {
+      if (!ref.current) {
+        return;
+      }
+      const dragIndex = item.index;
+      const hoverIndex = index;
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+      const hoverBoundingRect = ref.current?.getBoundingClientRect();
+      const hoverMiddleY =
+        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      const clientOffset = monitor.getClientOffset();
+      const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+      }
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+      }
+      dispatch(moveIngredient({ dragIndex, hoverIndex }));
+      item.index = hoverIndex;
+    },
+  });
+
+  const [, drag] = useDrag({
+    type: "constructor",
+    item: () => {
+      return { id: ingredient._id, index };
+    },
+  });
+
+  drag(drop(ref));
+
+  return (
+    <div ref={ref} data-handler-id={handlerId}>
+      <Container extraClass={styles.center + " pt-4"}>
+        <div className={styles.align}>
+          <DragIcon type="primary" />
+        </div>
+        <ConstructorElement
+          isLocked={false}
+          text={ingredient.name}
+          price={ingredient.price}
+          thumbnail={ingredient.image}
+          handleClose={() => handleRemoveElement(index)}
+        />
+      </Container>
+    </div>
+  );
+};
+
+interface DragItem {
+  index: number;
+  id: string;
+  type: string;
+}
 
 const BurgerConstructor = () => {
   const data = useAppSelector(selectIngredients);
@@ -113,10 +196,6 @@ const BurgerConstructor = () => {
     }
   };
 
-  const handleRemoveElement = (index: number) => {
-    dispatch(removeIngredient(index));
-  };
-
   return (
     <div ref={dropTarget}>
       <Container extraClass={styles.center + " pt-25"}>
@@ -140,19 +219,7 @@ const BurgerConstructor = () => {
           <ul className={styles.scroll}>
             {selectedIngredients.map((value, index) => (
               <li key={self.crypto.randomUUID()}>
-                <Container extraClass={styles.center + " pt-4"}>
-                  <div className={styles.align}>
-                    <DragIcon type="primary" />
-                  </div>
-
-                  <ConstructorElement
-                    isLocked={false}
-                    text={value.name}
-                    price={value.price}
-                    thumbnail={value.image}
-                    handleClose={() => handleRemoveElement(index)}
-                  />
-                </Container>
+                <DraggableItem ingredient={value} index={index} />
               </li>
             ))}
           </ul>

@@ -12,6 +12,11 @@ const initialState: BurgerConstructorState = {
   selectedIngredients: [],
 };
 
+interface MoveAction {
+  dragIndex: number;
+  hoverIndex: number;
+}
+
 export const burgerConstructorSlice = createSlice({
   name: "burgerConstructor",
   initialState,
@@ -37,6 +42,18 @@ export const burgerConstructorSlice = createSlice({
       result.splice(action.payload, 1);
       state.selectedIngredients = result;
     },
+    moveIngredient: (state, action: PayloadAction<MoveAction>) => {
+      const dragIndex = action.payload.dragIndex;
+      const hoverIndex = action.payload.hoverIndex;
+      // console.log(dragIndex, "->", hoverIndex);
+
+      const result = [...state.selectedIngredients];
+      // console.log(result)
+      const removed = result.splice(dragIndex, 1);
+
+      result.splice(hoverIndex, 0, ...removed);
+      state.selectedIngredients = result;
+    },
   },
 });
 
@@ -45,6 +62,7 @@ export const {
   addIngredient,
   removeIngredient,
   setSelectedBun,
+  moveIngredient,
 } = burgerConstructorSlice.actions;
 
 export const selectSelectedIngredients = (state: RootState) =>
