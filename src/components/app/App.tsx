@@ -30,59 +30,53 @@ const App = () => {
     </p>
   );
 
-  return (
-    <div>
-      {/* // for debug
-       <Container>
-        <div className={commonStyles.col2} style={{ background: "blue" }}>
-          <p>Contents of first col</p>
-        </div>
-        <div className={commonStyles.col3} style={{ background: "red" }}>
-          <p>Contents of second col</p>
-        </div>
-        <div className={commonStyles.col1} style={{ background: "green" }}>
-          <p>Contents of third col</p>
-        </div>
-        <div className={commonStyles.col5} style={{ background: "purple" }}>
-          <p>Contents of fourth col</p>
-        </div>
-        <div className={commonStyles.col6} style={{ background: "orange" }}>
-          <p>Contents of fifth col</p>
-        </div>
-      </Container> */}
+  try {
+    return (
+      <div>
+        <Container extraClass={styles.center}>
+          <Col w={6}>
+            <header>
+              <AppHeader />
+            </header>
+          </Col>
+          <Col w={6}>
+            <main>
+              {status === "finished" && (
+                <DndProvider backend={HTML5Backend}>
+                  <Container extraClass={styles.center + " pl-10 pr-10"}>
+                    <Col w={3} extraClass={styles.center}>
+                      <BurgerIngredients />
+                    </Col>
 
-      <Container extraClass={styles.center}>
-        <Col w={6}>
-          <header>
-            <AppHeader />
-          </header>
-        </Col>
-        <Col w={6}>
-          <main>
-            {status === "finished" && (
-              <DndProvider backend={HTML5Backend}>
-                <Container extraClass={styles.center + " pl-10 pr-10"}>
-                  <Col w={3} extraClass={styles.center}>
-                    <BurgerIngredients />
-                  </Col>
-
-                  <Col w={3} extraClass={styles.center + " pl-10"}>
-                    <BurgerConstructor />
-                  </Col>
+                    <Col w={3} extraClass={styles.center + " pl-10"}>
+                      <BurgerConstructor />
+                    </Col>
+                  </Container>
+                </DndProvider>
+              )}
+              {status === "error" && (
+                <Container extraClass={styles.center}>{errorMessage}</Container>
+              )}
+              {status === "loading" && (
+                <Container extraClass={styles.center}>
+                  {loadingMessage}
                 </Container>
-              </DndProvider>
-            )}
-            {status === "error" && (
-              <Container extraClass={styles.center}>{errorMessage}</Container>
-            )}
-            {status === "loading" && (
-              <Container extraClass={styles.center}>{loadingMessage}</Container>
-            )}
-          </main>
-        </Col>
-      </Container>
-    </div>
-  );
+              )}
+            </main>
+          </Col>
+        </Container>
+      </div>
+    );
+  } catch (e) {
+    return (
+      <section>
+        <h1>Что-то пошло не так :(</h1>
+        <p>
+          В приложении произошла ошибка. Пожалуйста, перезагрузите страницу.
+        </p>
+      </section>
+    );
+  }
 };
 
 export default App;
