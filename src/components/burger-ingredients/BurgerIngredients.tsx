@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import burgerIngredientsStyles from "./BurgerIngredients.module.css";
 import {
   Counter,
@@ -20,10 +20,14 @@ import {
   clearIngredientsDetails,
   setIngredientsDetails,
 } from "../../services/ingredientDetails";
-import { addIngredient } from "../../services/burgerConstructor";
+// import { addIngredient } from "../../services/burgerConstructor";
+import { useDrag } from "react-dnd";
+import { selectSelectedIngredients } from "../../services/burgerConstructor";
 
 const Ingredient = ({ ingredient }: IngredientProps) => {
   const dispatch = useAppDispatch();
+  const selectedIngredients = useAppSelector(selectSelectedIngredients);
+  const [count, setCount] = useState(0);
   const ingredientDetails = <IngredientDetails ingredient={ingredient} />;
   const { openModal, toggleOpen, modal } = useModal({
     header: "Детали ингредиента",
@@ -32,13 +36,28 @@ const Ingredient = ({ ingredient }: IngredientProps) => {
       dispatch(clearIngredientsDetails());
     },
   });
+  // const [{ isDrag }, dragRef] = useDrag({
+  const [, dragRef] = useDrag({
+    type: "ingredient",
+    item: { id: ingredient._id },
+    // collect: (monitor) => ({
+    // isDrag: monitor.isDragging(),
+    // }),
+  });
+
+  useEffect(() => {
+    if (selectedIngredients) {
+      setCount(
+        selectedIngredients.filter((v) => v._id === ingredient._id).length
+      );
+    }
+  }, [selectedIngredients, ingredient]);
   return (
-    <div>
+    <div ref={dragRef}>
       <div
         onClick={() => {
           toggleOpen();
           dispatch(setIngredientsDetails(ingredient));
-          dispatch(addIngredient(ingredient)); //fixme: remove this action to dnd handler
         }}
         className={burgerIngredientsStyles.counterParent}
       >
@@ -58,7 +77,7 @@ const Ingredient = ({ ingredient }: IngredientProps) => {
             </p>
           </Col>
         </Container>
-        <Counter count={1} size="default" />
+        {count > 0 && <Counter count={count} size="default" />}
       </div>
       {openModal && modal}
     </div>

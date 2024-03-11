@@ -19,9 +19,13 @@ export const burgerConstructorSlice = createSlice({
     },
     addIngredient: (state, action: PayloadAction<ApiData>) => {
       if (action.payload.type !== "bun") {
-        // fixme: bun should be replaced ?
         state.selectedIngredients = [
           ...state.selectedIngredients,
+          action.payload,
+        ];
+      } else {
+        state.selectedIngredients = [
+          ...[...state.selectedIngredients].filter((v) => v.type !== "bun"),
           action.payload,
         ];
       }

@@ -7,6 +7,8 @@ import Col from "../col/Col.tsx";
 import styles from "../../index.module.css";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { fetchIngredients } from "../../services/ingredients";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const App = () => {
   const { status } = useAppSelector((state) => state.ingredients);
@@ -58,15 +60,17 @@ const App = () => {
         <Col w={6}>
           <main>
             {status === "finished" && (
-              <Container extraClass={styles.center + " pl-10 pr-10"}>
-                <Col w={3} extraClass={styles.center}>
-                  <BurgerIngredients />
-                </Col>
+              <DndProvider backend={HTML5Backend}>
+                <Container extraClass={styles.center + " pl-10 pr-10"}>
+                  <Col w={3} extraClass={styles.center}>
+                    <BurgerIngredients />
+                  </Col>
 
-                <Col w={3} extraClass={styles.center + " pl-10"}>
-                  <BurgerConstructor />
-                </Col>
-              </Container>
+                  <Col w={3} extraClass={styles.center + " pl-10"}>
+                    <BurgerConstructor />
+                  </Col>
+                </Container>
+              </DndProvider>
             )}
             {status === "error" && (
               <Container extraClass={styles.center}>{errorMessage}</Container>
