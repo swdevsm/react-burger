@@ -194,6 +194,7 @@ const BurgerConstructor = () => {
         selectedBun._id,
       ];
       dispatch(createOrderRequest(ids)).then(() =>
+        // todo: check success ?
         dispatch(clearSelectedIngredients())
       );
       toggleOpen();
