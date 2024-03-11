@@ -5,7 +5,7 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import burgerConstructorStyles from "./BurgerConstructor.module.css";
-import { useEffect, useMemo, useReducer, useState } from "react";
+import { useEffect, useMemo, useReducer } from "react";
 import useModal from "../../hooks/modal.hook";
 import OrderDetails from "../order-details/OrderDetails";
 import Container from "../container/Container";
@@ -64,8 +64,6 @@ const BurgerConstructor = () => {
 
   // todo: call dispatcher on dnd actions
   const [total, totalDispatcher] = useReducer(totalReducer, initialState);
-  // todo: update to selected list of ingredients
-  const [ingredientsIdList, setIngredientsIdList] = useState<string[]>([]);
   const { openModal, toggleOpen, modal } = useModal({
     details: (
       <OrderDetails
@@ -101,16 +99,18 @@ const BurgerConstructor = () => {
     });
   }, [totalPrice]);
 
-  useEffect(
-    function prepareCreateOrder() {
-      setIngredientsIdList(selectedIngredients.map((value) => value._id));
-    },
-    [selectedIngredients]
-  );
-
   const handleCreateOrderClick = async () => {
-    dispatch(createOrderRequest(ingredientsIdList));
-    toggleOpen();
+    if (selectedBun) {
+      const ids = [
+        selectedBun._id,
+        ...selectedIngredients.map((value) => value._id),
+        selectedBun._id,
+      ];
+      dispatch(createOrderRequest(ids));
+      toggleOpen();
+    } else {
+      throw Error("select bun first");
+    }
   };
 
   const handleRemoveElement = (index: number) => {
