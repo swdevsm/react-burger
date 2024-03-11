@@ -22,6 +22,7 @@ import {
 } from "../../services/ingredientDetails";
 import { useDrag } from "react-dnd";
 import { selectSelectedIngredients } from "../../services/burgerConstructor";
+import { useInView } from "react-intersection-observer";
 
 const Ingredient = ({ ingredient }: IngredientProps) => {
   const dispatch = useAppDispatch();
@@ -112,15 +113,16 @@ const IngredientsCategory = ({
 
 const BurgerIngredients = () => {
   const data = useAppSelector(selectIngredients);
-  const [currentTab, setCurrentTab] = useState("bun");
   const scrollByTab = (id: string) => {
     const elem = document.getElementById(id);
     elem?.scrollIntoView({ behavior: "smooth" });
   };
   const handleTabClick = (value: string) => {
-    setCurrentTab(value);
     scrollByTab(value);
   };
+  const { ref: ref1, inView: inView1 } = useInView();
+  const { ref: ref2, inView: inView2 } = useInView();
+  const { ref: ref3, inView: inView3 } = useInView();
   return (
     <Container>
       <Col w={6}>
@@ -128,31 +130,19 @@ const BurgerIngredients = () => {
 
         <Container extraClass={styles.center + " pt-5"}>
           <Col w={2}>
-            <Tab
-              value="bun"
-              active={currentTab === "bun"}
-              onClick={handleTabClick}
-            >
+            <Tab value="bun" active={inView1} onClick={handleTabClick}>
               Булки
             </Tab>
           </Col>
 
           <Col w={2}>
-            <Tab
-              value="sauce"
-              active={currentTab === "sauce"}
-              onClick={handleTabClick}
-            >
+            <Tab value="sauce" active={inView2} onClick={handleTabClick}>
               Соусы
             </Tab>
           </Col>
 
           <Col w={2}>
-            <Tab
-              value="main"
-              active={currentTab === "main"}
-              onClick={handleTabClick}
-            >
+            <Tab value="main" active={inView3} onClick={handleTabClick}>
               Начинки
             </Tab>
           </Col>
@@ -163,25 +153,31 @@ const BurgerIngredients = () => {
             <Container extraClass={styles.scroll}>
               <ul>
                 <li>
-                  <IngredientsCategory
-                    title="Булки"
-                    type="bun"
-                    data={data ?? []}
-                  />
+                  <div ref={ref1}>
+                    <IngredientsCategory
+                      title="Булки"
+                      type="bun"
+                      data={data ?? []}
+                    />
+                  </div>
                 </li>
                 <li>
-                  <IngredientsCategory
-                    title="Соусы"
-                    type="sauce"
-                    data={data ?? []}
-                  />
+                  <div ref={ref2}>
+                    <IngredientsCategory
+                      title="Соусы"
+                      type="sauce"
+                      data={data ?? []}
+                    />
+                  </div>
                 </li>
                 <li>
-                  <IngredientsCategory
-                    title="Начинки"
-                    type="main"
-                    data={data ?? []}
-                  />
+                  <div ref={ref3}>
+                    <IngredientsCategory
+                      title="Начинки"
+                      type="main"
+                      data={data ?? []}
+                    />
+                  </div>
                 </li>
               </ul>
             </Container>
