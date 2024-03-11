@@ -30,6 +30,6 @@ export const orderSlice = createGenericSlice({
 
 export const { start, success, error } = orderSlice.actions;
 
-export const selectOrder = (state: RootState) => state.order.data;
+export const selectOrder = (state: RootState) => state.order;
 
 export default orderSlice.reducer;

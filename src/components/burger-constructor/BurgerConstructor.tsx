@@ -15,6 +15,7 @@ import { TotalAction, TotalState } from "./BurgerConstructor.types";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   addIngredient,
+  clearSelectedIngredients,
   moveIngredient,
   removeIngredient,
   selectSelectedBun,
@@ -126,7 +127,8 @@ const BurgerConstructor = () => {
   const selectedIngredients = useAppSelector(selectSelectedIngredients);
   const selectedBun = useAppSelector(selectSelectedBun);
 
-  const order = useAppSelector(selectOrder);
+  const { data: order, status } = useAppSelector(selectOrder);
+
   const dispatch = useAppDispatch();
 
   const onDropHandler = (itemId: string) => {
@@ -154,7 +156,7 @@ const BurgerConstructor = () => {
       <OrderDetails
         order={{
           id: `${order}`,
-          state: "start",
+          state: status,
         }}
       />
     ),
@@ -191,7 +193,9 @@ const BurgerConstructor = () => {
         ...selectedIngredients.map((value) => value.ingredient._id),
         selectedBun._id,
       ];
-      dispatch(createOrderRequest(ids));
+      dispatch(createOrderRequest(ids)).then(() =>
+        dispatch(clearSelectedIngredients())
+      );
       toggleOpen();
     } else {
       throw Error("select bun first");
@@ -256,6 +260,7 @@ const BurgerConstructor = () => {
                 type="primary"
                 size="large"
                 onClick={handleCreateOrderClick}
+                disabled={selectedBun == null}
               >
                 Оформить заказ
               </Button>

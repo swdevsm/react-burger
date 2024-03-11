@@ -3,12 +3,12 @@ import type { RootState } from "../app/store";
 import { ApiData } from "../ApiData.types";
 
 interface BurgerConstructorState {
-  selectedBun?: ApiData;
+  selectedBun: ApiData | null;
   selectedIngredients: ApiDataWithUniqueId[];
 }
 
 const initialState: BurgerConstructorState = {
-  selectedBun: undefined,
+  selectedBun: null,
   selectedIngredients: [],
 };
 
@@ -52,6 +52,10 @@ export const burgerConstructorSlice = createSlice({
       result.splice(hoverIndex, 0, ...removed);
       state.selectedIngredients = result;
     },
+    clearSelectedIngredients: (state) => {
+      state.selectedIngredients = [];
+      state.selectedBun = null;
+    },
   },
 });
 
@@ -60,6 +64,7 @@ export const {
   removeIngredient,
   setSelectedBun,
   moveIngredient,
+  clearSelectedIngredients,
 } = burgerConstructorSlice.actions;
 
 export const selectSelectedIngredients = (state: RootState) =>
