@@ -15,6 +15,8 @@ import { TotalAction, TotalState } from "./BurgerConstructor.types";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   addIngredient,
+  removeIngredient,
+  selectSelectedBun,
   selectSelectedIngredients,
 } from "../../services/burgerConstructor";
 import { selectIngredients } from "../../services/ingredients";
@@ -39,6 +41,8 @@ const totalReducer = (state: TotalState, action: TotalAction): TotalState => {
 const BurgerConstructor = () => {
   const data = useAppSelector(selectIngredients);
   const selectedIngredients = useAppSelector(selectSelectedIngredients);
+  const selectedBun = useAppSelector(selectSelectedBun);
+
   const order = useAppSelector(selectOrder);
   const dispatch = useAppDispatch();
 
@@ -58,21 +62,6 @@ const BurgerConstructor = () => {
     },
   });
 
-  const { bun } = useMemo(
-    () => ({
-      bun: selectedIngredients?.filter((item) => item.type === "bun") ?? [],
-    }),
-    [selectedIngredients]
-  );
-
-  const { ingredients } = useMemo(
-    () => ({
-      ingredients:
-        selectedIngredients?.filter((item) => item.type !== "bun") ?? [],
-    }),
-    [selectedIngredients]
-  );
-
   // todo: call dispatcher on dnd actions
   const [total, totalDispatcher] = useReducer(totalReducer, initialState);
   // todo: update to selected list of ingredients
@@ -90,16 +79,16 @@ const BurgerConstructor = () => {
   });
 
   const totalPrice = useMemo(() => {
-    if (bun.length > 0) {
-      const buns = bun[0].price * 2;
-      const ingredientsPrice = ingredients
+    if (selectedBun) {
+      const buns = selectedBun.price * 2;
+      const ingredientsPrice = selectedIngredients
         .map((value) => value.price)
         .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
       return ingredientsPrice + buns;
     } else {
       return 0;
     }
-  }, [bun, ingredients]);
+  }, [selectedBun, selectedIngredients]);
 
   useEffect(() => {
     totalDispatcher({
@@ -124,7 +113,9 @@ const BurgerConstructor = () => {
     toggleOpen();
   };
 
-  const selectedBun = selectedIngredients.filter((v) => v.type === "bun")[0];
+  const handleRemoveElement = (index: number) => {
+    dispatch(removeIngredient(index));
+  };
 
   return (
     <div ref={dropTarget}>
@@ -147,24 +138,23 @@ const BurgerConstructor = () => {
 
         <Container>
           <ul className={styles.scroll}>
-            {selectedIngredients
-              .filter((v) => v.type !== "bun")
-              .map((value) => (
-                <li key={self.crypto.randomUUID()}>
-                  <Container extraClass={styles.center + " pt-4"}>
-                    <div className={styles.align}>
-                      <DragIcon type="primary" />
-                    </div>
+            {selectedIngredients.map((value, index) => (
+              <li key={self.crypto.randomUUID()}>
+                <Container extraClass={styles.center + " pt-4"}>
+                  <div className={styles.align}>
+                    <DragIcon type="primary" />
+                  </div>
 
-                    <ConstructorElement
-                      isLocked={false}
-                      text={value.name}
-                      price={value.price}
-                      thumbnail={value.image}
-                    />
-                  </Container>
-                </li>
-              ))}
+                  <ConstructorElement
+                    isLocked={false}
+                    text={value.name}
+                    price={value.price}
+                    thumbnail={value.image}
+                    handleClose={() => handleRemoveElement(index)}
+                  />
+                </Container>
+              </li>
+            ))}
           </ul>
         </Container>
 
