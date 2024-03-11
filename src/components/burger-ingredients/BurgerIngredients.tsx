@@ -20,7 +20,6 @@ import {
   clearIngredientsDetails,
   setIngredientsDetails,
 } from "../../services/ingredientDetails";
-// import { addIngredient } from "../../services/burgerConstructor";
 import { useDrag } from "react-dnd";
 import { selectSelectedIngredients } from "../../services/burgerConstructor";
 
@@ -36,19 +35,16 @@ const Ingredient = ({ ingredient }: IngredientProps) => {
       dispatch(clearIngredientsDetails());
     },
   });
-  // const [{ isDrag }, dragRef] = useDrag({
   const [, dragRef] = useDrag({
     type: "ingredient",
     item: { id: ingredient._id },
-    // collect: (monitor) => ({
-    // isDrag: monitor.isDragging(),
-    // }),
   });
 
   useEffect(() => {
     if (selectedIngredients) {
       setCount(
-        selectedIngredients.filter((v) => v._id === ingredient._id).length
+        selectedIngredients.filter((v) => v.ingredient._id === ingredient._id)
+          .length
       );
     }
   }, [selectedIngredients, ingredient]);

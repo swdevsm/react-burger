@@ -132,7 +132,9 @@ const BurgerConstructor = () => {
   const onDropHandler = (itemId: string) => {
     const ingredient = data?.find((v) => v._id === itemId);
     if (ingredient) {
-      dispatch(addIngredient(ingredient));
+      dispatch(
+        addIngredient({ uniqueId: self.crypto.randomUUID(), ingredient })
+      );
     } else {
       throw Error(`wrong ingredient id: ${itemId}`);
     }
@@ -163,7 +165,7 @@ const BurgerConstructor = () => {
     if (selectedBun) {
       const buns = selectedBun.price * 2;
       const ingredientsPrice = selectedIngredients
-        .map((value) => value.price)
+        .map((value) => value.ingredient.price)
         .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
       return ingredientsPrice + buns;
     } else {
@@ -186,7 +188,7 @@ const BurgerConstructor = () => {
     if (selectedBun) {
       const ids = [
         selectedBun._id,
-        ...selectedIngredients.map((value) => value._id),
+        ...selectedIngredients.map((value) => value.ingredient._id),
         selectedBun._id,
       ];
       dispatch(createOrderRequest(ids));
@@ -218,8 +220,8 @@ const BurgerConstructor = () => {
         <Container>
           <ul className={styles.scroll}>
             {selectedIngredients.map((value, index) => (
-              <li key={self.crypto.randomUUID()}>
-                <DraggableItem ingredient={value} index={index} />
+              <li key={value.uniqueId}>
+                <DraggableItem ingredient={value.ingredient} index={index} />
               </li>
             ))}
           </ul>
