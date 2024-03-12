@@ -6,7 +6,10 @@ import Col from "../col/Col";
 import styles from "../../index.module.css";
 
 const OrderDetails = ({ order }: OrderDetailsProps) => {
-  const orderId = <p className="text text_type_digits-large">{order.id}</p>;
+  const { id, state } = order;
+  const orderId = <p className="text text_type_digits-large">{id}</p>;
+  const loading = <p className="text text_type_main-medium pb-20">Загрузка</p>;
+  const error = <p className="text text_type_main-medium pb-20">Ошибка :(</p>;
   const orderIdMessage = (
     <p className="text text_type_main-medium">идентификатор заказа</p>
   );
@@ -18,6 +21,24 @@ const OrderDetails = ({ order }: OrderDetailsProps) => {
       Дождитесь готовности на орбитальной станции
     </p>
   );
+  if (state == "loading") {
+    return (
+      <Container>
+        <Col w={6}>
+          <Container extraClass={styles.center}>{loading}</Container>
+        </Col>
+      </Container>
+    );
+  }
+  if (state == "error") {
+    return (
+      <Container>
+        <Col w={6}>
+          <Container extraClass={styles.center}>{error}</Container>
+        </Col>
+      </Container>
+    );
+  }
   return (
     <Container>
       <Col w={6}>

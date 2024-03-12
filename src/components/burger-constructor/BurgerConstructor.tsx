@@ -5,16 +5,27 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import burgerConstructorStyles from "./BurgerConstructor.module.css";
-import { useContext, useEffect, useMemo, useReducer, useState } from "react";
+import { useEffect, useMemo, useReducer, useRef } from "react";
 import useModal from "../../hooks/modal.hook";
 import OrderDetails from "../order-details/OrderDetails";
 import Container from "../container/Container";
 import Col from "../col/Col";
 import styles from "../../index.module.css";
-import { ApiDataContext } from "../../services/apiDataContext";
-import { ApiData } from "../../ApiData.types";
 import { TotalAction, TotalState } from "./BurgerConstructor.types";
-import { createOrder } from "../../utils/burger-api";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  addIngredient,
+  clearSelectedIngredients,
+  moveIngredient,
+  removeIngredient,
+  selectSelectedBun,
+  selectSelectedIngredients,
+} from "../../services/burgerConstructor";
+import { selectIngredients } from "../../services/ingredients";
+import { createOrderRequest, selectOrder } from "../../services/order";
+import { ApiData } from "../../ApiData.types";
+import { useDrag, useDrop } from "react-dnd";
+import type { Identifier, XYCoord } from "dnd-core";
 
 const initialState: TotalState = { sum: 0 };
 
@@ -31,42 +42,138 @@ const totalReducer = (state: TotalState, action: TotalAction): TotalState => {
   }
 };
 
+interface DraggableItemProps {
+  ingredient: ApiData;
+  index: number;
+}
+
+const DraggableItem = ({ ingredient, index }: DraggableItemProps) => {
+  const dispatch = useAppDispatch();
+  const handleRemoveElement = (index: number) => {
+    dispatch(removeIngredient(index));
+  };
+  const ref = useRef<HTMLDivElement>(null);
+  const [{ handlerId }, drop] = useDrop<
+    DragItem,
+    void,
+    { handlerId: Identifier | null }
+  >({
+    accept: "constructor",
+    collect(monitor) {
+      return {
+        handlerId: monitor.getHandlerId(),
+      };
+    },
+    hover(item: DragItem, monitor) {
+      if (!ref.current) {
+        return;
+      }
+      const dragIndex = item.index;
+      const hoverIndex = index;
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+      const hoverBoundingRect = ref.current?.getBoundingClientRect();
+      const hoverMiddleY =
+        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      const clientOffset = monitor.getClientOffset();
+      const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+      }
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+      }
+      dispatch(moveIngredient({ dragIndex, hoverIndex }));
+      item.index = hoverIndex;
+    },
+  });
+
+  const [, drag] = useDrag({
+    type: "constructor",
+    item: () => {
+      return { id: ingredient._id, index };
+    },
+  });
+
+  drag(drop(ref));
+
+  return (
+    <div ref={ref} data-handler-id={handlerId}>
+      <Container extraClass={styles.center + " pt-4"}>
+        <div className={styles.align}>
+          <DragIcon type="primary" />
+        </div>
+        <ConstructorElement
+          isLocked={false}
+          text={ingredient.name}
+          price={ingredient.price}
+          thumbnail={ingredient.image}
+          handleClose={() => handleRemoveElement(index)}
+        />
+      </Container>
+    </div>
+  );
+};
+
+interface DragItem {
+  index: number;
+  id: string;
+  type: string;
+}
+
 const BurgerConstructor = () => {
-  // todo: refactor to redux
-  const data: Array<ApiData> = useContext(ApiDataContext);
-  const { buns, ingredients } = useMemo(() => {
-    return {
-      buns: data.filter((item) => item.type === "bun") ?? [],
-      ingredients: data.filter((item) => item.type !== "bun") ?? [],
-    };
-  }, [data]);
+  const data = useAppSelector(selectIngredients);
+  const selectedIngredients = useAppSelector(selectSelectedIngredients);
+  const selectedBun = useAppSelector(selectSelectedBun);
+
+  const { data: order, status } = useAppSelector(selectOrder);
+
+  const dispatch = useAppDispatch();
+
+  const onDropHandler = (itemId: string) => {
+    const ingredient = data?.find((v) => v._id === itemId);
+    if (ingredient) {
+      dispatch(
+        addIngredient({ uniqueId: self.crypto.randomUUID(), ingredient })
+      );
+    } else {
+      throw Error(`wrong ingredient id: ${itemId}`);
+    }
+  };
+
+  const [, dropTarget] = useDrop({
+    accept: "ingredient",
+    drop(itemId: { id: string }) {
+      onDropHandler(itemId.id);
+    },
+  });
+
   // todo: call dispatcher on dnd actions
   const [total, totalDispatcher] = useReducer(totalReducer, initialState);
-  // fixme: change filter to selected bun by dnd ? do not forget update to ingredients list two times
-  const [selectedBun, setSelectedBun] = useState<ApiData>(buns[0]);
-  // fixme: change fiter to selected items after dnd
-  const [selectedIngredients, setSelectedIngredients] = useState<ApiData[]>([]);
-  // todo: update to selected list of ingredients
-  const [ingredientsIdList, setIngredientsIdList] = useState<string[]>([]);
-  const [orderNumber, setOrderNumber] = useState(null);
   const { openModal, toggleOpen, modal } = useModal({
     details: (
       <OrderDetails
         order={{
-          id: `${orderNumber}`,
-          state: "start",
+          id: `${order}`,
+          state: status,
         }}
       />
     ),
+    onClose: () => {},
   });
 
   const totalPrice = useMemo(() => {
-    const bunPrice = selectedBun.price * 2;
-    const ingredientsPrice = selectedIngredients
-      .map((value) => value.price)
-      .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-    return bunPrice + ingredientsPrice;
-  }, [selectedIngredients, selectedBun]);
+    if (selectedBun) {
+      const buns = selectedBun.price * 2;
+      const ingredientsPrice = selectedIngredients
+        .map((value) => value.ingredient.price)
+        .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+      return ingredientsPrice + buns;
+    } else {
+      return 0;
+    }
+  }, [selectedBun, selectedIngredients]);
 
   useEffect(() => {
     totalDispatcher({
@@ -79,119 +186,92 @@ const BurgerConstructor = () => {
     });
   }, [totalPrice]);
 
-  useEffect(
-    function demoTotalCalculation() {
-      const random = (max: number) => {
-        return Math.floor(Math.random() * max);
-      };
-      const shuffle = (array: Array<ApiData>) => {
-        let currentIndex = array.length,
-          randomIndex;
-        // While there remain elements to shuffle.
-        while (currentIndex > 0) {
-          // Pick a remaining element.
-          randomIndex = Math.floor(Math.random() * currentIndex);
-          currentIndex--;
-          // And swap it with the current element.
-          [array[currentIndex], array[randomIndex]] = [
-            array[randomIndex],
-            array[currentIndex],
-          ];
-        }
-        return array;
-      };
-      if (data) {
-        setSelectedBun(buns[random(buns.length)]);
-        const start = random(ingredients.length / 2);
-        const end = ingredients.length / 2 + random(ingredients.length / 2) - 1;
-        const randomized = shuffle(ingredients.slice(start, end));
-        setSelectedIngredients(randomized);
-        const withBunsList = [selectedBun, ...randomized, selectedBun];
-        setIngredientsIdList(withBunsList.map((value) => value._id));
-      }
-    },
-    [buns, data, ingredients, selectedBun]
-  );
-
   const handleCreateOrderClick = async () => {
-    createOrder(ingredientsIdList).then(setOrderNumber);
-    toggleOpen();
+    if (selectedBun) {
+      const ids = [
+        selectedBun._id,
+        ...selectedIngredients.map((value) => value.ingredient._id),
+        selectedBun._id,
+      ];
+      dispatch(createOrderRequest(ids)).then(() =>
+        // todo: check success ?
+        dispatch(clearSelectedIngredients())
+      );
+      toggleOpen();
+    } else {
+      throw Error("select bun first");
+    }
   };
 
   return (
-    <Container extraClass={styles.center + " pt-25"}>
-      <Col w={6}>
-        <Container extraClass={`${styles.center}`}>
-          <div className={burgerConstructorStyles.emptyDragIcon} />
-          <ConstructorElement
-            key={selectedBun._id}
-            type="top"
-            isLocked={true}
-            text={`${selectedBun.name} (верх)`}
-            price={selectedBun.price}
-            thumbnail={selectedBun.image}
-          />
+    <div ref={dropTarget}>
+      <Container extraClass={styles.center + " pt-25"}>
+        <Col w={6}>
+          <Container extraClass={`${styles.center}`}>
+            <div className={burgerConstructorStyles.emptyDragIcon} />
+            {selectedBun && (
+              <ConstructorElement
+                key={selectedBun._id}
+                type="top"
+                isLocked={true}
+                text={`${selectedBun.name} (верх)`}
+                price={selectedBun.price}
+                thumbnail={selectedBun.image}
+              />
+            )}
+          </Container>
+        </Col>
+
+        <Container>
+          <ul className={styles.scroll}>
+            {selectedIngredients.map((value, index) => (
+              <li key={value.uniqueId}>
+                <DraggableItem ingredient={value.ingredient} index={index} />
+              </li>
+            ))}
+          </ul>
         </Container>
-      </Col>
 
-      <Container>
-        <ul className={styles.scroll}>
-          {selectedIngredients.map((value) => (
-            <li key={value._id}>
-              {/* fixme: use uuid as key */}
-              <Container extraClass={styles.center + " pt-4"}>
-                <div className={styles.align}>
-                  <DragIcon type="primary" />
-                </div>
+        <Col w={6}>
+          <Container extraClass={`${styles.center} pt-4`}>
+            <div className={burgerConstructorStyles.emptyDragIcon} />
+            {selectedBun && (
+              <ConstructorElement
+                key={selectedBun._id}
+                type={"bottom"}
+                isLocked={true}
+                text={`${selectedBun.name} (низ)`}
+                price={selectedBun.price}
+                thumbnail={selectedBun.image}
+              />
+            )}
+          </Container>
+        </Col>
 
-                <ConstructorElement
-                  isLocked={false}
-                  text={value.name}
-                  price={value.price}
-                  thumbnail={value.image}
-                />
-              </Container>
-            </li>
-          ))}
-        </ul>
+        <Col w={6}>
+          <Container extraClass={styles.right + " pt-10"}>
+            <p className="text text_type_digits-medium">{total.sum}</p>
+            <div className={"pl-4"}>
+              <CurrencyIcon type="primary" />
+            </div>
+            <div className="pl-10 pb-10">
+              {/* fixme: refactor to <button> ? */}
+              <Button
+                htmlType="button"
+                type="primary"
+                size="large"
+                onClick={handleCreateOrderClick}
+                disabled={selectedBun == null}
+              >
+                Оформить заказ
+              </Button>
+            </div>
+          </Container>
+        </Col>
+
+        {openModal && modal}
       </Container>
-
-      <Col w={6}>
-        <Container extraClass={`${styles.center} pt-4`}>
-          <div className={burgerConstructorStyles.emptyDragIcon} />
-          <ConstructorElement
-            key={selectedBun._id}
-            type={"bottom"}
-            isLocked={true}
-            text={`${selectedBun.name} (низ)`}
-            price={selectedBun.price}
-            thumbnail={selectedBun.image}
-          />
-        </Container>
-      </Col>
-
-      <Col w={6}>
-        <Container extraClass={styles.right + " pt-10"}>
-          <p className="text text_type_digits-medium">{total.sum}</p>
-          <div className={"pl-4"}>
-            <CurrencyIcon type="primary" />
-          </div>
-          <div className="pl-10 pb-10">
-            {/* fixme: refactor to <button> ? */}
-            <Button
-              htmlType="button"
-              type="primary"
-              size="large"
-              onClick={handleCreateOrderClick}
-            >
-              Оформить заказ
-            </Button>
-          </div>
-        </Container>
-      </Col>
-
-      {openModal && modal}
-    </Container>
+    </div>
   );
 };
 

@@ -4,10 +4,7 @@ export const getIngredients = () => {
   const url = `${BURGER_API_URL}/ingredients`;
   return fetch(url)
     .then(checkResponse)
-    .then((json) => (json.success ? json.data : []))
-    .catch((e) => {
-      console.error("There has been a problem with fetch operation:", e);
-    });
+    .then((json) => (json.success ? json.data : []));
 };
 
 export const createOrder = (selectedIngredients: string[]) => {
@@ -23,10 +20,7 @@ export const createOrder = (selectedIngredients: string[]) => {
     }),
   })
     .then(checkResponse)
-    .then((json) => (json.success ? json.order?.number : null))
-    .catch((e) => {
-      console.error("There has been a problem with fetch operation:", e);
-    });
+    .then((json) => (json.success ? json.order?.number : null));
 };
 
 const checkResponse = (res: Response) => {

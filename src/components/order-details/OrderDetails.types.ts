@@ -1,6 +1,6 @@
 export type Order = {
   id: string;
-  state: "start" | "cancel";
+  state: "loading" | "error" | "finished";
 };
 
 export interface OrderDetailsProps {
