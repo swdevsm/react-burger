@@ -6,6 +6,7 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./register.module.css";
 import { ChangeEvent, SyntheticEvent, useState } from "react";
+import { Link } from "react-router-dom";
 
 const RegisterPage = () => {
   const [state, setState] = useState({ name: "", email: "", password: "" });
@@ -45,8 +46,13 @@ const RegisterPage = () => {
         </div>
         <p className="text text_type_main-default text_color_inactive pt-20">
           Уже зарегистрированы?
-          <Button htmlType="button" type="secondary" size="medium">
-            Войти
+          <Button
+            extraClass="p-1"
+            htmlType="button"
+            type="secondary"
+            size="medium"
+          >
+            <Link to="/login">Войти</Link>
           </Button>
         </p>
       </form>
