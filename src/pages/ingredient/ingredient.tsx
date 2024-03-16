@@ -1,5 +1,8 @@
+import { useParams } from "react-router-dom";
+
 const Ingredient = () => {
-  return <>ingredient</>;
+  const { id } = useParams<"id">();
+  return <>{`ingredient ${id}`}</>;
 };
 
 export default Ingredient;
