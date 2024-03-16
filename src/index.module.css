@@ -55,3 +55,15 @@
     flex-basis: 100%;
   }
 }
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  flex-basis: 16%;
+  justify-content: center;
+}
+
+.formContainer {
+  display: flex;
+  justify-content: center;
+}

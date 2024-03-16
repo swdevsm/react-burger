@@ -4,7 +4,7 @@ import {
   Input,
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import styles from "./register.module.css";
+import styles from "../../index.module.css";
 import { ChangeEvent, SyntheticEvent, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -19,8 +19,8 @@ const RegisterPage = () => {
     console.log(state);
   };
   return (
-    <main className={styles.container}>
-      <form className={`${styles.main} pt-25 mt-10`} onSubmit={submit}>
+    <main className={styles.formContainer}>
+      <form className={`${styles.form} pt-25 mt-10`} onSubmit={submit}>
         <h2 className="text text_type_main-medium">Регистрация</h2>
         <Input
           name="name"

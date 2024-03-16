@@ -1,5 +1,5 @@
 import { ChangeEvent, SyntheticEvent, useState } from "react";
-import styles from "./login.module.css";
+import styles from "../../index.module.css";
 import {
   Button,
   EmailInput,
@@ -18,8 +18,8 @@ const LoginPage = () => {
     console.log(state);
   };
   return (
-    <main className={styles.container}>
-      <form className={`${styles.main} pt-25 mt-10`} onSubmit={submit}>
+    <main className={styles.formContainer}>
+      <form className={`${styles.form} pt-25 mt-10`} onSubmit={submit}>
         <h2 className="text text_type_main-medium">Вход</h2>
         <EmailInput
           name="email"
