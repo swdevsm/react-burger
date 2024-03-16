@@ -18,7 +18,7 @@ const NewApp = () => {
   //   return <OrderHistory />;
   //   return <OrderList />;
   //   return <Profile />;
-  //   return <Register />;
+  return <Register />;
   //   return <ResetPassword />;
 };
 
