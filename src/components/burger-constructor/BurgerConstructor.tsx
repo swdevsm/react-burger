@@ -12,7 +12,7 @@ import Container from "../container/Container";
 import Col from "../col/Col";
 import styles from "../../index.module.css";
 import { TotalAction, TotalState } from "./BurgerConstructor.types";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
   addIngredient,
   clearSelectedIngredients,

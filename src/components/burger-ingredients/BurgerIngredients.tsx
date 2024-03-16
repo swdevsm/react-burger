@@ -14,7 +14,7 @@ import IngredientDetails from "../ingredient-details/IngredientDetails";
 import Container from "../container/Container";
 import Col from "../col/Col";
 import styles from "../../index.module.css";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { selectIngredients } from "../../services/ingredients";
 import {
   clearIngredientsDetails,

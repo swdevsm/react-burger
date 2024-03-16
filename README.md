@@ -27,3 +27,8 @@ todo:
 - correct layout ???
 - correct scroll styles
 - make scroll adaptive
+
+- add dependency
+- add empty bun and empty ingredient
+- modal (use example from react-dom-router)
+- auth example in video (-7:23)

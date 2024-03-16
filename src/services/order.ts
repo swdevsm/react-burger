@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import type { RootState } from "../app/store";
+import type { RootState } from "../store/store";
 import { createOrder } from "../utils/burger-api";
 import { createGenericSlice, FetchApiState } from "./common";
 

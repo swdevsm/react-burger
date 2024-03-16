@@ -5,7 +5,7 @@ import BurgerIngredients from "../burger-ingredients/BurgerIngredients.tsx";
 import Container from "../container/Container.tsx";
 import Col from "../col/Col.tsx";
 import styles from "../../index.module.css";
-import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { useAppSelector, useAppDispatch } from "../../store/hooks.ts";
 import { fetchIngredients } from "../../services/ingredients";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
