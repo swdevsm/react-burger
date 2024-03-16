@@ -1,5 +1,5 @@
-const OrderList = () => {
+const OrderListPage = () => {
   return <>order-list</>;
 };
 
-export default OrderList;
+export default OrderListPage;

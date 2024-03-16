@@ -7,7 +7,7 @@ import {
 import styles from "./register.module.css";
 import { ChangeEvent, SyntheticEvent, useState } from "react";
 
-const Register = () => {
+const RegisterPage = () => {
   const [state, setState] = useState({ name: "", email: "", password: "" });
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, [e.target.name]: e.target.value });
@@ -54,4 +54,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default RegisterPage;

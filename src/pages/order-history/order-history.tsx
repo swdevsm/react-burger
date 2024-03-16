@@ -1,5 +1,5 @@
-const OrderHistory = () => {
+const OrderHistoryPage = () => {
   return <>order-history</>;
 };
 
-export default OrderHistory;
+export default OrderHistoryPage;

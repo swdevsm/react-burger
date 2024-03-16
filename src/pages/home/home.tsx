@@ -9,7 +9,7 @@ import { fetchIngredients } from "../../services/ingredients";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-const Home = () => {
+const HomePage = () => {
   const { status } = useAppSelector((state) => state.ingredients);
   const dispatch = useAppDispatch();
 
@@ -73,4 +73,4 @@ const Home = () => {
   }
 };
 
-export default Home;
+export default HomePage;

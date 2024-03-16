@@ -1,11 +1,11 @@
-import ForgotPassword from "../../pages/forgot-password/forgot-password";
-import Home from "../../pages/home/home";
-import Ingredient from "../../pages/ingredient/ingredient";
-import Login from "../../pages/login/login";
-import NotFound from "../../pages/not-found/not-found";
-import Profile from "../../pages/profile/profile";
-import Register from "../../pages/register/register";
-import ResetPassword from "../../pages/reset-password/reset-password";
+import ForgotPasswordPage from "../../pages/forgot-password/forgot-password";
+import HomePage from "../../pages/home/home";
+import IngredientPage from "../../pages/ingredient/ingredient";
+import LoginPage from "../../pages/login/login";
+import NotFoundPage from "../../pages/not-found/not-found";
+import ProfilePage from "../../pages/profile/profile";
+import RegisterPage from "../../pages/register/register";
+import ResetPasswordPage from "../../pages/reset-password/reset-password";
 import { Routes, Route } from "react-router-dom";
 import AppHeader from "../app-header/AppHeader";
 
@@ -16,18 +16,18 @@ const App = () => {
         <AppHeader />
       </header>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/ingredient/:id" element={<Ingredient />} />
-        {/* <Route path="/order-history" element={<OrderHistory />} /> */}
-        {/* <Route path="/order-list" element={<OrderList />} /> */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/ingredient/:id" element={<IngredientPage />} />
+        {/* <Route path="/order-history" element={<OrderHistoryPage />} /> */}
+        {/* <Route path="/order-list" element={<OrderListPage />} /> */}
 
-        <Route path="/not-found" element={<NotFound />} />
+        <Route path="/not-found" element={<NotFoundPage />} />
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
       </Routes>
     </>
   );
