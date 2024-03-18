@@ -8,6 +8,8 @@ import RegisterPage from "../../pages/register/register";
 import ResetPasswordPage from "../../pages/reset-password/reset-password";
 import { Routes, Route } from "react-router-dom";
 import AppHeader from "../app-header/AppHeader";
+import ProfileOrdersPage from "../../pages/profile-orders/profile-orders";
+import ProfileOrderPage from "../../pages/profile-order/profile-order";
 
 const App = () => {
   return (
@@ -18,8 +20,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/ingredient/:id" element={<IngredientPage />} />
-        {/* <Route path="/order-history" element={<OrderHistoryPage />} /> */}
-        {/* <Route path="/order-list" element={<OrderListPage />} /> */}
+        <Route path="/profile/orders" element={<ProfileOrdersPage />} />
+        <Route path="/profile/orders/:number" element={<ProfileOrderPage />} />
 
         <Route path="/not-found" element={<NotFoundPage />} />
 

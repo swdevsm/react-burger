@@ -4,6 +4,7 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "../../index.module.css";
 import profileStyles from "./profile.module.css";
+import { Link } from "react-router-dom";
 
 const ProfilePage = () => {
   const nonActiveStyle = "text_color_inactive";
@@ -21,7 +22,7 @@ const ProfilePage = () => {
               Профиль
             </p>
             <p className={`text text_type_main-medium ${nonActiveStyle} pt-4`}>
-              История заказов
+              <Link to="/profile/orders">История заказов</Link>
             </p>
             <p className={`text text_type_main-medium ${nonActiveStyle}  pt-4`}>
               Выход
