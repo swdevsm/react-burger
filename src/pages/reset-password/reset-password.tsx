@@ -5,18 +5,42 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "../../index.module.css";
 import { ChangeEvent, SyntheticEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { selectPasswordReset } from "../../services/resetPassword";
+import {
+  passwordResetActionRequest,
+  selectPasswordResetAction,
+} from "../../services/resetPasswordAction";
 
 const ResetPasswordPage = () => {
-  const [state, setState] = useState({ password: "", code: "" });
+  const { data: passwordReset } = useAppSelector(selectPasswordReset);
+  const { status: passwordResetActionStatus } = useAppSelector(
+    selectPasswordResetAction
+  );
+  const dispatch = useAppDispatch();
+  const [state, setState] = useState({ password: "", token: "" });
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
   const submit = (e: SyntheticEvent) => {
-    // todo: check input
     e.preventDefault();
-    console.log(state);
+    if (state.password && state.token) {
+      dispatch(
+        passwordResetActionRequest({
+          password: state.password,
+          token: state.token,
+        })
+      );
+    }
   };
+  if (!passwordReset) return <Navigate to="/not-found" />;
+  if (passwordResetActionStatus === "error") {
+    console.log("error on reset action"); // fixme: what to do on error ?
+  }
+  if (passwordResetActionStatus === "finished") {
+    return <Navigate to="/login" />;
+  }
   return (
     <main className={styles.formContainer}>
       <form className={`${styles.form} pt-25 mt-10`} onSubmit={submit}>
@@ -29,14 +53,19 @@ const ResetPasswordPage = () => {
           placeholder="Введите новый пароль"
         />
         <Input
-          name="code"
+          name="token"
           extraClass="pt-6"
-          value={state.code}
+          value={state.token}
           onChange={onChange}
           placeholder="Введите код из письма"
         />
         <div className="pt-6">
-          <Button htmlType="submit">Сохранить</Button>
+          <Button
+            htmlType="submit"
+            disabled={Boolean(!state.password && !state.token)}
+          >
+            {"Сохранить"}
+          </Button>
         </div>
         <div className="pl-25 pr-25 ml-20 mr-20"></div>
         <p className="text text_type_main-default text_color_inactive pt-20">

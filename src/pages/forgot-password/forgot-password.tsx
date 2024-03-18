@@ -5,7 +5,10 @@ import {
 import styles from "../../index.module.css";
 import { ChangeEvent, SyntheticEvent, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { passwordResetRequest, selectPasswordReset } from "../../services/auth";
+import {
+  passwordResetRequest,
+  selectPasswordReset,
+} from "../../services/resetPassword";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 const ForgotPasswordPage = () => {
@@ -22,7 +25,6 @@ const ForgotPasswordPage = () => {
     }
   };
   if (status === "finished" && passwordReset === true) {
-    console.log(status, passwordReset);
     return <Navigate to="/reset-password" />;
   }
   return (
@@ -37,7 +39,7 @@ const ForgotPasswordPage = () => {
         />
         <div className="pt-6">
           <Button htmlType="submit" disabled={!state.email}>
-            Восстановить
+            {"Восстановить"}
           </Button>
         </div>
         <div className="pl-25 pr-25 ml-20 mr-20"></div>

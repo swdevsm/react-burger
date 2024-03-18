@@ -3,7 +3,8 @@ import ingredientsReducer from "../services/ingredients";
 import burgerConstructorReducer from "../services/burgerConstructor";
 import orderReducer from "../services/order";
 import ingredientDetailsReducer from "../services/ingredientDetails";
-import passwordResetReducer from "../services/auth";
+import passwordResetReducer from "../services/resetPassword";
+import passwordResetActionReducer from "../services/resetPasswordAction";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     ingredientDetails: ingredientDetailsReducer,
     order: orderReducer,
     passwordReset: passwordResetReducer,
+    passwordResetAction: passwordResetActionReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });
