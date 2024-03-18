@@ -126,9 +126,7 @@ const BurgerConstructor = () => {
   const data = useAppSelector(selectIngredients);
   const selectedIngredients = useAppSelector(selectSelectedIngredients);
   const selectedBun = useAppSelector(selectSelectedBun);
-
   const { data: order, status } = useAppSelector(selectOrder);
-
   const dispatch = useAppDispatch();
 
   const onDropHandler = (itemId: string) => {

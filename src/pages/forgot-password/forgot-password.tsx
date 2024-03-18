@@ -4,18 +4,27 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "../../index.module.css";
 import { ChangeEvent, SyntheticEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { passwordResetRequest, selectPasswordReset } from "../../services/auth";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 const ForgotPasswordPage = () => {
-  const [state, setState] = useState({ email: "" });
+  const [state, setState] = useState({ email: "", error: false });
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
+  const { data: passwordReset, status } = useAppSelector(selectPasswordReset);
+  const dispatch = useAppDispatch();
   const submit = (e: SyntheticEvent) => {
-    // todo: check input
     e.preventDefault();
-    console.log(state);
+    if (state.email && !state.error) {
+      dispatch(passwordResetRequest(state.email));
+    }
   };
+  if (status === "finished" && passwordReset === true) {
+    console.log(status, passwordReset);
+    return <Navigate to="/reset-password" />;
+  }
   return (
     <main className={styles.formContainer}>
       <form className={`${styles.form} pt-25 mt-10`} onSubmit={submit}>
@@ -27,7 +36,9 @@ const ForgotPasswordPage = () => {
           onChange={onChange}
         />
         <div className="pt-6">
-          <Button htmlType="submit">Восстановить</Button>
+          <Button htmlType="submit" disabled={!state.email}>
+            Восстановить
+          </Button>
         </div>
         <div className="pl-25 pr-25 ml-20 mr-20"></div>
         <p className="text text_type_main-default text_color_inactive pt-20">

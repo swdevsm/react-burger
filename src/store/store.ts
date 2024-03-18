@@ -3,6 +3,7 @@ import ingredientsReducer from "../services/ingredients";
 import burgerConstructorReducer from "../services/burgerConstructor";
 import orderReducer from "../services/order";
 import ingredientDetailsReducer from "../services/ingredientDetails";
+import passwordResetReducer from "../services/auth";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     burgerConstructor: burgerConstructorReducer,
     ingredientDetails: ingredientDetailsReducer,
     order: orderReducer,
+    passwordReset: passwordResetReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });

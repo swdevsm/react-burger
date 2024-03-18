@@ -1,3 +1,4 @@
+import { checkResponse } from "./api";
 import { BURGER_API_URL } from "./config";
 
 export const getIngredients = () => {
@@ -21,8 +22,4 @@ export const createOrder = (selectedIngredients: string[]) => {
   })
     .then(checkResponse)
     .then((json) => (json.success ? json.order?.number : null));
-};
-
-const checkResponse = (res: Response) => {
-  return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
 };
