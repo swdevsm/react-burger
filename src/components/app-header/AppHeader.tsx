@@ -7,6 +7,7 @@ import {
 import Container from "../container/Container";
 import Col from "../col/Col";
 import styles from "../../index.module.css";
+import { Link } from "react-router-dom";
 
 const AppHeader = () => {
   return (
@@ -39,7 +40,7 @@ const AppHeader = () => {
         <a href="#" className={`${styles.container} ${styles.right} p-5`}>
           <ProfileIcon type="secondary" />
           <p className="text text_type_main-default text_color_inactive pl-1">
-            Личный кабинет
+            <Link to={"/profile"}>Личный кабинет</Link>
           </p>
         </a>
       </Col>
