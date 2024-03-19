@@ -37,12 +37,12 @@ const AppHeader = () => {
       </Col>
 
       <Col w={2}>
-        <a href="#" className={`${styles.container} ${styles.right} p-5`}>
+        <div className={`${styles.container} ${styles.right} p-5`}>
           <ProfileIcon type="secondary" />
           <p className="text text_type_main-default text_color_inactive pl-1">
             <Link to={"/profile"}>Личный кабинет</Link>
           </p>
-        </a>
+        </div>
       </Col>
     </Container>
   );
