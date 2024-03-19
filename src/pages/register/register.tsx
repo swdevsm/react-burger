@@ -7,17 +7,29 @@ import {
 import styles from "../../index.module.css";
 import { ChangeEvent, SyntheticEvent, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { registerRequest, selectRegister } from "../../services/register";
+import { RegisterErrorResponse } from "../../utils/auth-api";
 
 const RegisterPage = () => {
   const [state, setState] = useState({ name: "", email: "", password: "" });
+  const { data: registerResult, status: registerStatus } =
+    useAppSelector(selectRegister);
+  const dispatch = useAppDispatch();
+
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
   const submit = (e: SyntheticEvent) => {
-    // todo: check input
     e.preventDefault();
-    console.log(state);
+    if (state.name && state.email && state.password) {
+      dispatch(registerRequest({ ...state }));
+    }
   };
+
+  if (registerStatus === "error") {
+    console.log((registerResult as RegisterErrorResponse).message);
+  }
   return (
     <main className={styles.formContainer}>
       <form className={`${styles.form} pt-25 mt-10`} onSubmit={submit}>
@@ -42,7 +54,12 @@ const RegisterPage = () => {
           onChange={onChange}
         />
         <div className="pt-6">
-          <Button htmlType="submit">Зарегистрироваться</Button>
+          <Button
+            htmlType="submit"
+            disabled={Boolean(!state.name || !state.email || !state.password)}
+          >
+            Зарегистрироваться
+          </Button>
         </div>
         <p className="text text_type_main-default text_color_inactive pt-20">
           Уже зарегистрированы?

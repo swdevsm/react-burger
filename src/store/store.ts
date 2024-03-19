@@ -5,6 +5,7 @@ import orderReducer from "../services/order";
 import ingredientDetailsReducer from "../services/ingredientDetails";
 import passwordResetReducer from "../services/resetPassword";
 import passwordResetActionReducer from "../services/resetPasswordAction";
+import registerReducer from "../services/register";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     order: orderReducer,
     passwordReset: passwordResetReducer,
     passwordResetAction: passwordResetActionReducer,
+    register: registerReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });
