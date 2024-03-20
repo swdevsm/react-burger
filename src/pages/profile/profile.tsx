@@ -7,9 +7,13 @@ import profileStyles from "./profile.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import useLocalStorage from "../../hooks/localstorage.hook";
 import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { logoutRequest, selectLogout } from "../../services/logout";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
+  const { status: logoutStatus } = useAppSelector(selectLogout);
+  const dispatch = useAppDispatch();
   const [accessToken, setAccessToken] = useLocalStorage<string>(
     "accessToken",
     ""
@@ -19,14 +23,19 @@ const ProfilePage = () => {
     ""
   );
   const handleLogout = () => {
-    setAccessToken("");
-    setRefreshToken("");
+    dispatch(logoutRequest({ token: refreshToken }));
   };
   useEffect(() => {
     if (accessToken === "" && refreshToken === "") {
       navigate("/login");
     }
   }, [accessToken, navigate, refreshToken]);
+  useEffect(() => {
+    if (logoutStatus === "finished") {
+      setAccessToken("");
+      setRefreshToken("");
+    }
+  }, [logoutStatus, navigate, setAccessToken, setRefreshToken]);
   const nonActiveStyle = "text_color_inactive";
   const active = true;
   return (
