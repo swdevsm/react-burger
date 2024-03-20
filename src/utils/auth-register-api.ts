@@ -1,3 +1,4 @@
+import { ErrorResponse, UserResponse } from "./auth.types";
 import { BURGER_API_URL } from "./config";
 
 export type RegisterRequest = {
@@ -6,21 +7,11 @@ export type RegisterRequest = {
   name: string;
 };
 
-export type UserResponse = {
-  email: string;
-  name: string;
-};
-
 export type RegisterSuccessResponse = {
   success: boolean;
   user: UserResponse;
   accessToken: string;
   refreshToken: string;
-};
-
-export type RegisterErrorResponse = {
-  success: boolean;
-  message: string;
 };
 
 export type RegisterResponse =
@@ -32,7 +23,7 @@ export type RegisterResponse =
     })
   | (Omit<Response, "json"> & {
       status: 403;
-      json: () => RegisterErrorResponse | PromiseLike<RegisterErrorResponse>;
+      json: () => ErrorResponse | PromiseLike<ErrorResponse>;
     });
 
 const marshalResponse = (res: RegisterResponse) => {

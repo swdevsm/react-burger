@@ -1,3 +1,4 @@
+import { ErrorResponse } from "./auth.types";
 import { BURGER_API_URL } from "./config";
 
 export type RefreshTokenRequest = {
@@ -10,11 +11,6 @@ export type RefreshTokenSuccessResponse = {
   refreshToken: string;
 };
 
-export type RefreshTokenErrorResponse = {
-  success: boolean;
-  message: string;
-};
-
 export type RefreshTokenResponse =
   | (Omit<Response, "json"> & {
       status: 200;
@@ -24,9 +20,7 @@ export type RefreshTokenResponse =
     })
   | (Omit<Response, "json"> & {
       status: 401;
-      json: () =>
-        | RefreshTokenErrorResponse
-        | PromiseLike<RefreshTokenErrorResponse>;
+      json: () => ErrorResponse | PromiseLike<ErrorResponse>;
     });
 
 const marshalRefreshTokenResponse = (res: RefreshTokenResponse) => {

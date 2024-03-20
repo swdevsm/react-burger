@@ -3,10 +3,10 @@ import type { RootState } from "../store/store";
 import { createGenericSlice, FetchApiState } from "./common";
 import {
   register,
-  RegisterErrorResponse,
   RegisterRequest,
   RegisterSuccessResponse,
 } from "../utils/auth-register-api";
+import { ErrorResponse } from "../utils/auth.types";
 
 export const registerRequest = createAsyncThunk(
   "auth/register",
@@ -16,7 +16,7 @@ export const registerRequest = createAsyncThunk(
 export const registerSlice = createGenericSlice({
   name: "auth",
   initialState: { status: "loading" } as FetchApiState<
-    RegisterSuccessResponse | RegisterErrorResponse | Error | null
+    RegisterSuccessResponse | ErrorResponse | Error | null
   >,
   reducers: {},
   extraReducers: (builder) => {
@@ -29,7 +29,7 @@ export const registerSlice = createGenericSlice({
     });
     builder.addCase(registerRequest.rejected, (state, action) => {
       state.status = "error";
-      state.data = action.error as RegisterErrorResponse;
+      state.data = action.error as ErrorResponse;
     });
   },
 });

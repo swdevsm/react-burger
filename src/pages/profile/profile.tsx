@@ -9,10 +9,13 @@ import useLocalStorage from "../../hooks/localstorage.hook";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { logoutRequest, selectLogout } from "../../services/logout";
+import { selectUser, userRequest } from "../../services/user";
+import { UserSuccessResponse } from "../../utils/auth-user-api";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
   const { status: logoutStatus } = useAppSelector(selectLogout);
+  const { data: userResult, status: userStatus } = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const [accessToken, setAccessToken] = useLocalStorage<string>(
     "accessToken",
@@ -22,20 +25,30 @@ const ProfilePage = () => {
     "refreshToken",
     ""
   );
-  const handleLogout = () => {
-    dispatch(logoutRequest({ token: refreshToken }));
-  };
+
+  useEffect(() => {
+    if (userStatus !== "finished" && accessToken) {
+      dispatch(userRequest(accessToken));
+    }
+  }, [accessToken, dispatch, userStatus]);
+
   useEffect(() => {
     if (accessToken === "" && refreshToken === "") {
       navigate("/login");
     }
   }, [accessToken, navigate, refreshToken]);
+
   useEffect(() => {
     if (logoutStatus === "finished") {
       setAccessToken("");
       setRefreshToken("");
     }
   }, [logoutStatus, navigate, setAccessToken, setRefreshToken]);
+
+  const handleLogout = () => {
+    dispatch(logoutRequest({ token: refreshToken }));
+  };
+
   const nonActiveStyle = "text_color_inactive";
   const active = true;
   return (
@@ -66,7 +79,7 @@ const ProfilePage = () => {
             <Input
               name="name"
               extraClass="pt-6"
-              value={"Имя"}
+              value={(userResult as UserSuccessResponse)?.user?.name ?? ""}
               placeholder="Имя"
               onChange={() => {}}
               disabled
@@ -75,7 +88,7 @@ const ProfilePage = () => {
             <EmailInput
               name="email"
               extraClass="pt-6"
-              value={"email@email.com"}
+              value={(userResult as UserSuccessResponse)?.user?.email ?? ""}
               onChange={() => {}}
               disabled
               isIcon

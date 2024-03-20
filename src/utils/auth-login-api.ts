@@ -1,9 +1,5 @@
+import { ErrorResponse, UserResponse } from "./auth.types";
 import { BURGER_API_URL } from "./config";
-
-export type UserResponse = {
-  email: string;
-  name: string;
-};
 
 export type LoginRequest = {
   email: string;
@@ -17,11 +13,6 @@ export type LoginSuccessResponse = {
   user: UserResponse;
 };
 
-export type LoginErrorResponse = {
-  success: boolean;
-  message: string;
-};
-
 export type LoginResponse =
   | (Omit<Response, "json"> & {
       status: 200;
@@ -29,7 +20,7 @@ export type LoginResponse =
     })
   | (Omit<Response, "json"> & {
       status: 401;
-      json: () => LoginErrorResponse | PromiseLike<LoginErrorResponse>;
+      json: () => ErrorResponse | PromiseLike<ErrorResponse>;
     });
 
 const marshalLoginResponse = (res: LoginResponse) => {

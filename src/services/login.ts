@@ -3,10 +3,10 @@ import type { RootState } from "../store/store";
 import { createGenericSlice, FetchApiState } from "./common";
 import {
   login,
-  LoginErrorResponse,
   LoginRequest,
   LoginSuccessResponse,
 } from "../utils/auth-login-api";
+import { ErrorResponse } from "../utils/auth.types";
 
 export const loginRequest = createAsyncThunk(
   "auth/login",
@@ -16,7 +16,7 @@ export const loginRequest = createAsyncThunk(
 export const loginSlice = createGenericSlice({
   name: "auth",
   initialState: { status: "loading" } as FetchApiState<
-    LoginSuccessResponse | LoginErrorResponse | Error | null
+    LoginSuccessResponse | ErrorResponse | Error | null
   >,
   reducers: {
     reset: (state) => {
@@ -34,7 +34,7 @@ export const loginSlice = createGenericSlice({
     });
     builder.addCase(loginRequest.rejected, (state, action) => {
       state.status = "error";
-      state.data = action.error as LoginErrorResponse;
+      state.data = action.error as ErrorResponse;
     });
   },
 });
