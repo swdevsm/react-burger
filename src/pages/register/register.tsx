@@ -9,7 +9,10 @@ import { ChangeEvent, SyntheticEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { registerRequest, selectRegister } from "../../services/register";
-import { RegisterErrorResponse } from "../../utils/auth-api";
+import {
+  RegisterErrorResponse,
+  RegisterSuccessResponse,
+} from "../../utils/auth-api";
 
 const RegisterPage = () => {
   const [state, setState] = useState({ name: "", email: "", password: "" });
@@ -29,6 +32,11 @@ const RegisterPage = () => {
 
   if (registerStatus === "error") {
     console.log((registerResult as RegisterErrorResponse).message);
+  }
+  if (registerStatus === "finished") {
+    const result = registerResult as RegisterSuccessResponse;
+    // todo: save tokens
+    console.log(result);
   }
   return (
     <main className={styles.formContainer}>

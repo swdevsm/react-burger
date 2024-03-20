@@ -6,6 +6,7 @@ import ingredientDetailsReducer from "../services/ingredientDetails";
 import passwordResetReducer from "../services/resetPassword";
 import passwordResetActionReducer from "../services/resetPasswordAction";
 import registerReducer from "../services/register";
+import loginReducer from "../services/login";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     passwordReset: passwordResetReducer,
     passwordResetAction: passwordResetActionReducer,
     register: registerReducer,
+    login: loginReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });
