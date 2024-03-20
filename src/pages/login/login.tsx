@@ -9,10 +9,19 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { loginRequest, reset, selectLogin } from "../../services/login";
 import { LoginErrorResponse, LoginSuccessResponse } from "../../utils/auth-api";
+import useLocalStorage from "../../hooks/localstorage.hook";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [state, setState] = useState({ email: "", password: "" });
+  const [accessToken, setAccessToken] = useLocalStorage<string>(
+    "accessToken",
+    ""
+  );
+  const [refreshToken, setRefreshToken] = useLocalStorage<string>(
+    "refreshToken",
+    ""
+  );
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
@@ -21,7 +30,6 @@ const LoginPage = () => {
   const dispatch = useAppDispatch();
 
   const submit = (e: SyntheticEvent) => {
-    // todo: check input
     e.preventDefault();
     if (state.email && state.password) {
       dispatch(loginRequest({ ...state }));
@@ -31,14 +39,21 @@ const LoginPage = () => {
   useEffect(() => {
     if (loginStatus === "error") {
       console.log((loginResult as LoginErrorResponse).message);
-      dispatch(reset()); // fixme: error in console
+      dispatch(reset());
     }
     if (loginStatus === "finished") {
-      // todo: save tokens
-      console.log(loginResult as LoginSuccessResponse);
-      return navigate("/");
+      const result = loginResult as LoginSuccessResponse;
+      console.log(result);
+      setAccessToken(result.accessToken);
+      setRefreshToken(result.refreshToken);
     }
-  }, [loginResult, dispatch, loginStatus, navigate]);
+  }, [loginResult, dispatch, loginStatus, setAccessToken, setRefreshToken]);
+
+  useEffect(() => {
+    if (accessToken && refreshToken) {
+      navigate("/");
+    }
+  }, [accessToken, navigate, refreshToken]);
 
   return (
     <main className={styles.formContainer}>

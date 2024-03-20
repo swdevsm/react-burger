@@ -5,7 +5,7 @@ import {
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "../../index.module.css";
-import { ChangeEvent, SyntheticEvent, useState } from "react";
+import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { registerRequest, selectRegister } from "../../services/register";
@@ -13,9 +13,12 @@ import {
   RegisterErrorResponse,
   RegisterSuccessResponse,
 } from "../../utils/auth-api";
+import useLocalStorage from "../../hooks/localstorage.hook";
 
 const RegisterPage = () => {
   const [state, setState] = useState({ name: "", email: "", password: "" });
+  const [, setAccessToken] = useLocalStorage<string>("accessToken", "");
+  const [, setRefreshToken] = useLocalStorage<string>("refreshToken", "");
   const { data: registerResult, status: registerStatus } =
     useAppSelector(selectRegister);
   const dispatch = useAppDispatch();
@@ -30,14 +33,17 @@ const RegisterPage = () => {
     }
   };
 
-  if (registerStatus === "error") {
-    console.log((registerResult as RegisterErrorResponse).message);
-  }
-  if (registerStatus === "finished") {
-    const result = registerResult as RegisterSuccessResponse;
-    // todo: save tokens
-    console.log(result);
-  }
+  useEffect(() => {
+    if (registerStatus === "error") {
+      console.log((registerResult as RegisterErrorResponse).message);
+    }
+    if (registerStatus === "finished") {
+      const result = registerResult as RegisterSuccessResponse;
+      setAccessToken(result.accessToken);
+      setRefreshToken(result.refreshToken);
+    }
+  }, [registerResult, registerStatus, setAccessToken, setRefreshToken]);
+
   return (
     <main className={styles.formContainer}>
       <form className={`${styles.form} pt-25 mt-10`} onSubmit={submit}>
