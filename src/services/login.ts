@@ -6,7 +6,7 @@ import {
   LoginErrorResponse,
   LoginRequest,
   LoginSuccessResponse,
-} from "../utils/auth-api";
+} from "../utils/auth-login-api";
 
 export const loginRequest = createAsyncThunk(
   "auth/login",

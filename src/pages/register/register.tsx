@@ -12,7 +12,7 @@ import { registerRequest, selectRegister } from "../../services/register";
 import {
   RegisterErrorResponse,
   RegisterSuccessResponse,
-} from "../../utils/auth-api";
+} from "../../utils/auth-register-api";
 import useLocalStorage from "../../hooks/localstorage.hook";
 
 const RegisterPage = () => {

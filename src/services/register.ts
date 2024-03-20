@@ -6,7 +6,7 @@ import {
   RegisterErrorResponse,
   RegisterRequest,
   RegisterSuccessResponse,
-} from "../utils/auth-api";
+} from "../utils/auth-register-api";
 
 export const registerRequest = createAsyncThunk(
   "auth/register",

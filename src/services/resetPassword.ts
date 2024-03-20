@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import type { RootState } from "../store/store";
 import { createGenericSlice, FetchApiState } from "./common";
-import { passwordReset } from "../utils/auth-api";
+import { passwordReset } from "../utils/auth-password-reset-api";
 
 export const passwordResetRequest = createAsyncThunk(
   "auth/passwordReset",

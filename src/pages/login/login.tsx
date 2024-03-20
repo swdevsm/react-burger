@@ -8,7 +8,10 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { loginRequest, reset, selectLogin } from "../../services/login";
-import { LoginErrorResponse, LoginSuccessResponse } from "../../utils/auth-api";
+import {
+  LoginErrorResponse,
+  LoginSuccessResponse,
+} from "../../utils/auth-login-api";
 import useLocalStorage from "../../hooks/localstorage.hook";
 
 const LoginPage = () => {
