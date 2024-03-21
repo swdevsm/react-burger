@@ -42,3 +42,28 @@ export const user = (accessToken: string) => {
     },
   }).then((json) => responseUserHandler(json));
 };
+
+export type UpdateUserRequest = {
+  name: string;
+  email: string;
+  password: string;
+  accessToken: string;
+};
+
+export const updateUser = (updateUserRequest: UpdateUserRequest) => {
+  const url = `${BURGER_API_URL}/auth/user`;
+  return fetch(url, {
+    method: "patch",
+    headers: {
+      Accept: "application/json",
+      Authorization: updateUserRequest.accessToken,
+    },
+    body: JSON.stringify({
+      user: {
+        name: updateUserRequest.name,
+        email: updateUserRequest.email,
+        password: updateUserRequest.password,
+      },
+    }),
+  }).then((json) => responseUserHandler(json));
+};

@@ -9,6 +9,7 @@ import registerReducer from "../services/register";
 import loginReducer from "../services/login";
 import logoutReducer from "../services/logout";
 import userReducer from "../services/user";
+import updateUserReducer from "../services/updateUser";
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
     login: loginReducer,
     logout: logoutReducer,
     user: userReducer,
+    updateUser: updateUserReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });
