@@ -14,11 +14,16 @@ export type UserResultResponse =
   | (Omit<Response, "json"> & {
       status: 401;
       json: () => ErrorResponse | PromiseLike<ErrorResponse>;
+    })
+  | (Omit<Response, "json"> & {
+      status: 403;
+      json: () => ErrorResponse | PromiseLike<ErrorResponse>;
     });
 
 const marshalUserResponse = (res: UserResultResponse) => {
   if (res.status === 200) return res.json();
   if (res.status === 401) return res.json();
+  if (res.status === 403) return res.json();
   return Error(`Unhandled response code`);
 };
 

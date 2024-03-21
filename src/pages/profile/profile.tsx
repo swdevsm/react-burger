@@ -67,7 +67,7 @@ const ProfilePage = () => {
               <Link to="/profile/orders">История заказов</Link>
             </p>
             <p className={`text text_type_main-medium ${nonActiveStyle}  pt-4`}>
-              <div onClick={handleLogout}>Выход</div>
+              <span onClick={handleLogout}>Выход</span>
             </p>
             <p
               className={`text text_type_main-default ${nonActiveStyle} pt-20`}
