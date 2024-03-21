@@ -9,11 +9,9 @@ import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { registerRequest, selectRegister } from "../../services/register";
-import {
-  RegisterErrorResponse,
-  RegisterSuccessResponse,
-} from "../../utils/auth-register-api";
+import { RegisterSuccessResponse } from "../../utils/auth-register-api";
 import useLocalStorage from "../../hooks/localstorage.hook";
+import { ErrorResponse } from "../../utils/auth.types";
 
 const RegisterPage = () => {
   const [state, setState] = useState({ name: "", email: "", password: "" });
@@ -35,7 +33,7 @@ const RegisterPage = () => {
 
   useEffect(() => {
     if (registerStatus === "error") {
-      console.log((registerResult as RegisterErrorResponse).message);
+      console.log((registerResult as ErrorResponse).message);
     }
     if (registerStatus === "finished") {
       const result = registerResult as RegisterSuccessResponse;

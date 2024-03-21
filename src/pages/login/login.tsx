@@ -8,11 +8,9 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { loginRequest, reset, selectLogin } from "../../services/login";
-import {
-  LoginErrorResponse,
-  LoginSuccessResponse,
-} from "../../utils/auth-login-api";
+import { LoginSuccessResponse } from "../../utils/auth-login-api";
 import useLocalStorage from "../../hooks/localstorage.hook";
+import { ErrorResponse } from "../../utils/auth.types";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -41,7 +39,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (loginStatus === "error") {
-      console.log((loginResult as LoginErrorResponse).message);
+      console.log((loginResult as ErrorResponse).message);
       dispatch(reset());
     }
     if (loginStatus === "finished") {
