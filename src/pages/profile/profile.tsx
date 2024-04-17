@@ -4,18 +4,15 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "../../index.module.css";
 import profileStyles from "./profile.module.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import useLocalStorage from "../../hooks/localstorage.hook";
-import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { logoutRequest, selectLogout } from "../../services/logout";
+import { logoutRequest } from "../../services/logout";
 import { selectUser, userRequest } from "../../services/user";
 import { UserSuccessResponse } from "../../utils/auth-user-api";
 
 const ProfilePage = () => {
-  const navigate = useNavigate();
-  const { status: logoutStatus } = useAppSelector(selectLogout);
-  const { data: userResult, status: userStatus } = useAppSelector(selectUser);
+  const { data: userResult } = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const [accessToken, setAccessToken] = useLocalStorage<string>(
     "accessToken",
@@ -26,27 +23,18 @@ const ProfilePage = () => {
     ""
   );
 
-  useEffect(() => {
-    if (userStatus !== "finished" && accessToken) {
-      dispatch(userRequest(accessToken));
-    }
-  }, [accessToken, dispatch, userStatus]);
+  if (!accessToken) {
+    return <Navigate to="/login" />;
+  }
 
-  useEffect(() => {
-    if (accessToken === "" && refreshToken === "") {
-      navigate("/login");
-    }
-  }, [accessToken, navigate, refreshToken]);
-
-  useEffect(() => {
-    if (logoutStatus === "finished") {
-      setAccessToken("");
-      setRefreshToken("");
-    }
-  }, [logoutStatus, navigate, setAccessToken, setRefreshToken]);
+  if (accessToken && !userResult) {
+    dispatch(userRequest(accessToken));
+  }
 
   const handleLogout = () => {
     dispatch(logoutRequest({ token: refreshToken }));
+    setAccessToken("");
+    setRefreshToken("");
   };
 
   const nonActiveStyle = "text_color_inactive";

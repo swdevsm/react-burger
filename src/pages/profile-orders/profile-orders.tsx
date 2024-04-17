@@ -12,6 +12,7 @@ const ProfileOrdersPage = () => {
   const handleLogout = () => {
     dispatch(logoutRequest({ token: refreshToken }));
   };
+  // todo: clear tokens on logout ?
   const nonActiveStyle = "text_color_inactive";
   return (
     <main className={styles.formContainer}>
