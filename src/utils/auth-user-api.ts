@@ -44,9 +44,9 @@ export const user = (accessToken: string) => {
 };
 
 export type UpdateUserRequest = {
-  name: string;
-  email: string;
-  password: string;
+  name: string | null;
+  email: string | null;
+  password: string | null;
   accessToken: string;
 };
 

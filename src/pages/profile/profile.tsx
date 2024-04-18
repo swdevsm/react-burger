@@ -1,4 +1,7 @@
-import { Input } from "@ya.praktikum/react-developer-burger-ui-components";
+import {
+  Button,
+  Input,
+} from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "../../index.module.css";
 import profileStyles from "./profile.module.css";
 import { Link, Navigate } from "react-router-dom";
@@ -8,6 +11,7 @@ import { logoutRequest } from "../../services/logout";
 import { selectUser, userRequest } from "../../services/user";
 import { UserSuccessResponse } from "../../utils/auth-user-api";
 import { ChangeEvent, useEffect, useState } from "react";
+import { updateUserRequest } from "../../services/updateUser";
 // import {
 // refreshTokenRequest,
 // selectRefreshToken,
@@ -43,7 +47,6 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (userResult && userStatus === "finished") {
-      console.log("f");
       const result = userResult as UserSuccessResponse;
       setState({
         ...state,
@@ -84,6 +87,25 @@ const ProfilePage = () => {
     setRefreshToken("");
   };
 
+  const handleCancelClick = () => {
+    setState({
+      ...state,
+      passwordDisabled: true,
+      nameDisabled: true,
+      emailDisabled: true,
+    });
+  };
+  const handleSaveClick = () => {
+    dispatch(
+      updateUserRequest({
+        accessToken: accessToken,
+        name: state.name,
+        email: state.email,
+        password: state.password === "******" ? null : state.password,
+      })
+    );
+  };
+
   const nonActiveStyle = "text_color_inactive";
   const active = true;
 
@@ -105,16 +127,12 @@ const ProfilePage = () => {
             <p className={`text text_type_main-medium ${nonActiveStyle}  pt-4`}>
               <span onClick={handleLogout}>Выход</span>
             </p>
-            <p
-              className={`text text_type_main-default ${nonActiveStyle} pt-20`}
-            >
-              В этом разделе вы можете изменить свои персональные данные
-            </p>
           </aside>
           <section>
             <Input
               name="name"
               extraClass="pt-6"
+              // todo: do not save state before 'save' button
               value={state.name}
               placeholder="Имя"
               onChange={onChange}
@@ -148,6 +166,34 @@ const ProfilePage = () => {
                 setState({ ...state, passwordDisabled: false });
               }}
             />
+            {/* todo: fix layout */}
+            <p
+              className={`text text_type_main-default ${nonActiveStyle} pt-20`}
+            >
+              В этом разделе вы можете изменить свои персональные данные
+            </p>
+            {(!state.emailDisabled ||
+              !state.nameDisabled ||
+              !state.passwordDisabled) && (
+              <>
+                <Button
+                  htmlType="button"
+                  type="secondary"
+                  size="large"
+                  onClick={handleCancelClick}
+                >
+                  Отмена
+                </Button>
+                <Button
+                  htmlType="button"
+                  type="primary"
+                  size="large"
+                  onClick={handleSaveClick}
+                >
+                  Сохранить
+                </Button>
+              </>
+            )}
           </section>
         </div>
       </div>
