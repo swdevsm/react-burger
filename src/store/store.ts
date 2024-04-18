@@ -10,6 +10,7 @@ import loginReducer from "../services/login";
 import logoutReducer from "../services/logout";
 import userReducer from "../services/user";
 import updateUserReducer from "../services/updateUser";
+import refreshTokenReducer from "../services/refreshToken";
 
 export const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ export const store = configureStore({
     logout: logoutReducer,
     user: userReducer,
     updateUser: updateUserReducer,
+    refreshToken: refreshTokenReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });

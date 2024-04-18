@@ -34,8 +34,8 @@ const responseRefreshTokenHandler = (response: Response) => {
   return marshalRefreshTokenResponse(res);
 };
 
-export const refresh = (request: RefreshTokenResponse) => {
-  const url = `${BURGER_API_URL}/auth/refresh`;
+export const refreshToken = (request: RefreshTokenRequest) => {
+  const url = `${BURGER_API_URL}/auth/token`;
   return fetch(url, {
     method: "post",
     headers: {
