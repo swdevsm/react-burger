@@ -1,64 +1,34 @@
-import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
+import { ChangeEvent, SyntheticEvent, useCallback, useState } from "react";
 import styles from "../../index.module.css";
 import {
   Button,
   EmailInput,
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { loginRequest, reset, selectLogin } from "../../services/login";
-import { LoginSuccessResponse } from "../../utils/auth-login-api";
-import useLocalStorage from "../../hooks/localstorage.hook";
-import { ErrorResponse } from "../../utils/auth.types";
+import { Link, Navigate } from "react-router-dom";
+import { useAuth } from "../../services/auth";
 
 const LoginPage = () => {
-  const navigate = useNavigate();
+  const auth = useAuth();
   const [state, setState] = useState({ email: "", password: "" });
-  const [accessToken, setAccessToken] = useLocalStorage<string>(
-    "accessToken",
-    ""
-  );
-  const [refreshToken, setRefreshToken] = useLocalStorage<string>(
-    "refreshToken",
-    ""
-  );
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
-  const { data: loginResult, status: loginStatus } =
-    useAppSelector(selectLogin);
-  const dispatch = useAppDispatch();
+  const login = useCallback(
+    (e: SyntheticEvent) => {
+      e.preventDefault();
+      auth?.signIn(state);
+    },
+    [auth, state]
+  );
 
-  const submit = (e: SyntheticEvent) => {
-    e.preventDefault();
-    if (state.email && state.password) {
-      dispatch(loginRequest({ ...state }));
-    }
-  };
-
-  useEffect(() => {
-    if (loginStatus === "error") {
-      console.log((loginResult as ErrorResponse).message);
-      dispatch(reset());
-    }
-    if (loginStatus === "finished") {
-      const result = loginResult as LoginSuccessResponse;
-      console.log(result);
-      setAccessToken(result.accessToken);
-      setRefreshToken(result.refreshToken);
-    }
-  }, [loginResult, dispatch, loginStatus, setAccessToken, setRefreshToken]);
-
-  useEffect(() => {
-    if (accessToken && refreshToken) {
-      navigate("/");
-    }
-  }, [accessToken, navigate, refreshToken]);
+  if (auth?.user) {
+    return <Navigate to={"/"} />;
+  }
 
   return (
     <main className={styles.formContainer}>
-      <form className={`${styles.form} pt-25 mt-10`} onSubmit={submit}>
+      <form className={`${styles.form} pt-25 mt-10`} onSubmit={login}>
         <h2 className="text text_type_main-medium">Вход</h2>
         <EmailInput
           name="email"

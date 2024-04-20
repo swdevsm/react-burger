@@ -7,11 +7,12 @@ import profileStyles from "./profile.module.css";
 import { Link, Navigate } from "react-router-dom";
 import useLocalStorage from "../../hooks/localstorage.hook";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { logoutRequest } from "../../services/logout";
+// import { logoutRequest } from "../../services/logout";
 import { selectUser, userRequest } from "../../services/user";
 import { UserSuccessResponse } from "../../utils/auth-user-api";
 import { ChangeEvent, useEffect, useState } from "react";
 import { updateUserRequest } from "../../services/updateUser";
+import { useAuth } from "../../services/auth";
 // import {
 // refreshTokenRequest,
 // selectRefreshToken,
@@ -31,18 +32,16 @@ const initialFormState = {
 };
 
 const ProfilePage = () => {
+  const auth = useAuth();
   const { data: userResult, status: userStatus } = useAppSelector(selectUser);
   // const { data: refreshTokenResult, status: refreshTokenStatus } =
   // useAppSelector(selectRefreshToken);
   const dispatch = useAppDispatch();
-  const [accessToken, setAccessToken] = useLocalStorage<string>(
-    "accessToken",
-    ""
-  );
-  const [refreshToken, setRefreshToken] = useLocalStorage<string>(
-    "refreshToken",
-    ""
-  );
+  const [accessToken] = useLocalStorage<string>("accessToken", "");
+  // const [refreshToken, setRefreshToken] = useLocalStorage<string>(
+  //   "refreshToken",
+  //   ""
+  // );
   const [state, setState] = useState(initialFormState);
 
   useEffect(() => {
@@ -56,11 +55,11 @@ const ProfilePage = () => {
     }
   }, [userResult, userStatus, setState]);
 
-  if (!accessToken) {
-    return <Navigate to="/login" />;
+  if (!auth?.user) {
+    return <Navigate to={"/login"} />;
   }
 
-  if (accessToken && !userResult) {
+  if (auth?.user && !userResult) {
     dispatch(userRequest(accessToken));
   }
 
@@ -82,9 +81,9 @@ const ProfilePage = () => {
   };
 
   const handleLogout = () => {
-    dispatch(logoutRequest({ token: refreshToken }));
-    setAccessToken("");
-    setRefreshToken("");
+    auth?.signOut(() => {
+      console.log("logout");
+    });
   };
 
   const handleCancelClick = () => {
