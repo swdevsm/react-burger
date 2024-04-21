@@ -4,7 +4,7 @@ import {
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "../../index.module.css";
-import { ChangeEvent, SyntheticEvent, useState } from "react";
+import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { selectPasswordReset } from "../../services/resetPassword";
@@ -12,14 +12,25 @@ import {
   passwordResetActionRequest,
   selectPasswordResetAction,
 } from "../../services/resetPasswordAction";
+import { useAuth } from "../../services/auth";
 
 const ResetPasswordPage = () => {
+  const auth = useAuth();
   const { data: passwordReset } = useAppSelector(selectPasswordReset);
   const { status: passwordResetActionStatus } = useAppSelector(
     selectPasswordResetAction
   );
   const dispatch = useAppDispatch();
   const [state, setState] = useState({ password: "", token: "" });
+
+  useEffect(() => {
+    auth?.getUser();
+  }, []);
+
+  if (auth?.user) {
+    return <Navigate to={"/"} replace />;
+  }
+
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };

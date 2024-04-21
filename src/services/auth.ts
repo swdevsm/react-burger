@@ -5,9 +5,12 @@ import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { loginRequest, reset, selectLogin } from "./login";
 import useLocalStorage from "../hooks/localstorage.hook";
 import { logoutRequest, selectLogout } from "./logout";
+import { selectUser, userRequest } from "./user";
+import { UserSuccessResponse } from "../utils/auth-user-api";
 
 export interface AuthContextProps {
   user: UserResponse | null;
+  getUser: () => void;
   signIn: (request: LoginRequest) => void;
   signOut: (cb: () => void) => void;
 }
@@ -24,11 +27,15 @@ export const useProvideAuth = (): AuthContextProps => {
   const { data: logoutResult, status: logoutStatus } =
     useAppSelector(selectLogout);
   const dispatch = useAppDispatch();
-  const [, setAccessToken] = useLocalStorage<string>("accessToken", "");
+  const [accessToken, setAccessToken] = useLocalStorage<string>(
+    "accessToken",
+    ""
+  );
   const [refreshToken, setRefreshToken] = useLocalStorage<string>(
     "refreshToken",
     ""
   );
+  const { data: userResult, status: userStatus } = useAppSelector(selectUser);
 
   useEffect(() => {
     if (loginStatus === "error") {
@@ -53,6 +60,13 @@ export const useProvideAuth = (): AuthContextProps => {
     }
   }, [logoutResult, logoutStatus, setAccessToken, setRefreshToken]);
 
+  useEffect(() => {
+    if (userResult && userStatus === "finished") {
+      const result = userResult as UserSuccessResponse;
+      setUser(result.user);
+    }
+  }, [userResult, userStatus, setUser]);
+
   const signIn = async (request: LoginRequest) => {
     if (request.email && request.password) {
       dispatch(loginRequest(request));
@@ -65,8 +79,13 @@ export const useProvideAuth = (): AuthContextProps => {
     cb();
   };
 
+  const getUser = () => {
+    dispatch(userRequest(accessToken));
+  };
+
   return {
     user,
+    getUser,
     signIn,
     signOut,
   };

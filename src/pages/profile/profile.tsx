@@ -33,7 +33,7 @@ const initialFormState = {
 
 const ProfilePage = () => {
   const auth = useAuth();
-  const { data: userResult, status: userStatus } = useAppSelector(selectUser);
+  // const { data: userResult, status: userStatus } = useAppSelector(selectUser);
   // const { data: refreshTokenResult, status: refreshTokenStatus } =
   // useAppSelector(selectRefreshToken);
   const dispatch = useAppDispatch();
@@ -45,23 +45,40 @@ const ProfilePage = () => {
   const [state, setState] = useState(initialFormState);
 
   useEffect(() => {
-    if (userResult && userStatus === "finished") {
-      const result = userResult as UserSuccessResponse;
+    auth?.getUser();
+  }, []);
+
+  useEffect(() => {
+    if (auth?.user) {
       setState({
         ...state,
-        name: result?.user?.name,
-        email: result?.user?.email,
+        name: auth?.user?.name,
+        email: auth?.user?.email,
       });
     }
-  }, [userResult, userStatus, setState]);
+  }, [auth, setState]);
 
-  if (!auth?.user) {
-    return <Navigate to={"/login"} />;
-  }
+  // useEffect(() => {
+  //   if (userResult && userStatus === "finished") {
+  //     const result = userResult as UserSuccessResponse;
+  //     setState({
+  //       ...state,
+  //       name: result?.user?.name,
+  //       email: result?.user?.email,
+  //     });
+  //   }
+  // }, [userResult, userStatus, setState]);
 
-  if (auth?.user && !userResult) {
-    dispatch(userRequest(accessToken));
-  }
+  // if (!auth?.user) {
+  //   console.log("redirect to login");
+  //   return <Navigate to={"/login"} replace />;
+  // } else {
+  //   console.log(auth);
+  // }
+
+  // if (auth?.user && !userResult) {
+  //   dispatch(userRequest(accessToken));
+  // }
 
   // if (accessToken && userStatus === "error") {
   // dispatch(refreshTokenRequest({ token: refreshToken }));

@@ -1,4 +1,4 @@
-import { ChangeEvent, SyntheticEvent, useCallback, useState } from "react";
+import { ChangeEvent, SyntheticEvent, useCallback, useEffect, useState } from "react";
 import styles from "../../index.module.css";
 import {
   Button,
@@ -21,9 +21,13 @@ const LoginPage = () => {
     },
     [auth, state]
   );
+  
+  useEffect(() => {
+    auth?.getUser();
+  }, []);
 
   if (auth?.user) {
-    return <Navigate to={"/"} />;
+    return <Navigate to={"/"} replace />;
   }
 
   return (

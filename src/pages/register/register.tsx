@@ -6,14 +6,16 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "../../index.module.css";
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { registerRequest, selectRegister } from "../../services/register";
 import { RegisterSuccessResponse } from "../../utils/auth-register-api";
 import useLocalStorage from "../../hooks/localstorage.hook";
 import { ErrorResponse } from "../../utils/auth.types";
+import { useAuth } from "../../services/auth";
 
 const RegisterPage = () => {
+  const auth = useAuth();
   const [state, setState] = useState({ name: "", email: "", password: "" });
   const [, setAccessToken] = useLocalStorage<string>("accessToken", "");
   const [, setRefreshToken] = useLocalStorage<string>("refreshToken", "");
@@ -32,6 +34,10 @@ const RegisterPage = () => {
   };
 
   useEffect(() => {
+    auth?.getUser();
+  }, []);
+
+  useEffect(() => {
     if (registerStatus === "error") {
       console.log((registerResult as ErrorResponse).message);
     }
@@ -41,6 +47,10 @@ const RegisterPage = () => {
       setRefreshToken(result.refreshToken);
     }
   }, [registerResult, registerStatus, setAccessToken, setRefreshToken]);
+
+  if (auth?.user) {
+    return <Navigate to={"/"} replace />;
+  }
 
   return (
     <main className={styles.formContainer}>

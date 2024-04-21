@@ -15,10 +15,12 @@ const AppHeader = () => {
       <Col w={2}>
         <nav>
           <Container extraClass={styles.center}>
-            <a href="#" className={styles.container + " p-5"}>
+            <div className={styles.container + " p-5"}>
               <BurgerIcon type="primary" />
-              <p className="text text_type_main-default pl-2">Конструктор</p>
-            </a>
+              <p className="text text_type_main-default pl-2">
+                <Link to={"/"}>Конструктор</Link>
+              </p>
+            </div>
             <a href="#" className={styles.container + " p-5 ml-2"}>
               <ListIcon type="secondary" />
               <div className="p-1" />
