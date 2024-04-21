@@ -6,22 +6,31 @@ import NotFoundPage from "../../pages/not-found/not-found";
 import ProfilePage from "../../pages/profile/profile";
 import RegisterPage from "../../pages/register/register";
 import ResetPasswordPage from "../../pages/reset-password/reset-password";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import AppHeader from "../app-header/AppHeader";
 import ProfileOrdersPage from "../../pages/profile-orders/profile-orders";
 import ProfileOrderPage from "../../pages/profile-order/profile-order";
 import ProtectedRouteElement from "../protected-route-element/ProtectedRouteElement";
+import Modal from "../modal/Modal";
 
 const App = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const background = location.state && location.state.background;
+
+  const handleModalClose = () => {
+    navigate(-1);
+  };
+
   return (
     <>
       <header>
         <AppHeader />
       </header>
-      <Routes>
+      <Routes location={background || location}>
         <Route path="/" element={<HomePage />} />
         <Route path="/ingredient/:id" element={<IngredientPage />} />
-
+        <Route path="*" element={<NotFoundPage />} />
         <Route
           path="/profile/orders"
           element={<ProtectedRouteElement element={<ProfileOrdersPage />} />}
@@ -39,9 +48,19 @@ const App = () => {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
-
-        <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      {background && (
+        <Routes>
+          <Route
+            path="/ingredient/:id"
+            element={
+              <Modal header="Детали ингредиента" onClose={handleModalClose}>
+                <IngredientPage />
+              </Modal>
+            }
+          />
+        </Routes>
+      )}
     </>
   );
 };
