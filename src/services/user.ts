@@ -26,7 +26,12 @@ export const userSlice = createGenericSlice({
     });
     builder.addCase(userRequest.fulfilled, (state, action) => {
       state.data = action.payload;
-      state.status = "finished";
+      if (action.payload as UserSuccessResponse) {
+        state.status = "finished";
+      }
+      if (action.payload as ErrorResponse) {
+        state.status = "error";
+      }
     });
     builder.addCase(userRequest.rejected, (state, action) => {
       state.status = "error";

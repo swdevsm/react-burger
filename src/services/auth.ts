@@ -5,8 +5,10 @@ import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { loginRequest, reset, selectLogin } from "./login";
 import useLocalStorage from "../hooks/localstorage.hook";
 import { logoutRequest, selectLogout } from "./logout";
-import { selectUser, userRequest } from "./user";
+import { selectUser, reset as userRequestReset, userRequest } from "./user";
 import { UserSuccessResponse } from "../utils/auth-user-api";
+import { refreshTokenRequest, selectRefreshToken } from "./refreshToken";
+import { RefreshTokenSuccessResponse } from "../utils/auth-refresh-token-api";
 
 export interface AuthContextProps {
   user: UserResponse | null;
@@ -36,6 +38,8 @@ export const useProvideAuth = (): AuthContextProps => {
     ""
   );
   const { data: userResult, status: userStatus } = useAppSelector(selectUser);
+  const { data: refreshTokenResult, status: refreshTokenStatus } =
+    useAppSelector(selectRefreshToken);
 
   useEffect(() => {
     if (loginStatus === "error") {
@@ -65,7 +69,26 @@ export const useProvideAuth = (): AuthContextProps => {
       const result = userResult as UserSuccessResponse;
       setUser(result.user);
     }
+    if (userResult && userStatus === "error") {
+      const result = userResult as ErrorResponse;
+      if (result.message === "jwt expired") {
+        dispatch(refreshTokenRequest({ token: refreshToken }));
+        dispatch(userRequestReset());
+      }
+    }
   }, [userResult, userStatus, setUser]);
+
+  useEffect(() => {
+    if (refreshTokenResult && refreshTokenStatus === "finished") {
+      const newToken = refreshTokenResult as RefreshTokenSuccessResponse;
+      setAccessToken(newToken?.accessToken);
+    }
+    if (refreshTokenResult && refreshTokenStatus === "error") {
+      setAccessToken("");
+      setRefreshToken("");
+      setUser(null);
+    }
+  }, [refreshTokenResult, refreshTokenStatus, setAccessToken, setRefreshToken]);
 
   const signIn = async (request: LoginRequest) => {
     if (request.email && request.password) {

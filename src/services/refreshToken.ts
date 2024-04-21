@@ -30,7 +30,12 @@ export const refreshTokenSlice = createGenericSlice({
     });
     builder.addCase(refreshTokenRequest.fulfilled, (state, action) => {
       state.data = action.payload;
-      state.status = "finished";
+      if (action.payload as RefreshTokenSuccessResponse) {
+        state.status = "finished";
+      }
+      if (action.payload as ErrorResponse) {
+        state.status = "error";
+      }
     });
     builder.addCase(refreshTokenRequest.rejected, (state, action) => {
       state.status = "error";

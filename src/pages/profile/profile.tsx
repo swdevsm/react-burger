@@ -4,20 +4,12 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "../../index.module.css";
 import profileStyles from "./profile.module.css";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useLocalStorage from "../../hooks/localstorage.hook";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-// import { logoutRequest } from "../../services/logout";
-import { selectUser, userRequest } from "../../services/user";
-import { UserSuccessResponse } from "../../utils/auth-user-api";
+import { useAppDispatch } from "../../store/hooks";
 import { ChangeEvent, useEffect, useState } from "react";
 import { updateUserRequest } from "../../services/updateUser";
 import { useAuth } from "../../services/auth";
-// import {
-// refreshTokenRequest,
-// selectRefreshToken,
-// } from "../../services/refreshToken";
-// import { RefreshTokenSuccessResponse } from "../../utils/auth-refresh-token-api";
 
 const initialFormState = {
   name: "",
@@ -33,15 +25,8 @@ const initialFormState = {
 
 const ProfilePage = () => {
   const auth = useAuth();
-  // const { data: userResult, status: userStatus } = useAppSelector(selectUser);
-  // const { data: refreshTokenResult, status: refreshTokenStatus } =
-  // useAppSelector(selectRefreshToken);
   const dispatch = useAppDispatch();
   const [accessToken] = useLocalStorage<string>("accessToken", "");
-  // const [refreshToken, setRefreshToken] = useLocalStorage<string>(
-  //   "refreshToken",
-  //   ""
-  // );
   const [state, setState] = useState(initialFormState);
 
   useEffect(() => {
@@ -57,41 +42,6 @@ const ProfilePage = () => {
       });
     }
   }, [auth, setState]);
-
-  // useEffect(() => {
-  //   if (userResult && userStatus === "finished") {
-  //     const result = userResult as UserSuccessResponse;
-  //     setState({
-  //       ...state,
-  //       name: result?.user?.name,
-  //       email: result?.user?.email,
-  //     });
-  //   }
-  // }, [userResult, userStatus, setState]);
-
-  // if (!auth?.user) {
-  //   console.log("redirect to login");
-  //   return <Navigate to={"/login"} replace />;
-  // } else {
-  //   console.log(auth);
-  // }
-
-  // if (auth?.user && !userResult) {
-  //   dispatch(userRequest(accessToken));
-  // }
-
-  // if (accessToken && userStatus === "error") {
-  // dispatch(refreshTokenRequest({ token: refreshToken }));
-  // }
-
-  // if (
-  //   refreshTokenStatus === "finished" &&
-  //   accessToken &&
-  //   userStatus === "error"
-  // ) {
-  //   const newToken = refreshTokenResult as RefreshTokenSuccessResponse;
-  //   setAccessToken(newToken?.accessToken);
-  // }
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, [e.target.name]: e.target.value });
