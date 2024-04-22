@@ -16,7 +16,10 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { selectIngredients } from "../../services/ingredients";
 import { setIngredientsDetails } from "../../services/ingredientDetails";
 import { useDrag } from "react-dnd";
-import { selectSelectedIngredients } from "../../services/burgerConstructor";
+import {
+  selectSelectedBun,
+  selectSelectedIngredients,
+} from "../../services/burgerConstructor";
 import { useInView } from "react-intersection-observer";
 import { Link, useLocation } from "react-router-dom";
 
@@ -24,6 +27,7 @@ export const Ingredient = ({ ingredient }: IngredientProps) => {
   const location = useLocation();
   const dispatch = useAppDispatch();
   const selectedIngredients = useAppSelector(selectSelectedIngredients);
+  const selectedBun = useAppSelector(selectSelectedBun);
   const [count, setCount] = useState(0);
   const [, dragRef] = useDrag({
     type: "ingredient",
@@ -37,7 +41,10 @@ export const Ingredient = ({ ingredient }: IngredientProps) => {
           .length
       );
     }
-  }, [selectedIngredients, ingredient]);
+    if (selectedBun && selectedBun._id === ingredient._id) {
+      setCount(1);
+    }
+  }, [selectedIngredients, ingredient, selectedBun]);
   const linkToIngredient = (
     <div ref={dragRef}>
       <div
