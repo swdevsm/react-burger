@@ -12,11 +12,19 @@ import ProfileOrdersPage from "../../pages/profile-orders/profile-orders";
 import ProfileOrderPage from "../../pages/profile-order/profile-order";
 import ProtectedRouteElement from "../protected-route-element/ProtectedRouteElement";
 import Modal from "../modal/Modal";
+import { useAppDispatch } from "../../store/hooks";
+import { useEffect } from "react";
+import { fetchIngredients } from "../../services/ingredients";
 
 const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const background = location.state && location.state.background;
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchIngredients());
+  }, [dispatch]);
 
   const handleModalClose = () => {
     navigate(-1);

@@ -9,11 +9,6 @@ const IngredientPage = () => {
   const { id } = useParams<string>();
   const { data, status } = useAppSelector((state) => state.ingredients);
   const [current, setCurrent] = useState<ApiData | null>(null);
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(fetchIngredients());
-  }, [dispatch]);
 
   useEffect(() => {
     if (data && status === "finished") {

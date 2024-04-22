@@ -11,11 +11,6 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 
 const HomePage = () => {
   const { status } = useAppSelector((state) => state.ingredients);
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(fetchIngredients());
-  }, [dispatch]);
 
   const errorMessage = (
     <p className="text text_type_main-medium text_color_inactive">
