@@ -24,9 +24,7 @@ const App = () => {
 
   return (
     <>
-      <header>
-        <AppHeader />
-      </header>
+      <AppHeader />
       <Routes location={background || location}>
         <Route path="/" element={<HomePage />} />
         <Route path="/ingredient/:id" element={<IngredientPage />} />
