@@ -4,14 +4,10 @@ import { createGenericSlice, FetchApiState } from "./common";
 import { ErrorResponse } from "../utils/auth.types";
 import {
   refreshToken,
-  RefreshTokenRequest,
   RefreshTokenSuccessResponse,
 } from "../utils/auth-refresh-token-api";
 
-export const refreshTokenRequest = createAsyncThunk(
-  "auth/token",
-  async (request: RefreshTokenRequest) => await refreshToken(request)
-);
+export const refreshTokenRequest = createAsyncThunk("auth/token", refreshToken);
 
 export const refreshTokenSlice = createGenericSlice({
   name: "auth",

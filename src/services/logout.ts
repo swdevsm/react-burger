@@ -3,14 +3,10 @@ import type { RootState } from "../store/store";
 import { createGenericSlice, FetchApiState } from "./common";
 import {
   logout,
-  LogoutRequest,
   LogoutResponse,
 } from "../utils/auth-logout-api";
 
-export const logoutRequest = createAsyncThunk(
-  "auth/logout",
-  async (request: LogoutRequest) => await logout(request)
-);
+export const logoutRequest = createAsyncThunk("auth/logout", logout);
 
 export const logoutSlice = createGenericSlice({
   name: "auth",

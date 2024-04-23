@@ -6,7 +6,7 @@ import { FetchApiState, createGenericSlice } from "./common";
 
 export const fetchIngredients = createAsyncThunk(
   "ingredients/fetch",
-  async () => (await getIngredients()) as ApiData[]
+  getIngredients
 );
 
 export const ingredientsSlice = createGenericSlice({

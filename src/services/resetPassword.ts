@@ -5,7 +5,7 @@ import { passwordReset } from "../utils/auth-password-reset-api";
 
 export const passwordResetRequest = createAsyncThunk(
   "auth/passwordReset",
-  async (email: string) => (await passwordReset(email)) as boolean
+  passwordReset
 );
 
 export const passwordResetSlice = createGenericSlice({

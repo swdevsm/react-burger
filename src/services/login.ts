@@ -3,15 +3,11 @@ import type { RootState } from "../store/store";
 import { createGenericSlice, FetchApiState } from "./common";
 import {
   login,
-  LoginRequest,
   LoginSuccessResponse,
 } from "../utils/auth-login-api";
 import { ErrorResponse } from "../utils/auth.types";
 
-export const loginRequest = createAsyncThunk(
-  "auth/login",
-  async (request: LoginRequest) => await login(request)
-);
+export const loginRequest = createAsyncThunk("auth/login", login);
 
 export const loginSlice = createGenericSlice({
   name: "auth",

@@ -1,17 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import type { RootState } from "../store/store";
 import { createGenericSlice, FetchApiState } from "./common";
-import {
-  updateUser,
-  UpdateUserRequest,
-  UserSuccessResponse,
-} from "../utils/auth-user-api";
+import { updateUser, UserSuccessResponse } from "../utils/auth-user-api";
 import { ErrorResponse } from "../utils/auth.types";
 
 export const updateUserRequest = createAsyncThunk(
   "auth/user/update",
-  async (updateUserRequest: UpdateUserRequest) =>
-    await updateUser(updateUserRequest)
+  updateUser
 );
 
 export const updateUserSlice = createGenericSlice({

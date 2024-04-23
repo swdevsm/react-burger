@@ -4,10 +4,7 @@ import { createGenericSlice, FetchApiState } from "./common";
 import { user, UserSuccessResponse } from "../utils/auth-user-api";
 import { ErrorResponse } from "../utils/auth.types";
 
-export const userRequest = createAsyncThunk(
-  "auth/user",
-  async (request: string) => await user(request)
-);
+export const userRequest = createAsyncThunk("auth/user", user);
 
 export const userSlice = createGenericSlice({
   name: "auth",
