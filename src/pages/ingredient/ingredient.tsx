@@ -1,8 +1,7 @@
 import { useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { useAppSelector } from "../../store/hooks";
 import { useEffect, useState } from "react";
 import { ApiData } from "../../ApiData.types";
-import { fetchIngredients } from "../../services/ingredients";
 import IngredientDetails from "../../components/ingredient-details/IngredientDetails";
 
 const IngredientPage = () => {

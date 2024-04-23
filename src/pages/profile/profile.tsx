@@ -7,18 +7,17 @@ import profileStyles from "./profile.module.css";
 import { Link } from "react-router-dom";
 import useLocalStorage from "../../hooks/localstorage.hook";
 import { useAppDispatch } from "../../store/hooks";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { updateUserRequest } from "../../services/updateUser";
 import { useAuth } from "../../services/auth";
+import { UpdateUserRequest } from "../../utils/auth-user-api";
+import useForm from "../../hooks/useForm";
 
-const initialFormState = {
-  name: "",
+const editFormState = {
   nameDisabled: true,
   currentNameIcon: "EditIcon",
-  email: "",
   emailDisabled: true,
   currentEmailIcon: "EditIcon",
-  password: "******",
   passwordDisabled: true,
   currentPasswordIcon: "EditIcon",
 };
@@ -27,25 +26,27 @@ const ProfilePage = () => {
   const auth = useAuth();
   const dispatch = useAppDispatch();
   const [accessToken] = useLocalStorage<string>("accessToken", "");
-  const [state, setState] = useState(initialFormState);
+  const [state, setState] = useState(editFormState);
+  const [values, handleChange, setValues] = useForm<UpdateUserRequest>({
+    name: "",
+    email: "",
+    password: "******",
+    accessToken: "",
+  });
 
   useEffect(() => {
     auth?.getUser();
   }, []);
 
   useEffect(() => {
-    if (auth?.user) {
-      setState({
-        ...state,
+    if (auth?.user && values.name === "" && values.email === "") {
+      setValues({
+        ...values,
         name: auth?.user?.name,
         email: auth?.user?.email,
       });
     }
-  }, [auth, setState]);
-
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, [e.target.name]: e.target.value });
-  };
+  }, [auth, setValues, values]);
 
   const handleLogout = () => {
     auth?.signOut(() => {
@@ -64,10 +65,9 @@ const ProfilePage = () => {
   const handleSaveClick = () => {
     dispatch(
       updateUserRequest({
+        ...values,
         accessToken: accessToken,
-        name: state.name,
-        email: state.email,
-        password: state.password === "******" ? null : state.password,
+        password: values.password === "******" ? null : values.password,
       })
     );
   };
@@ -99,9 +99,9 @@ const ProfilePage = () => {
               name="name"
               extraClass="pt-6"
               // todo: do not save state before 'save' button
-              value={state.name}
+              value={values.name ?? ""}
               placeholder="Имя"
-              onChange={onChange}
+              onChange={handleChange}
               disabled={state.nameDisabled}
               icon={"EditIcon"}
               onIconClick={() => {
@@ -111,9 +111,9 @@ const ProfilePage = () => {
             <Input
               name="email"
               extraClass="pt-6"
-              value={state.email}
+              value={values.email ?? ""}
               placeholder="Email"
-              onChange={onChange}
+              onChange={handleChange}
               disabled={state.emailDisabled}
               icon={"EditIcon"}
               onIconClick={() => {
@@ -123,9 +123,9 @@ const ProfilePage = () => {
             <Input
               name="password"
               extraClass="pt-6"
-              value={state.password}
+              value={values.password ?? ""}
               placeholder="Пароль"
-              onChange={onChange}
+              onChange={handleChange}
               disabled={state.passwordDisabled}
               icon={"EditIcon"}
               onIconClick={() => {

@@ -4,7 +4,7 @@ import {
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "../../index.module.css";
-import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
+import { SyntheticEvent, useEffect } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { selectPasswordReset } from "../../services/resetPassword";
@@ -13,6 +13,8 @@ import {
   selectPasswordResetAction,
 } from "../../services/resetPasswordAction";
 import { useAuth } from "../../services/auth";
+import { PasswordWithToken } from "../../utils/auth-password-reset-api";
+import useForm from "../../hooks/useForm";
 
 const ResetPasswordPage = () => {
   const auth = useAuth();
@@ -21,7 +23,10 @@ const ResetPasswordPage = () => {
     selectPasswordResetAction
   );
   const dispatch = useAppDispatch();
-  const [state, setState] = useState({ password: "", token: "" });
+  const [values, handleChange] = useForm<PasswordWithToken>({
+    password: "",
+    token: "",
+  });
 
   useEffect(() => {
     auth?.getUser();
@@ -31,16 +36,13 @@ const ResetPasswordPage = () => {
     return <Navigate to={"/"} replace />;
   }
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, [e.target.name]: e.target.value });
-  };
   const submit = (e: SyntheticEvent) => {
     e.preventDefault();
-    if (state.password && state.token) {
+    if (values.password && values.token) {
       dispatch(
         passwordResetActionRequest({
-          password: state.password,
-          token: state.token,
+          password: values.password,
+          token: values.token,
         })
       );
     }
@@ -59,21 +61,21 @@ const ResetPasswordPage = () => {
         <PasswordInput
           name="password"
           extraClass="pt-6"
-          value={state.password}
-          onChange={onChange}
+          value={values.password}
+          onChange={handleChange}
           placeholder="Введите новый пароль"
         />
         <Input
           name="token"
           extraClass="pt-6"
-          value={state.token}
-          onChange={onChange}
+          value={values.token}
+          onChange={handleChange}
           placeholder="Введите код из письма"
         />
         <div className="pt-6">
           <Button
             htmlType="submit"
-            disabled={Boolean(!state.password && !state.token)}
+            disabled={Boolean(!values.password && !values.token)}
           >
             {"Сохранить"}
           </Button>

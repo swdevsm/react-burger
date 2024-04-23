@@ -1,11 +1,9 @@
-import { useEffect } from "react";
 import BurgerConstructor from "../../components/burger-constructor/BurgerConstructor.tsx";
 import BurgerIngredients from "../../components/burger-ingredients/BurgerIngredients.tsx";
 import Container from "../../components/container/Container.tsx";
 import Col from "../../components/col/Col.tsx";
 import styles from "../../index.module.css";
-import { useAppSelector, useAppDispatch } from "../../store/hooks.ts";
-import { fetchIngredients } from "../../services/ingredients";
+import { useAppSelector } from "../../store/hooks.ts";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 

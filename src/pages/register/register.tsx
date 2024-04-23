@@ -5,31 +5,36 @@ import {
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "../../index.module.css";
-import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
+import { SyntheticEvent, useEffect } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { registerRequest, selectRegister } from "../../services/register";
-import { RegisterSuccessResponse } from "../../utils/auth-register-api";
+import {
+  RegisterRequest,
+  RegisterSuccessResponse,
+} from "../../utils/auth-register-api";
 import useLocalStorage from "../../hooks/localstorage.hook";
 import { ErrorResponse } from "../../utils/auth.types";
 import { useAuth } from "../../services/auth";
+import useForm from "../../hooks/useForm";
 
 const RegisterPage = () => {
   const auth = useAuth();
-  const [state, setState] = useState({ name: "", email: "", password: "" });
+  const [values, handleChange] = useForm<RegisterRequest>({
+    name: "",
+    email: "",
+    password: "",
+  });
   const [, setAccessToken] = useLocalStorage<string>("accessToken", "");
   const [, setRefreshToken] = useLocalStorage<string>("refreshToken", "");
   const { data: registerResult, status: registerStatus } =
     useAppSelector(selectRegister);
   const dispatch = useAppDispatch();
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, [e.target.name]: e.target.value });
-  };
   const submit = (e: SyntheticEvent) => {
     e.preventDefault();
-    if (state.name && state.email && state.password) {
-      dispatch(registerRequest({ ...state }));
+    if (values.name && values.email && values.password) {
+      dispatch(registerRequest(values));
     }
   };
 
@@ -59,26 +64,28 @@ const RegisterPage = () => {
         <Input
           name="name"
           extraClass="pt-6"
-          value={state.name}
-          onChange={onChange}
+          value={values.name}
+          onChange={handleChange}
           placeholder="Имя"
         />
         <EmailInput
           name="email"
           extraClass="pt-6"
-          value={state.email}
-          onChange={onChange}
+          value={values.email}
+          onChange={handleChange}
         />
         <PasswordInput
           name="password"
           extraClass="pt-6"
-          value={state.password}
-          onChange={onChange}
+          value={values.password}
+          onChange={handleChange}
         />
         <div className="pt-6">
           <Button
             htmlType="submit"
-            disabled={Boolean(!state.name || !state.email || !state.password)}
+            disabled={Boolean(
+              !values.name || !values.email || !values.password
+            )}
           >
             Зарегистрироваться
           </Button>

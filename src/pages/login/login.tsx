@@ -1,4 +1,4 @@
-import { ChangeEvent, SyntheticEvent, useCallback, useEffect, useState } from "react";
+import { SyntheticEvent, useCallback, useEffect } from "react";
 import styles from "../../index.module.css";
 import {
   Button,
@@ -7,21 +7,23 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../../services/auth";
+import { LoginRequest } from "../../utils/auth-login-api";
+import useForm from "../../hooks/useForm";
 
 const LoginPage = () => {
   const auth = useAuth();
-  const [state, setState] = useState({ email: "", password: "" });
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, [e.target.name]: e.target.value });
-  };
+  const [values, handleChange] = useForm<LoginRequest>({
+    email: "",
+    password: "",
+  });
   const login = useCallback(
     (e: SyntheticEvent) => {
       e.preventDefault();
-      auth?.signIn(state);
+      auth?.signIn(values);
     },
-    [auth, state]
+    [auth, values]
   );
-  
+
   useEffect(() => {
     auth?.getUser();
   }, []);
@@ -37,19 +39,19 @@ const LoginPage = () => {
         <EmailInput
           name="email"
           extraClass="pt-6"
-          value={state.email}
-          onChange={onChange}
+          value={values.email}
+          onChange={handleChange}
         />
         <PasswordInput
           name="password"
           extraClass="pt-6"
-          value={state.password}
-          onChange={onChange}
+          value={values.password}
+          onChange={handleChange}
         />
         <div className="pt-6">
           <Button
             htmlType="submit"
-            disabled={Boolean(!state.email || !state.password)}
+            disabled={Boolean(!values.email || !values.password)}
           >
             Войти
           </Button>
