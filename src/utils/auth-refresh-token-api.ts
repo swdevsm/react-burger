@@ -1,3 +1,4 @@
+import { checkResponse } from "./api";
 import { ErrorResponse } from "./auth.types";
 import { BURGER_API_URL } from "./config";
 
@@ -23,17 +24,6 @@ export type RefreshTokenResponse =
       json: () => ErrorResponse | PromiseLike<ErrorResponse>;
     });
 
-const marshalRefreshTokenResponse = (res: RefreshTokenResponse) => {
-  if (res.status === 200) return res.json();
-  if (res.status === 401) return res.json();
-  return Error(`Unhandled response code`);
-};
-
-const responseRefreshTokenHandler = (response: Response) => {
-  const res = response as RefreshTokenResponse;
-  return marshalRefreshTokenResponse(res);
-};
-
 export const refreshToken = (request: RefreshTokenRequest) => {
   const url = `${BURGER_API_URL}/auth/token`;
   return fetch(url, {
@@ -43,5 +33,7 @@ export const refreshToken = (request: RefreshTokenRequest) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(request),
-  }).then((json) => responseRefreshTokenHandler(json));
+  })
+    .then(checkResponse)
+    .then((json) => json);
 };

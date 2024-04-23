@@ -17,7 +17,7 @@ export const registerSlice = createGenericSlice({
       state.status = "loading";
     });
     builder.addCase(registerRequest.fulfilled, (state, action) => {
-      state.data = action.payload;
+      state.data = action.payload as RegisterSuccessResponse;
       state.status = "finished";
     });
     builder.addCase(registerRequest.rejected, (state, action) => {

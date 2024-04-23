@@ -1,10 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import type { RootState } from "../store/store";
 import { createGenericSlice, FetchApiState } from "./common";
-import {
-  login,
-  LoginSuccessResponse,
-} from "../utils/auth-login-api";
+import { login, LoginSuccessResponse } from "../utils/auth-login-api";
 import { ErrorResponse } from "../utils/auth.types";
 
 export const loginRequest = createAsyncThunk("auth/login", login);
@@ -25,7 +22,7 @@ export const loginSlice = createGenericSlice({
       state.status = "loading";
     });
     builder.addCase(loginRequest.fulfilled, (state, action) => {
-      state.data = action.payload;
+      state.data = action.payload as LoginSuccessResponse;
       state.status = "finished";
     });
     builder.addCase(loginRequest.rejected, (state, action) => {

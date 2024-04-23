@@ -1,3 +1,4 @@
+import { checkResponse } from "./api";
 import { ErrorResponse, UserResponse } from "./auth.types";
 import { BURGER_API_URL } from "./config";
 
@@ -20,18 +21,6 @@ export type UserResultResponse =
       json: () => ErrorResponse | PromiseLike<ErrorResponse>;
     });
 
-const marshalUserResponse = (res: UserResultResponse) => {
-  if (res.status === 200) return res.json();
-  if (res.status === 401) return res.json();
-  if (res.status === 403) return res.json();
-  return Error(`Unhandled response code`);
-};
-
-const responseUserHandler = (response: Response) => {
-  const res = response as UserResultResponse;
-  return marshalUserResponse(res);
-};
-
 export const user = (accessToken: string) => {
   const url = `${BURGER_API_URL}/auth/user`;
   return fetch(url, {
@@ -40,7 +29,9 @@ export const user = (accessToken: string) => {
       Accept: "application/json",
       Authorization: accessToken,
     },
-  }).then((json) => responseUserHandler(json));
+  })
+    .then(checkResponse)
+    .then((json) => json);
 };
 
 export type UpdateUserRequest = {
@@ -65,5 +56,7 @@ export const updateUser = (updateUserRequest: UpdateUserRequest) => {
         password: updateUserRequest.password,
       },
     }),
-  }).then((json) => responseUserHandler(json));
+  })
+    .then(checkResponse)
+    .then((json) => json);
 };
