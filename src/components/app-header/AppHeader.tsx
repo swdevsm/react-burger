@@ -46,7 +46,9 @@ const AppHeader = () => {
 
         <Col w={2}>
           <Container extraClass={styles.center + " p-2"}>
-            <Logo />
+            <Link to={"/"}>
+              <Logo />
+            </Link>
           </Container>
         </Col>
 
