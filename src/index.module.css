@@ -3,8 +3,16 @@
   flex-wrap: wrap;
 }
 
+.flex {
+  display: flex;
+}
+
 .center {
   justify-content: center;
+}
+
+.width {
+  max-width: 1600px;
 }
 
 .scroll {

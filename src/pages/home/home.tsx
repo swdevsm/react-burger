@@ -24,8 +24,8 @@ const HomePage = () => {
 
   try {
     return (
-      <div>
-        <Container extraClass={styles.center}>
+      <div className={styles.flex + " " + styles.center}>
+        <Container extraClass={styles.center + " " + styles.width}>
           <Col w={6}>
             <main>
               {status === "finished" && (
