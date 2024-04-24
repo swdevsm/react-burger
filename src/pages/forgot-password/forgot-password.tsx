@@ -10,10 +10,8 @@ import {
   selectPasswordReset,
 } from "../../services/resetPassword";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { useAuth } from "../../services/auth";
 
 const ForgotPasswordPage = () => {
-  const auth = useAuth();
   const [state, setState] = useState({ email: "", error: false });
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, [e.target.name]: e.target.value });
@@ -28,9 +26,6 @@ const ForgotPasswordPage = () => {
   };
   if (status === "finished" && passwordReset === true) {
     return <Navigate to="/reset-password" />;
-  }
-  if (auth?.user) {
-    return <Navigate to={"/"} replace />;
   }
   return (
     <main className={styles.formContainer}>

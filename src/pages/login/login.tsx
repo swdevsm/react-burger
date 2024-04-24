@@ -1,11 +1,11 @@
-import { SyntheticEvent, useCallback, useEffect } from "react";
+import { SyntheticEvent, useCallback } from "react";
 import styles from "../../index.module.css";
 import {
   Button,
   EmailInput,
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../services/auth";
 import { LoginRequest } from "../../utils/auth-login-api";
 import useForm from "../../hooks/useForm";
@@ -19,18 +19,10 @@ const LoginPage = () => {
   const login = useCallback(
     (e: SyntheticEvent) => {
       e.preventDefault();
-      auth?.signIn(values);
+      auth.signIn(values);
     },
     [auth, values]
   );
-
-  useEffect(() => {
-    auth?.getUser();
-  }, []);
-
-  if (auth?.user) {
-    return <Navigate to={"/"} replace />;
-  }
 
   return (
     <main className={styles.formContainer}>

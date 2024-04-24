@@ -197,7 +197,7 @@ const BurgerConstructor = () => {
         ...selectedIngredients.map((value) => value.ingredient._id),
         selectedBun._id,
       ];
-      if (auth?.user) {
+      if (auth.user) {
         dispatch(
           createOrderRequest({
             selectedIngredients: ids,

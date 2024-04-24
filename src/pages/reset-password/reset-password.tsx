@@ -4,7 +4,7 @@ import {
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "../../index.module.css";
-import { SyntheticEvent, useEffect } from "react";
+import { SyntheticEvent } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { selectPasswordReset } from "../../services/resetPassword";
@@ -12,12 +12,10 @@ import {
   passwordResetActionRequest,
   selectPasswordResetAction,
 } from "../../services/resetPasswordAction";
-import { useAuth } from "../../services/auth";
 import { PasswordWithToken } from "../../utils/auth-password-reset-api";
 import useForm from "../../hooks/useForm";
 
 const ResetPasswordPage = () => {
-  const auth = useAuth();
   const { data: passwordReset } = useAppSelector(selectPasswordReset);
   const { status: passwordResetActionStatus } = useAppSelector(
     selectPasswordResetAction
@@ -27,14 +25,6 @@ const ResetPasswordPage = () => {
     password: "",
     token: "",
   });
-
-  useEffect(() => {
-    auth?.getUser();
-  }, []);
-
-  if (auth?.user) {
-    return <Navigate to={"/"} replace />;
-  }
 
   const submit = (e: SyntheticEvent) => {
     e.preventDefault();

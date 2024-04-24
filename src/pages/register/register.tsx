@@ -6,7 +6,7 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "../../index.module.css";
 import { SyntheticEvent, useEffect } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { registerRequest, selectRegister } from "../../services/register";
 import {
@@ -15,11 +15,9 @@ import {
 } from "../../utils/auth-register-api";
 import useLocalStorage from "../../hooks/localstorage.hook";
 import { ErrorResponse } from "../../utils/auth.types";
-import { useAuth } from "../../services/auth";
 import useForm from "../../hooks/useForm";
 
 const RegisterPage = () => {
-  const auth = useAuth();
   const [values, handleChange] = useForm<RegisterRequest>({
     name: "",
     email: "",
@@ -39,10 +37,6 @@ const RegisterPage = () => {
   };
 
   useEffect(() => {
-    auth?.getUser();
-  }, []);
-
-  useEffect(() => {
     if (registerStatus === "error") {
       console.log((registerResult as ErrorResponse).message);
     }
@@ -52,10 +46,6 @@ const RegisterPage = () => {
       setRefreshToken(result.refreshToken);
     }
   }, [registerResult, registerStatus, setAccessToken, setRefreshToken]);
-
-  if (auth?.user) {
-    return <Navigate to={"/"} replace />;
-  }
 
   return (
     <main className={styles.formContainer}>

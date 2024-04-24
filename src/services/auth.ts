@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { loginRequest, reset, selectLogin } from "./login";
 import useLocalStorage from "../hooks/localstorage.hook";
 import { logoutRequest, selectLogout } from "./logout";
-import { selectUser, reset as userRequestReset, userRequest } from "./user";
+import { selectUser, userRequest } from "./user";
 import { UserSuccessResponse } from "../utils/auth-user-api";
 import { refreshTokenRequest, selectRefreshToken } from "./refreshToken";
 import { RefreshTokenSuccessResponse } from "../utils/auth-refresh-token-api";
@@ -16,7 +16,12 @@ export interface AuthContextProps {
   signIn: (request: LoginRequest) => void;
   signOut: (cb: () => void) => void;
 }
-export const AuthContext = createContext<AuthContextProps | null>(null);
+export const AuthContext = createContext<AuthContextProps>({
+  user: null,
+  getUser: () => {},
+  signIn: () => {},
+  signOut: () => {},
+});
 
 export const useAuth = () => {
   return useContext(AuthContext);
@@ -43,7 +48,7 @@ export const useProvideAuth = (): AuthContextProps => {
 
   useEffect(() => {
     if (loginStatus === "error") {
-      console.log((loginResult as ErrorResponse).message);
+      console.log("login error", (loginResult as ErrorResponse).message);
       dispatch(reset());
     }
     if (loginResult && loginStatus === "finished") {
@@ -56,7 +61,7 @@ export const useProvideAuth = (): AuthContextProps => {
 
   useEffect(() => {
     if (logoutStatus === "error") {
-      console.log((logoutResult as ErrorResponse).message);
+      console.log("logout error", (logoutResult as ErrorResponse).message);
     }
     if (logoutResult && logoutStatus === "finished") {
       setAccessToken("");
@@ -73,7 +78,6 @@ export const useProvideAuth = (): AuthContextProps => {
       const result = userResult as ErrorResponse;
       if (result.message === "jwt expired") {
         dispatch(refreshTokenRequest({ token: refreshToken }));
-        dispatch(userRequestReset());
       }
     }
   }, [userResult, userStatus, setUser]);
@@ -103,7 +107,9 @@ export const useProvideAuth = (): AuthContextProps => {
   };
 
   const getUser = () => {
-    dispatch(userRequest(accessToken));
+    if (accessToken) {
+      dispatch(userRequest(accessToken));
+    }
   };
 
   return {

@@ -35,21 +35,17 @@ const ProfilePage = () => {
   });
 
   useEffect(() => {
-    auth?.getUser();
-  }, []);
-
-  useEffect(() => {
-    if (auth?.user && values.name === "" && values.email === "") {
+    if (auth.user && values.name === "" && values.email === "") {
       setValues({
         ...values,
-        name: auth?.user?.name,
-        email: auth?.user?.email,
+        name: auth.user?.name,
+        email: auth.user?.email,
       });
     }
   }, [auth, setValues, values]);
 
   const handleLogout = () => {
-    auth?.signOut(() => {
+    auth.signOut(() => {
       console.log("logout");
     });
   };
