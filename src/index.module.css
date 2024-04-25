@@ -1,10 +1,22 @@
+.nav {
+  background-color: rgb(47 47 56 / 60%);
+}
+
 .container {
   display: flex;
   flex-wrap: wrap;
 }
 
+.flex {
+  display: flex;
+}
+
 .center {
   justify-content: center;
+}
+
+.width {
+  max-width: 1400px;
 }
 
 .scroll {
@@ -54,4 +66,16 @@
   .col6 {
     flex-basis: 100%;
   }
+}
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  flex-basis: 16%;
+  justify-content: center;
+}
+
+.formContainer {
+  display: flex;
+  justify-content: center;
 }

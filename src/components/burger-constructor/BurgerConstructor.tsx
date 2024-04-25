@@ -12,7 +12,7 @@ import Container from "../container/Container";
 import Col from "../col/Col";
 import styles from "../../index.module.css";
 import { TotalAction, TotalState } from "./BurgerConstructor.types";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
   addIngredient,
   clearSelectedIngredients,
@@ -26,6 +26,9 @@ import { createOrderRequest, selectOrder } from "../../services/order";
 import { ApiData } from "../../ApiData.types";
 import { useDrag, useDrop } from "react-dnd";
 import type { Identifier, XYCoord } from "dnd-core";
+import useLocalStorage from "../../hooks/localstorage.hook";
+import { useAuth } from "../../services/auth";
+import { useNavigate } from "react-router-dom";
 
 const initialState: TotalState = { sum: 0 };
 
@@ -126,10 +129,11 @@ const BurgerConstructor = () => {
   const data = useAppSelector(selectIngredients);
   const selectedIngredients = useAppSelector(selectSelectedIngredients);
   const selectedBun = useAppSelector(selectSelectedBun);
-
   const { data: order, status } = useAppSelector(selectOrder);
-
   const dispatch = useAppDispatch();
+  const [accessToken] = useLocalStorage<string>("accessToken", "");
+  const auth = useAuth();
+  const navigate = useNavigate();
 
   const onDropHandler = (itemId: string) => {
     const ingredient = data?.find((v) => v._id === itemId);
@@ -193,11 +197,20 @@ const BurgerConstructor = () => {
         ...selectedIngredients.map((value) => value.ingredient._id),
         selectedBun._id,
       ];
-      dispatch(createOrderRequest(ids)).then(() =>
-        // todo: check success ?
-        dispatch(clearSelectedIngredients())
-      );
-      toggleOpen();
+      if (auth.user) {
+        dispatch(
+          createOrderRequest({
+            selectedIngredients: ids,
+            accessToken: accessToken,
+          })
+        ).then(() =>
+          // todo: check success ?
+          dispatch(clearSelectedIngredients())
+        );
+        toggleOpen();
+      } else {
+        navigate("/login");
+      }
     } else {
       throw Error("select bun first");
     }

@@ -1,13 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import type { RootState } from "../app/store";
+import type { RootState } from "../store/store";
 import { createOrder } from "../utils/burger-api";
 import { createGenericSlice, FetchApiState } from "./common";
 
-export const createOrderRequest = createAsyncThunk(
-  "order/create",
-  async (selectedIngredients: string[]) =>
-    (await createOrder(selectedIngredients)) as number
-);
+export const createOrderRequest = createAsyncThunk("order/create", createOrder);
 
 export const orderSlice = createGenericSlice({
   name: "order",

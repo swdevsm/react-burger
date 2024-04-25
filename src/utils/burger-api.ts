@@ -1,3 +1,4 @@
+import { checkResponse } from "./api";
 import { BURGER_API_URL } from "./config";
 
 export const getIngredients = () => {
@@ -7,22 +8,24 @@ export const getIngredients = () => {
     .then((json) => (json.success ? json.data : []));
 };
 
-export const createOrder = (selectedIngredients: string[]) => {
+export interface CreateOrderRequest {
+  selectedIngredients: string[];
+  accessToken: string;
+}
+
+export const createOrder = (request: CreateOrderRequest) => {
   const url = `${BURGER_API_URL}/orders`;
   return fetch(url, {
     method: "post",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
+      Authorization: request.accessToken,
     },
     body: JSON.stringify({
-      ingredients: selectedIngredients,
+      ingredients: request.selectedIngredients,
     }),
   })
     .then(checkResponse)
     .then((json) => (json.success ? json.order?.number : null));
-};
-
-const checkResponse = (res: Response) => {
-  return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
 };

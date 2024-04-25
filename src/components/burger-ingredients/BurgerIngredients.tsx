@@ -9,33 +9,26 @@ import {
   IngredientProps,
   IngredientsCategoryProps,
 } from "./BurgerIngredients.types";
-import useModal from "../../hooks/modal.hook";
-import IngredientDetails from "../ingredient-details/IngredientDetails";
 import Container from "../container/Container";
 import Col from "../col/Col";
 import styles from "../../index.module.css";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { selectIngredients } from "../../services/ingredients";
-import {
-  clearIngredientsDetails,
-  setIngredientsDetails,
-} from "../../services/ingredientDetails";
+import { setIngredientsDetails } from "../../services/ingredientDetails";
 import { useDrag } from "react-dnd";
-import { selectSelectedIngredients } from "../../services/burgerConstructor";
+import {
+  selectSelectedBun,
+  selectSelectedIngredients,
+} from "../../services/burgerConstructor";
 import { useInView } from "react-intersection-observer";
+import { Link, useLocation } from "react-router-dom";
 
-const Ingredient = ({ ingredient }: IngredientProps) => {
+export const Ingredient = ({ ingredient }: IngredientProps) => {
+  const location = useLocation();
   const dispatch = useAppDispatch();
   const selectedIngredients = useAppSelector(selectSelectedIngredients);
+  const selectedBun = useAppSelector(selectSelectedBun);
   const [count, setCount] = useState(0);
-  const ingredientDetails = <IngredientDetails ingredient={ingredient} />;
-  const { openModal, toggleOpen, modal } = useModal({
-    header: "Детали ингредиента",
-    details: ingredientDetails,
-    onClose: () => {
-      dispatch(clearIngredientsDetails());
-    },
-  });
   const [, dragRef] = useDrag({
     type: "ingredient",
     item: { id: ingredient._id },
@@ -48,12 +41,15 @@ const Ingredient = ({ ingredient }: IngredientProps) => {
           .length
       );
     }
-  }, [selectedIngredients, ingredient]);
-  return (
+    if (selectedBun && selectedBun._id === ingredient._id) {
+      setCount(1);
+    }
+  }, [selectedIngredients, ingredient, selectedBun]);
+  const linkToIngredient = (
     <div ref={dragRef}>
       <div
         onClick={() => {
-          toggleOpen();
+          // toggleOpen();
           dispatch(setIngredientsDetails(ingredient));
         }}
         className={burgerIngredientsStyles.counterParent}
@@ -76,8 +72,16 @@ const Ingredient = ({ ingredient }: IngredientProps) => {
         </Container>
         {count > 0 && <Counter count={count} size="default" />}
       </div>
-      {openModal && modal}
     </div>
+  );
+  return (
+    <Link
+      key={ingredient._id}
+      to={`/ingredient/${ingredient._id}`}
+      state={{ background: location }}
+    >
+      {linkToIngredient}
+    </Link>
   );
 };
 

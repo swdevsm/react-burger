@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "../app/store";
+import type { RootState } from "../store/store";
 import { ApiData } from "../ApiData.types";
 
 interface BurgerConstructorState {

@@ -1,12 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { RootState } from "../app/store";
+import { RootState } from "../store/store";
 import { ApiData } from "../ApiData.types";
 import { getIngredients } from "../utils/burger-api";
 import { FetchApiState, createGenericSlice } from "./common";
 
 export const fetchIngredients = createAsyncThunk(
   "ingredients/fetch",
-  async () => (await getIngredients()) as ApiData[]
+  getIngredients
 );
 
 export const ingredientsSlice = createGenericSlice({

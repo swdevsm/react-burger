@@ -1,82 +1,93 @@
+import ForgotPasswordPage from "../../pages/forgot-password/forgot-password";
+import HomePage from "../../pages/home/home";
+import IngredientPage from "../../pages/ingredient/ingredient";
+import LoginPage from "../../pages/login/login";
+import NotFoundPage from "../../pages/not-found/not-found";
+import ProfilePage from "../../pages/profile/profile";
+import RegisterPage from "../../pages/register/register";
+import ResetPasswordPage from "../../pages/reset-password/reset-password";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import AppHeader from "../app-header/AppHeader";
+import ProfileOrdersPage from "../../pages/profile-orders/profile-orders";
+import ProfileOrderPage from "../../pages/profile-order/profile-order";
+import Protected from "../protected/Protected";
+import Modal from "../modal/Modal";
+import { useAppDispatch } from "../../store/hooks";
 import { useEffect } from "react";
-import AppHeader from "../app-header/AppHeader.tsx";
-import BurgerConstructor from "../burger-constructor/BurgerConstructor.tsx";
-import BurgerIngredients from "../burger-ingredients/BurgerIngredients.tsx";
-import Container from "../container/Container.tsx";
-import Col from "../col/Col.tsx";
-import styles from "../../index.module.css";
-import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { fetchIngredients } from "../../services/ingredients";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { useAuth } from "../../services/auth";
 
 const App = () => {
-  const { status } = useAppSelector((state) => state.ingredients);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const background = location.state && location.state.background;
   const dispatch = useAppDispatch();
+  const auth = useAuth();
 
   useEffect(() => {
     dispatch(fetchIngredients());
   }, [dispatch]);
 
-  const errorMessage = (
-    <p className="text text_type_main-medium text_color_inactive">
-      Error ... Try to update page
-    </p>
+  const handleModalClose = () => {
+    navigate(-1);
+  };
+
+  useEffect(() => {
+    if (!auth.user) {
+      auth.getUser();
+    }
+  }, []);
+
+  return (
+    <>
+      <AppHeader />
+      <Routes location={background || location}>
+        <Route
+          path="/profile/orders"
+          element={<Protected children={<ProfileOrdersPage />} />}
+        />
+        <Route
+          path="/profile/orders/:number"
+          element={<Protected children={<ProfileOrderPage />} />}
+        />
+        <Route
+          path="/profile"
+          element={<Protected children={<ProfilePage />} />}
+        />
+        <Route
+          path="/login"
+          element={<Protected children={<LoginPage />} anonymous />}
+        />
+        <Route
+          path="/register"
+          element={<Protected children={<RegisterPage />} anonymous />}
+        />
+        <Route
+          path="/forgot-password"
+          element={<Protected children={<ForgotPasswordPage />} anonymous />}
+        />
+        <Route
+          path="/reset-password"
+          element={<Protected children={<ResetPasswordPage />} anonymous />}
+        />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/ingredient/:id" element={<IngredientPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+      {background && (
+        <Routes>
+          <Route
+            path="/ingredient/:id"
+            element={
+              <Modal header="Детали ингредиента" onClose={handleModalClose}>
+                <IngredientPage />
+              </Modal>
+            }
+          />
+        </Routes>
+      )}
+    </>
   );
-
-  const loadingMessage = (
-    <p className="text text_type_main-medium text_color_inactive">
-      Loading ... Try to update page
-    </p>
-  );
-
-  try {
-    return (
-      <div>
-        <Container extraClass={styles.center}>
-          <Col w={6}>
-            <header>
-              <AppHeader />
-            </header>
-          </Col>
-          <Col w={6}>
-            <main>
-              {status === "finished" && (
-                <DndProvider backend={HTML5Backend}>
-                  <Container extraClass={styles.center + " pl-10 pr-10"}>
-                    <Col w={3} extraClass={styles.center}>
-                      <BurgerIngredients />
-                    </Col>
-
-                    <Col w={3} extraClass={styles.center + " pl-10"}>
-                      <BurgerConstructor />
-                    </Col>
-                  </Container>
-                </DndProvider>
-              )}
-              {status === "error" && (
-                <Container extraClass={styles.center}>{errorMessage}</Container>
-              )}
-              {status === "loading" && (
-                <Container extraClass={styles.center}>
-                  {loadingMessage}
-                </Container>
-              )}
-            </main>
-          </Col>
-        </Container>
-      </div>
-    );
-  } catch (e) {
-    return (
-      <section>
-        <h1>Что-то пошло не так :(</h1>
-        <p>
-          В приложении произошла ошибка. Пожалуйста, перезагрузите страницу.
-        </p>
-      </section>
-    );
-  }
 };
 
 export default App;
