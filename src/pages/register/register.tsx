@@ -5,7 +5,7 @@ import {
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "../../index.module.css";
-import { SyntheticEvent, useEffect } from "react";
+import { FormEvent, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { registerRequest, selectRegister } from "../../services/register";
@@ -29,7 +29,7 @@ const RegisterPage = () => {
     useAppSelector(selectRegister);
   const dispatch = useAppDispatch();
 
-  const submit = (e: SyntheticEvent) => {
+  const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (values.name && values.email && values.password) {
       dispatch(registerRequest(values));

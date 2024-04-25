@@ -1,4 +1,7 @@
-import { SyntheticEvent, useCallback } from "react";
+import {
+  FormEvent,
+  useCallback,
+} from "react";
 import styles from "../../index.module.css";
 import {
   Button,
@@ -17,7 +20,7 @@ const LoginPage = () => {
     password: "",
   });
   const login = useCallback(
-    (e: SyntheticEvent) => {
+    (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       auth.signIn(values);
     },

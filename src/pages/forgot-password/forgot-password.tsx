@@ -3,7 +3,7 @@ import {
   EmailInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "../../index.module.css";
-import { ChangeEvent, SyntheticEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import {
   passwordResetRequest,
@@ -18,7 +18,7 @@ const ForgotPasswordPage = () => {
   };
   const { data: passwordReset, status } = useAppSelector(selectPasswordReset);
   const dispatch = useAppDispatch();
-  const submit = (e: SyntheticEvent) => {
+  const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (state.email && !state.error) {
       dispatch(passwordResetRequest(state.email));

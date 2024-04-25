@@ -4,7 +4,7 @@ import {
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "../../index.module.css";
-import { SyntheticEvent } from "react";
+import { FormEvent } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { selectPasswordReset } from "../../services/resetPassword";
@@ -26,7 +26,7 @@ const ResetPasswordPage = () => {
     token: "",
   });
 
-  const submit = (e: SyntheticEvent) => {
+  const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (values.password && values.token) {
       dispatch(
